@@ -50,7 +50,7 @@ int criarTabelaHash(){
 //Função de hash usando o metodo da divisão
 int funcaoHash(elem *tabelaHash, char palavra, int tamanhoTabela){
     int tamanhoPalavra = strlen(palavra);
-    int posicao = tamanhoPalavra % 2, k = 1;
+    int posicao = tamanhoPalavra / 2, k = 1;
     int i = 0;
 
 return posicao;
@@ -65,14 +65,17 @@ int buscarPalavra(elem *tabelaHash, char palavra, int tamanhoTabela, int caracte
     while(aux < tamanhoTabela){
         if(tabelaHash[aux].chave == palavra){
 
-            if(tabelaHash[aux].Lista->prox == NULL){
-                tabelaHash[aux].Lista->prox->qtd = caracteres;
+            if(tabelaHash[aux].Lista == NULL){
+                tabelaHash[aux].Lista = insereFimAparicoes(&tabelaHash[aux].Lista, caracteres);
                 return 1;
             }
 
-            tabelaHash[aux].Lista->prox = insereFimAparicoes(&tabelaHash[aux].Lista, caracteres);
-            
-            return 1;
+            while(tabelaHash[aux].Lista != NULL){
+                if(tabelaHash[aux].Lista->qtd == caracteres){
+                    return 1;
+                }
+                tabelaHash[aux].Lista = tabelaHash[aux].Lista->prox;
+            }
         }
         aux = aux + k;
         k++;
@@ -80,19 +83,25 @@ int buscarPalavra(elem *tabelaHash, char palavra, int tamanhoTabela, int caracte
 return 0;
 }
 
-elem inserirPalavra(elem *tabelaHash, char palavra, int tamanhoTabela){
+void inserirPalavra(elem *tabelaHash, char palavra, int tamanhoTabela, int caracteres){
+    int resultadoBusca = buscarPalavra(tabelaHash, palavra, tamanhoTabela, caracteres);
+    int aux = funcaoHash(tabelaHash, palavra, tamanhoTabela);
 
+    if(resultadoBusca == 0){
+        strcpy(tabelaHash[aux].chave, palavra);
+        tabelaHash[aux].Lista = NULL;
+    }
 }
 
 int main(){
     elem palavras;
-    char nomeArquivo[50];
+    char arqPalavrasChave[50];
 
     printf("Digite o nome do arquivo: ");
-    scanf("%s", &nomeArquivo);
+    scanf("%s", &arqPalavrasChave);
 
     FILE *arq;
-    arq = fopen(nomeArquivo, "r");
+    arq = fopen(arqPalavrasChave, "r");
 
     if(arq == NULL){
         printf("Erro ao tentar abrir o arquivo"); return 0;
