@@ -257,35 +257,6 @@ void imprimirTabela(tabela *tabelaHash, int tamanhoTabela, int tamanhoPalavra){
     printf("--------------------------------\n");
 }
 
-/*
-//Funcao para aumentar a tabela hash
-void aumentaTabela(tabela *tabelaHash, int *tamanhoTabela){
-    tabela *novaTabela = (tabela*)calloc((*tamanhoTabela * 2), sizeof(tabela));
-    int j = 0;
-    if(novaTabela == NULL){
-        printf("Erro ao tentar alocar");
-        return;
-    }
-
-    for(int i = 0; i < *tamanhoTabela; i++){
-
-        j = (novaTabela, tabelaHash[i].chave, *tamanhoTabela);
-
-        if(j == 0){
-            continue;
-        }
-
-        novaTabela[j].chave = tabelaHash[i].chave;
-        novaTabela[j].Lista = tabelaHash[i].Lista;
-    }
-
-    *tamanhoTabela = *tamanhoTabela * 2;
-    
-    free(tabelaHash);
-    
-    tabelaHash = novaTabela;
-}
-*/
 //Cria o no que guardar  a lista de palavras chave
 no *criaNo(char *palavra, int tamanhoPalavra){
     no *novo = (no*)calloc(1, sizeof(no));
@@ -399,6 +370,34 @@ void imprimeOrdTabela(tabela *tabelaHash, no *listaPalavras, int tamanhoTabela) 
         aux2 = aux2->prox;
     }
     printf("\n");
+}
+
+//Funcao para aumentar a tabela hash
+void aumentaTabela(tabela *tabelaHash, int *tamanhoTabela){
+    tabela *novaTabela = (tabela*)calloc((*tamanhoTabela * 2), sizeof(tabela));
+    int j = 0;
+    if(novaTabela == NULL){
+        printf("Erro ao tentar alocar");
+        return;
+    }
+
+    for(int i = 0; i < *tamanhoTabela; i++){
+
+        j = (novaTabela, tabelaHash[i].chave, *tamanhoTabela);
+
+        if(j == 0){
+            continue;
+        }
+
+        novaTabela[j].chave = tabelaHash[i].chave;
+        novaTabela[j].Lista = tabelaHash[i].Lista;
+    }
+
+    *tamanhoTabela = *tamanhoTabela * 2;
+    
+    free(tabelaHash);
+    
+    tabelaHash = novaTabela;
 }
 
 int main(){
