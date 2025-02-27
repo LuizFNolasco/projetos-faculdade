@@ -234,7 +234,7 @@ void inserirPalavra(tabela *tabelaHash, char *palavra, int tamanhoTabela, int ca
         char *ajeita = ajeitaPalavra(palavra, tamanhoPalavra);
         strcpy(tabelaHash[aux].chaveSemAcento, ajeita);
 
-        tabelaHash[aux].Lista = criaLista(caracteres);
+        tabelaHash[aux].Lista = NULL;
     }
 }
 
@@ -370,29 +370,35 @@ void liberaListaPalavra(no **listaPalavras) {
     }
 }
 
-void imprimeOrdTabela(tabela *tabelaHash, no *listaPalavras, int tamanhoTabela){
+void imprimeOrdTabela(tabela *tabelaHash, no *listaPalavras, int tamanhoTabela) {
     aparicoes *aux = NULL;
     no *aux2 = listaPalavras;
-    int i = 0, j = 0, posicao;
+    int posicao;
 
-    while(aux2 != NULL){
+    while (aux2 != NULL) {
         posicao = funcaoHash(strlen(aux2->palavraNo), tamanhoTabela);
-        
-            if(strcmp(tabelaHash[posicao].chaveSemAcento, aux2->palavraNo)){
+        int tentativas = 0;
 
+        while (tentativas < tamanhoTabela) {
+            if (tabelaHash[posicao].chave != NULL && strcmp(tabelaHash[posicao].chaveSemAcento, aux2->palavraNo) == 0) {
                 printf("%s", tabelaHash[posicao].chave);
                 aux = tabelaHash[posicao].Lista;
 
-                while(aux != NULL){
-                    printf(" %d ", aux->tamanho);
+                while (aux != NULL) {
+                    printf(" %d", aux->tamanho);
                     aux = aux->prox;
                 }
-                aux2 = aux2->prox;
-            }else{
-                posicao += 1;
+                printf("\n");
+                break;
+            } else {
+                posicao = (posicao + 1) % tamanhoTabela;
+                tentativas++;
             }
-    }
+        }
 
+        aux2 = aux2->prox;
+    }
+    printf("\n");
 }
 
 int main(){
