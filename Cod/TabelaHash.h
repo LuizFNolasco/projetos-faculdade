@@ -240,6 +240,18 @@ Entrada:
 Saida:
 
 */
+void converterParaISO8859_1(const char *arquivoEntrada, const char *arquivoSaida);
+
+/*
+Função:
+
+Descrição:
+
+Entrada:
+
+Saida:
+
+*/
 void menu();
 
 
