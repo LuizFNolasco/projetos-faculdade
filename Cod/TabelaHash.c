@@ -5,7 +5,7 @@
 #include <locale.h>
 //#include "iconv.h"
 
-// Estrutura para armazenar apos quantos carcteres aparece a palavra
+// Estrutura da lista encadeada para armazenar apos quantos caracteres cada palavra aparece
 typedef struct aparicoes{
     int tamanho;
     struct aparicoes *prox;
@@ -18,11 +18,13 @@ typedef struct tabela{
     aparicoes *Lista;
 }tabela;
 
+// Estrutura do no de palavras chaves, para facilitar na ordenação das palavras
 typedef struct no{
     char *palavraNo;
     struct no *prox;
 }no;
 
+//Cria a tabelaHash com as varaiaves zerados
 void criaTabela(tabela *tabelaHash, int tamanhoTabela) {
     int i;
     for(i = 0; i < tamanhoTabela; i++) {
@@ -32,21 +34,25 @@ void criaTabela(tabela *tabelaHash, int tamanhoTabela) {
     }
 }
 
+//Exclui todos os dados da tabela
 void excluirTabela(tabela *tabelaHash, int tamanhoTabela) {
     int i = 0;
 
+    //Variaveis necessarias
     aparicoes *atual = tabelaHash[i].Lista;
     aparicoes *proximo;
 
+    //Loop para percorrer as palavras existentes na tabelaHash
     for(i; i < tamanhoTabela; i++) {
         if(tabelaHash[i].chave != NULL) {
+            //Liberar a palavra
             free(tabelaHash[i].chave);
-
+            //Lisberar a versão da palavra sem acento ou caracteres especiais
             if(tabelaHash[i].chaveSemAcento != NULL) {
                 free(tabelaHash[i].chaveSemAcento);
             }
 
-            // Liberar a lista de apari  es
+            // Liberar a lista de aparições
             while(atual != NULL) {
                 proximo = atual->prox;
 
@@ -58,7 +64,7 @@ void excluirTabela(tabela *tabelaHash, int tamanhoTabela) {
     }
 }
 
-// Funcao para inicializar um no que portara apos quantos caracteres que a palavra aparece
+// Funcao para inicializar o no que portara apos quantos caracteres que a palavra aparece
 aparicoes *criaLista(int caracteres){
     aparicoes *novo = (aparicoes*)calloc(1, sizeof(aparicoes));
 
@@ -88,7 +94,7 @@ aparicoes *insereFimAparicoes(aparicoes *listaAparicoes, int caracteres){
 return listaAparicoes;
 }
 
-
+//Função responsavel por retirar os acentos e caracteres especiais da palavra
 char *ajeitaPalavra(char *novaPalavra, int tamanhoPalavra) {
     int j = 0;  // ï¿½ndice para a nova string (pode ser menor que a original)
     
@@ -175,7 +181,7 @@ char *ajeitaPalavra(char *novaPalavra, int tamanhoPalavra) {
 return novaPalavra;
 }
 
-//Funcao de hash usando o metodo da divisao
+//Calcula o indice em que a palavra ira se encontrar
 int funcaoHash(int tamanhoPalavra, int tamanhoTabela){
     int posicao = (tamanhoPalavra * 2), k = 1;
 
@@ -215,6 +221,7 @@ int buscarPalavra(tabela *tabelaHash, char *palavra, int tamanhoTabela, int cara
 return 0;
 }
 
+//Insere a palavra na tabelaHash
 void inserirPalavra(tabela *tabelaHash, char *palavra, int tamanhoTabela, int caracteres, int tamanhoPalavra){    
     int resultadoBusca = buscarPalavra(tabelaHash, palavra, tamanhoTabela, caracteres, tamanhoPalavra);
     int aux = funcaoHash(tamanhoPalavra, tamanhoTabela);
@@ -275,6 +282,7 @@ no *criaNo(char *palavra, int tamanhoPalavra){
 return novo;
 }
 
+//Insere de forma ordenada a palavra sem acentos e caracteres especiais dentro de uma lista encadeada
 void insereOrdPalavra(no **listaPalavra, char *palavra, int tamanhoPalavra) {
     no *novo = criaNo(palavra, tamanhoPalavra);
     no *aux = *listaPalavra;
@@ -318,6 +326,7 @@ void insereOrdPalavra(no **listaPalavra, char *palavra, int tamanhoPalavra) {
     }
 }
 
+// Realiza a impressão de todos os nó's que estão na lista encadeada
 void exibirLista(no *listaPalavras) {
     no *atual = listaPalavras;
     
@@ -327,6 +336,7 @@ void exibirLista(no *listaPalavras) {
     }
 }
 
+//Elimina todos os nó's que estão na lista encadeada
 void liberaListaPalavra(no **listaPalavras) {
     no *atual = *listaPalavras;
     no *proximo;
@@ -341,6 +351,7 @@ void liberaListaPalavra(no **listaPalavras) {
     }
 }
 
+// Imprime a tabela de forma que os elementos apareçam ordenados por ordem alfabetica
 void imprimeOrdTabela(tabela *tabelaHash, no *listaPalavras, int tamanhoTabela) {
     aparicoes *aux = NULL;
     no *aux2 = listaPalavras;
@@ -372,78 +383,105 @@ void imprimeOrdTabela(tabela *tabelaHash, no *listaPalavras, int tamanhoTabela) 
     printf("\n");
 }
 
-//Funcao para aumentar a tabela hash
-void aumentaTabela(tabela *tabelaHash, int *tamanhoTabela){
-    tabela *novaTabela = (tabela*)calloc((*tamanhoTabela * 2), sizeof(tabela));
-    int j = 0;
-    if(novaTabela == NULL){
-        printf("Erro ao tentar alocar");
+// Aumenta o tamanho da tabela, para conseguir guardar mais elementos
+void aumentaTabela(tabela **tabelaHash, no *listaPalavras, int *tamanhoTabela) {
+    if (*tabelaHash == NULL || tamanhoTabela == NULL) {
+        printf("Erro: ponteiro nulo passado para aumentaTabela.\n");
         return;
     }
 
-    for(int i = 0; i < *tamanhoTabela; i++){
+    int novoTamanho = *tamanhoTabela * 2;
+    tabela *novaTabela = (tabela*)calloc(novoTamanho, sizeof(tabela));
 
-        j = (novaTabela, tabelaHash[i].chave, *tamanhoTabela);
+    int posicao;
 
-        if(j == 0){
-            continue;
-        }
-
-        novaTabela[j].chave = tabelaHash[i].chave;
-        novaTabela[j].Lista = tabelaHash[i].Lista;
+    if (novaTabela == NULL) {
+        printf("Erro ao tentar alocar memória para a nova tabela.\n");
+        return;
     }
 
-    *tamanhoTabela = *tamanhoTabela * 2;
-    
-    free(tabelaHash);
-    
-    tabelaHash = novaTabela;
+    // Inicializa a nova tabela
+    criaTabela(novaTabela, novoTamanho);
+
+    // Copia os elementos da tabela antiga para a nova tabela
+    for (int i = 0; i < *tamanhoTabela; i++) {
+        if ((*tabelaHash)[i].chave != NULL) {
+            // Insere a palavra e todos os elementos da lista de colisões
+            posicao = funcaoHash(strlen((*tabelaHash)[i].chave), novoTamanho);
+            
+            novaTabela[posicao].chave = strdup((*tabelaHash)[i].chave);
+            novaTabela[posicao].chaveSemAcento = strdup((*tabelaHash)[i].chaveSemAcento);
+
+            aparicoes *listaVelha = (*tabelaHash)[i].Lista;
+            aparicoes *aux = listaVelha;
+            aparicoes *novaLista = NULL;
+
+            while(aux != NULL){
+                aparicoes *novo = (aparicoes*)calloc(1, sizeof(aparicoes));
+
+                novo->tamanho = aux->tamanho;
+                novo->prox = NULL;
+
+                if(novaLista == NULL){
+                    novaLista = novo;
+                }
+
+                aux = aux->prox;
+            }
+            novaTabela[posicao].Lista = novaLista;
+        }
+    }
+
+    // Libera a memória da tabela antiga
+    for (int i = 0; i < *tamanhoTabela; i++) {
+        if ((*tabelaHash)[i].chave != NULL) {
+            free((*tabelaHash)[i].chave);
+            free((*tabelaHash)[i].chaveSemAcento);
+
+            aparicoes *aux = (*tabelaHash)[i].Lista;
+
+            while (aux != NULL) {
+                aparicoes *prox = aux->prox;
+                free(aux);
+                aux = prox;
+            }
+        }
+    }
+    free(*tabelaHash);
+
+    // Atualiza o ponteiro da tabela hash e o tamanho
+    *tabelaHash = novaTabela;
+    *tamanhoTabela = novoTamanho;
 }
 
-int main(){
-    tabela tabelaHash[81]; // 9x9
-    no *listaPalavra = NULL;
-    aparicoes *listaAparicoes = NULL;
+//Abre o arquivo de palavras chave e insere tanto na lista encadeada quando na tabela
+void recebeArqPalavrasChave(tabela **tabelaHash, no **listaPalavra, char *arqPalavrasChave, char *palavraFormada, int caractereAtual, int indice, 
+    int tamanhoPalavraFormada, int possivelFinal, int caracteres, int tamanhoTabela, int j) {
+    
+    int posicaoInicio = 0;
 
-    char arqPalavrasChave[1000], arqTexto[1000];
-    int caractereAtual, tamanhoPalavraFormada = 100, indice = 0;
-    int posicaoTabela = 0, tamanhoTabela = 81, caracteres = 1, j = 0, possivelFinal = 0;
-
-    char *palavraFormada = (char*)calloc(tamanhoPalavraFormada, sizeof(char));
-
-    criaTabela(tabelaHash, tamanhoTabela);  
-
-    //Para o isalnum receber valores que pentencem a ligua portuguesa
-    //setlocale(LC_ALL, "Portuguese_Brazil");
-
-    //Usando o arquivo de palavras chaves
     printf("Digite o nome do arquivo de palavras chaves: ");
     scanf("%s", arqPalavrasChave);
 
-    FILE *arqP;
-    arqP = fopen(arqPalavrasChave, "r");
-
-    if(arqP == NULL){
-        printf("Erro ao tentar abrir o arquivo"); 
-        free(palavraFormada);
-        return 0;
+    FILE *arqP = fopen(arqPalavrasChave, "r");
+    if (arqP == NULL) {
+        printf("Erro ao tentar abrir o arquivo.\n");
+        return;
     }
 
     while ((caractereAtual = fgetc(arqP)) != EOF) {
-        // Enquanto o caractere atual for diferente de espaï¿½o e pontuaï¿½ï¿½o, a palavra ï¿½ formada
         if (caractereAtual != ' ') {
-            // Caso passe o nï¿½mero mï¿½ximo de caracteres
             if (indice >= tamanhoPalavraFormada - 1) {
                 tamanhoPalavraFormada *= 2;
-                palavraFormada = (char *)realloc(palavraFormada, tamanhoPalavraFormada * sizeof(char));
-
-                if (palavraFormada == NULL) {
-                    printf("Erro ao realocar memï¿½ria.\n");
+                char *temp = (char *)realloc(palavraFormada, tamanhoPalavraFormada * sizeof(char));
+                if (temp == NULL) {
+                    printf("Erro ao realocar memória.\n");
                     fclose(arqP);
-                    return 1;
+                    return;
                 }
+                palavraFormada = temp;
             }
-            // Tratamento caracteres
+
             if ((caractereAtual == '!' || caractereAtual == '.' || caractereAtual == ',' || caractereAtual == ';' 
                 || caractereAtual == ':' || caractereAtual == '@' || caractereAtual == '#' || caractereAtual == '$'
                 || caractereAtual == '%' || caractereAtual == '&' || caractereAtual == '*' || caractereAtual == '(' 
@@ -451,109 +489,136 @@ int main(){
                 possivelFinal = indice;
                 j++;
             }
-    
+
             palavraFormada[indice] = caractereAtual;
             indice++;
-    
-        // Indice > 0 significa que a palavra foi formada e chegou em um espaï¿½o
         } else if (indice > 0) {
-            // Verifica se a palavra termina com um caractere nï¿½o alfanumï¿½rico
             if (palavraFormada[indice - 1] == '!' || palavraFormada[indice - 1] == '.' || palavraFormada[indice - 1] == ',' || palavraFormada[indice - 1] == ';' 
-            || palavraFormada[indice - 1] == ':' || palavraFormada[indice - 1] == '@' || palavraFormada[indice - 1] == '#' || palavraFormada[indice - 1] == '$'
-            || palavraFormada[indice - 1] == '%' || palavraFormada[indice - 1] == '&' || palavraFormada[indice - 1] == '*' || palavraFormada[indice - 1] == '(' 
-            || palavraFormada[indice - 1] == ')') {
-
+                || palavraFormada[indice - 1] == ':' || palavraFormada[indice - 1] == '@' || palavraFormada[indice - 1] == '#' || palavraFormada[indice - 1] == '$'
+                || palavraFormada[indice - 1] == '%' || palavraFormada[indice - 1] == '&' || palavraFormada[indice - 1] == '*' || palavraFormada[indice - 1] == '(' 
+                || palavraFormada[indice - 1] == ')') {
                 palavraFormada[possivelFinal] = '\0';
-
-                inserirPalavra(tabelaHash, palavraFormada, tamanhoTabela, caracteres, possivelFinal);
-
-                insereOrdPalavra(&listaPalavra, palavraFormada, possivelFinal);
-
+                posicaoInicio = caracteres - indice; // Posição de início da palavra
+                inserirPalavra((*tabelaHash), palavraFormada, tamanhoTabela, posicaoInicio, possivelFinal);
+                insereOrdPalavra(listaPalavra, palavraFormada, possivelFinal);
             } else {
                 palavraFormada[indice] = '\0';
-                
-                inserirPalavra(tabelaHash, palavraFormada, tamanhoTabela, caracteres, indice);
-                
-                insereOrdPalavra(&listaPalavra, palavraFormada, indice);
+                posicaoInicio = caracteres - indice; // Posição de início da palavra
+                inserirPalavra((*tabelaHash), palavraFormada, tamanhoTabela, posicaoInicio, indice);
+                insereOrdPalavra(listaPalavra, palavraFormada, indice);
             }
             indice = 0;
-            j = 0; // Reinicia o contador de pontuaï¿½ï¿½o
+            j = 0;
         }
-        caracteres++;
+        caracteres++; // Incrementa o contador de caracteres
     }
-    //Verifica se chegou ao final do arquivo e esqueceu uma palavra
-    if(indice > 0) {
+
+    if (indice > 0) {
         palavraFormada[indice] = '\0';
-        
-        inserirPalavra(tabelaHash, palavraFormada, tamanhoTabela, caracteres, indice);
-        
-        insereOrdPalavra(&listaPalavra, palavraFormada, indice);
+        posicaoInicio = caracteres - indice; // Posição de início da palavra
+        inserirPalavra((*tabelaHash), palavraFormada, tamanhoTabela, posicaoInicio, indice);
+        insereOrdPalavra(listaPalavra, palavraFormada, indice);
     }
 
     fclose(arqP);
-    free(palavraFormada);
-    indice = 0; 
-    caracteres = 1;
+}
 
-    palavraFormada = (char*)calloc(tamanhoPalavraFormada, sizeof(char));
-
-    //Usando o arquivo de texto   
+//Abre o arquivo de texto e insere após quantos caracteres cada palavra aparece
+void recebeArqTexto(tabela **tabelaHash, char *arqTexto, char *palavraFormada, int caractereAtual, int possivelFinal, int indice, int tamanhoTabela, 
+    int caracteres, int tamanhoPalavraFormada, int j) {
+    
+    int posicaoInicio = 0;
+    
     printf("Digite o nome do arquivo a ser lido: ");
-    scanf("%s", &arqTexto);
+    scanf("%s", arqTexto);
 
-    FILE *arqT;
-    arqT = fopen(arqTexto, "r");
-
-    if(arqT == NULL){
-        printf("Erro ao tentar abrir o arquivo");
-        return 0;
+    FILE *arqT = fopen(arqTexto, "r");
+    if (arqT == NULL) {
+        printf("Erro ao tentar abrir o arquivo.\n");
+        return;
     }
 
-    while((caractereAtual = fgetc(arqT)) != EOF){
-        if(caractereAtual != ' '){
-            if(indice >= tamanhoPalavraFormada){
+    while ((caractereAtual = fgetc(arqT)) != EOF) {
+        if (caractereAtual != ' ') {
+            if (indice >= tamanhoPalavraFormada - 1) {
                 tamanhoPalavraFormada *= 2;
-                palavraFormada = (char*)realloc(palavraFormada, tamanhoPalavraFormada * sizeof(char));
+                char *temp = (char *)realloc(palavraFormada, tamanhoPalavraFormada * sizeof(char));
+                if (temp == NULL) {
+                    printf("Erro ao realocar memória.\n");
+                    fclose(arqT);
+                    return;
+                }
+                palavraFormada = temp;
             }
 
-            if((caractereAtual == '!' || caractereAtual == '.' || caractereAtual == ',' || caractereAtual == ';' 
+            if ((caractereAtual == '!' || caractereAtual == '.' || caractereAtual == ',' || caractereAtual == ';' 
                 || caractereAtual == ':' || caractereAtual == '@' || caractereAtual == '#' || caractereAtual == '$'
                 || caractereAtual == '%' || caractereAtual == '&' || caractereAtual == '*' || caractereAtual == '(' 
-                || caractereAtual == ')') && j <= 1){
-
+                || caractereAtual == ')') && j <= 1) {
                 possivelFinal = indice;
                 j++;
             }
+
             palavraFormada[indice] = caractereAtual;
             indice++;
-        }else if(indice > 0){
-
-            if(palavraFormada[indice - 1] == '!' || palavraFormada[indice - 1] == '.' || palavraFormada[indice - 1] == ',' || palavraFormada[indice - 1] == ';' 
-            || palavraFormada[indice - 1] == ':' || palavraFormada[indice - 1] == '@' || palavraFormada[indice - 1] == '#' || palavraFormada[indice - 1] == '$'
-            || palavraFormada[indice - 1] == '%' || palavraFormada[indice - 1] == '&' || palavraFormada[indice - 1] == '*' || palavraFormada[indice - 1] == '(' 
-            || palavraFormada[indice - 1] == ')'){
-                palavraFormada[possivelFinal - 1] = '\0';
-
-                buscarPalavra(tabelaHash, palavraFormada, tamanhoTabela, caracteres, possivelFinal);
-            }else{
+        } else if (indice > 0) {
+            if (palavraFormada[indice - 1] == '!' || palavraFormada[indice - 1] == '.' || palavraFormada[indice - 1] == ',' || palavraFormada[indice - 1] == ';' 
+                || palavraFormada[indice - 1] == ':' || palavraFormada[indice - 1] == '@' || palavraFormada[indice - 1] == '#' || palavraFormada[indice - 1] == '$'
+                || palavraFormada[indice - 1] == '%' || palavraFormada[indice - 1] == '&' || palavraFormada[indice - 1] == '*' || palavraFormada[indice - 1] == '(' 
+                || palavraFormada[indice - 1] == ')') {
+                palavraFormada[possivelFinal] = '\0';
+                posicaoInicio = caracteres - indice; // Posição de início da palavra
+                buscarPalavra((*tabelaHash), palavraFormada, tamanhoTabela, posicaoInicio, possivelFinal);
+            } else {
                 palavraFormada[indice] = '\0';
-
-                buscarPalavra(tabelaHash, palavraFormada, tamanhoTabela, caracteres, indice);
+                posicaoInicio = caracteres - indice; // Posição de início da palavra
+                buscarPalavra((*tabelaHash), palavraFormada, tamanhoTabela, posicaoInicio, indice);
             }
             indice = 0;
+            j = 0;
         }
-        caracteres++;
+        caracteres++; // Incrementa o contador de caracteres
     }
 
-    if(indice > 0){
+    if (indice > 0) {
         palavraFormada[indice] = '\0';
-
-        buscarPalavra(tabelaHash, palavraFormada, tamanhoTabela, caracteres, indice);
+        posicaoInicio = caracteres - indice; // Posição de início da palavra
+        buscarPalavra((*tabelaHash), palavraFormada, tamanhoTabela, posicaoInicio, indice);
     }
 
     fclose(arqT);
+}
 
-   // exibirLista(listaPalavra);
+//Menu que irá aparecer para o usuario
+void menu(){
+
+}
+
+int main(){
+    tabela *tabelaHash; // 9x9
+    no *listaPalavra = NULL;
+    aparicoes *listaAparicoes = NULL;
+
+    char arqPalavrasChave[1000], arqTexto[1000];
+    int caractereAtual, tamanhoPalavraFormada = 100, indice = 0;
+    int posicaoTabela = 0, tamanhoTabela = 81, caracteres = 1, j = 0, possivelFinal = 0;
+
+    tabelaHash = (tabela*)calloc(tamanhoTabela, sizeof(tabela));
+    char *palavraFormada = (char*)calloc(tamanhoPalavraFormada, sizeof(char));
+
+    criaTabela(tabelaHash, tamanhoTabela);  
+
+     //setlocale(LC_ALL, "Portuguese_Brazil");
+
+    recebeArqPalavrasChave(&tabelaHash, &listaPalavra, arqPalavrasChave, palavraFormada, caractereAtual, indice, 
+    tamanhoPalavraFormada, possivelFinal, caracteres, tamanhoTabela, j);
+
+    recebeArqTexto(&tabelaHash, arqTexto, palavraFormada, caractereAtual, possivelFinal, indice, tamanhoTabela, 
+    caracteres, tamanhoPalavraFormada, j);
+
+    aumentaTabela(&tabelaHash, listaPalavra, &tamanhoTabela);   
+    
+    // exibirLista(listaPalavra);
     //imprimirTabela(tabelaHash, tamanhoTabela, 10);
 
     imprimeOrdTabela(tabelaHash, listaPalavra, tamanhoTabela);
@@ -563,3 +628,36 @@ int main(){
 
 return 0;
 }
+
+/*
+// Converte o encoding do arquivo lido para ISO-8859-1
+char *convertEncoding(const char *input, const char *fromEncoding, const char *toEncoding) {
+    iconv_t cd = iconv_open(toEncoding, fromEncoding);
+    if (cd == (iconv_t)-1) {
+        perror("iconv_open");
+        return NULL;
+    }
+
+    size_t inBytesLeft = strlen(input);
+    size_t outBytesLeft = inBytesLeft * 2; // Buffer de saída maior para garantir espaço suficiente
+    char *output = (char *)malloc(outBytesLeft);
+    if (output == NULL) {
+        perror("malloc");
+        iconv_close(cd);
+        return NULL;
+    }
+
+    char *inBuf = (char *)input;
+    char *outBuf = output;
+    if (iconv(cd, &inBuf, &inBytesLeft, &outBuf, &outBytesLeft) == (size_t)-1) {
+        perror("iconv");
+        free(output);
+        iconv_close(cd);
+        return NULL;
+    }
+
+    *outBuf = '\0'; // Adicionar o caractere nulo ao final da string convertida
+    iconv_close(cd);
+    return output;
+}
+*/
