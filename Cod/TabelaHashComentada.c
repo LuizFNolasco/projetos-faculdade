@@ -1,24 +1,23 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<string.h>
-#include <ctype.h>
-#include <locale.h>
-#include <iconv.h>
+#include<locale.h>
+#include<iconv.h>
 
-// Estrutura da lista encadeada para armazenar apos quantos caracteres cada palavra aparece
+//Estrutura da lista encadeada para armazenar apos quantos caracteres cada palavra aparece
 typedef struct aparicoes{
     int tamanho; //Numero de após quantos caracteres a palavra aparece
     struct aparicoes *prox; //Ponteiro para o próximo nó com a contagem de caracteres  
 }aparicoes;
 
-// Estrutura da tabela hash para armazenar a palavra e a lista de apos quantos caracteres aparece a palavra
+//Estrutura da tabela hash para armazenar a palavra e a lista de apos quantos caracteres aparece a palavra
 typedef struct tabela{
     char *chave; //Ponteiro para a palavra chave 
     char *chaveSemAcento; //Ponteiro para a palavra sem acentos, caracteres especiais e letras maiusculas
     aparicoes *Lista; //Ponteiro para a lista de após quantos caracteres ocorre cada ocorrencia da palavra
 }tabela;
 
-// Estrutura do no de palavras chaves, para facilitar na ordenação das palavras
+//Estrutura do no de palavras chaves, para facilitar na ordenação das palavras
 typedef struct no{
     char *palavraNo; //Ponteiro para a versão da palavra sem acentos, caracteres especiais e letras maiusculas
     struct no *prox; //Ponteiro para o proximo nó com a versão da palavra sem acentos, caracteres especiais e letras maiusculas
