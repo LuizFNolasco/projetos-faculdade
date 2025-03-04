@@ -129,7 +129,7 @@ char *ajeitaPalavra(char *novaPalavra, int tamanhoPalavra) {
                 novaPalavra[j] = 'n'; j++; break;
             case 253: case 255:
                 novaPalavra[j] = 'y'; j++; break;
-                
+  
             default:
                 break;
         }
@@ -178,6 +178,7 @@ void inserirPalavra(tabela *tabelaHash, char *palavra, int tamanhoTabela, int ca
     int resultadoBusca = buscarPalavra(tabelaHash, palavra, tamanhoTabela, caracteres, tamanhoPalavra);
     int aux = funcaoHash(tamanhoPalavra, tamanhoTabela);
     int k = 1;
+    char *ajeita;
 
     if(resultadoBusca == 0){
         
@@ -190,14 +191,14 @@ void inserirPalavra(tabela *tabelaHash, char *palavra, int tamanhoTabela, int ca
         strcpy(tabelaHash[aux].chave, palavra); 
 
         tabelaHash[aux].chaveSemAcento = (char*)calloc(tamanhoPalavra + 1, sizeof(char));
-        char *ajeita = ajeitaPalavra(palavra, tamanhoPalavra);
+        ajeita = ajeitaPalavra(palavra, tamanhoPalavra);
         strcpy(tabelaHash[aux].chaveSemAcento, ajeita);
 
         tabelaHash[aux].Lista = NULL;
     }
 }
 
-void imprimirTabela(tabela *tabelaHash, int tamanhoTabela, int tamanhoPalavra){
+void imprimirTabela(tabela *tabelaHash, int tamanhoTabela){
     int i;
 
     printf("--------------------------------\n");
@@ -217,13 +218,14 @@ void imprimirTabela(tabela *tabelaHash, int tamanhoTabela, int tamanhoPalavra){
 
 no *criaNo(char *palavra, int tamanhoPalavra){
     no *novo = (no*)calloc(1, sizeof(no));
+    char *ajeita;
 
     if(novo == NULL){
         printf("Erro ao tentar alocar");
         return NULL;
     }
     novo->palavraNo = (char*)calloc(tamanhoPalavra + 1, sizeof(char));
-    char *ajeita = ajeitaPalavra(palavra, tamanhoPalavra);
+    ajeita = ajeitaPalavra(palavra, tamanhoPalavra);
 
     strcpy(novo->palavraNo, ajeita);
 
@@ -264,15 +266,6 @@ void insereOrdPalavra(no **listaPalavra, char *palavra, int tamanhoPalavra) {
     } else {
         novo->prox = anterior->prox;
         anterior->prox = novo;
-    }
-}
-
-void exibirLista(no *listaPalavras) {
-    no *atual = listaPalavras;
-    
-    while (atual != NULL) {
-        printf("%s\n", atual->palavraNo);
-        atual = atual->prox;
     }
 }
 
@@ -321,15 +314,13 @@ void imprimeOrdTabela(tabela *tabelaHash, no *listaPalavras, int tamanhoTabela) 
 }
 
 void aumentaTabela(tabela **tabelaHash, no *listaPalavras, int *tamanhoTabela) {
-    int novoTamanho = 0, posicao;
-    
+    int novoTamanho = *tamanhoTabela * 2, posicao;
+    tabela *novaTabela = (tabela*)calloc(novoTamanho, sizeof(tabela));
+ 
     if (*tabelaHash == NULL || tamanhoTabela == NULL) {
         printf("Erro: ponteiro nulo passado para aumentaTabela.\n");
         return;
     }
-
-    novoTamanho = *tamanhoTabela * 2;
-    tabela *novaTabela = (tabela*)calloc(novoTamanho, sizeof(tabela));
 
     if (novaTabela == NULL) {
         printf("Erro ao tentar alocar memória para a nova tabela.\n");
@@ -384,9 +375,10 @@ void aumentaTabela(tabela **tabelaHash, no *listaPalavras, int *tamanhoTabela) {
 }
 
 void recebeArqPalavrasChave(tabela **tabelaHash, no **listaPalavra, char *arqPalavrasChave, char *palavraFormada, int caractereAtual, int indice, 
-    int tamanhoPalavraFormada, int possivelFinal, int caracteres, int tamanhoTabela, int j) {
+    int tamanhoPalavraFormada, int caracteres, int tamanhoTabela) {
     
     int posicaoInicio = 0;
+    char *temp;
 
     printf("Digite o nome do arquivo de palavras chaves: ");
     scanf("%s", arqPalavrasChave);
@@ -398,10 +390,14 @@ void recebeArqPalavrasChave(tabela **tabelaHash, no **listaPalavra, char *arqPal
     }
 
     while ((caractereAtual = fgetc(arqP)) != EOF) {
-        if (caractereAtual != ' ') {
+        if (caractereAtual != ' ' && caractereAtual != '!' && caractereAtual != '.' && caractereAtual != ',' && caractereAtual != ';' 
+            && caractereAtual != ':' && caractereAtual != '(' && caractereAtual != ')') {
+
             if (indice >= tamanhoPalavraFormada - 1) {
+
                 tamanhoPalavraFormada *= 2;
-                char *temp = (char *)realloc(palavraFormada, tamanhoPalavraFormada * sizeof(char));
+                temp = (char *)realloc(palavraFormada, tamanhoPalavraFormada * sizeof(char));
+                
                 if (temp == NULL) {
                     printf("Erro ao realocar memória.\n");
                     fclose(arqP);
@@ -410,34 +406,18 @@ void recebeArqPalavrasChave(tabela **tabelaHash, no **listaPalavra, char *arqPal
                 palavraFormada = temp;
             }
 
-            if ((caractereAtual == '!' || caractereAtual == '.' || caractereAtual == ',' || caractereAtual == ';' 
-                || caractereAtual == ':' || caractereAtual == '@' || caractereAtual == '#' || caractereAtual == '$'
-                || caractereAtual == '%' || caractereAtual == '&' || caractereAtual == '*' || caractereAtual == '(' 
-                || caractereAtual == ')') && j <= 1) {
-                possivelFinal = indice;
-                j++;
-            }
-
             palavraFormada[indice] = caractereAtual;
             indice++;
 
         } else if (indice > 0) {
-            if (palavraFormada[indice - 1] == '!' || palavraFormada[indice - 1] == '.' || palavraFormada[indice - 1] == ',' || palavraFormada[indice - 1] == ';' 
-                || palavraFormada[indice - 1] == ':' || palavraFormada[indice - 1] == '@' || palavraFormada[indice - 1] == '#' || palavraFormada[indice - 1] == '$'
-                || palavraFormada[indice - 1] == '%' || palavraFormada[indice - 1] == '&' || palavraFormada[indice - 1] == '*' || palavraFormada[indice - 1] == '(' 
-                || palavraFormada[indice - 1] == ')') {
-                palavraFormada[possivelFinal] = '\0';
-                posicaoInicio = caracteres - indice;
-                inserirPalavra((*tabelaHash), palavraFormada, tamanhoTabela, posicaoInicio, possivelFinal);
-                insereOrdPalavra(listaPalavra, palavraFormada, possivelFinal);
-            } else {
-                palavraFormada[indice] = '\0';
-                posicaoInicio = caracteres - indice;
-                inserirPalavra((*tabelaHash), palavraFormada, tamanhoTabela, posicaoInicio, indice);
-                insereOrdPalavra(listaPalavra, palavraFormada, indice);
-            }
+
+            palavraFormada[indice] = '\0';
+            posicaoInicio = caracteres - indice;
+            
+            inserirPalavra((*tabelaHash), palavraFormada, tamanhoTabela, posicaoInicio, indice);
+            insereOrdPalavra(listaPalavra, palavraFormada, indice);
+
             indice = 0;
-            j = 0;
         }
         caracteres++;
     }
@@ -445,6 +425,7 @@ void recebeArqPalavrasChave(tabela **tabelaHash, no **listaPalavra, char *arqPal
     if (indice > 0) {
         palavraFormada[indice] = '\0';
         posicaoInicio = caracteres - indice;
+        
         inserirPalavra((*tabelaHash), palavraFormada, tamanhoTabela, posicaoInicio, indice);
         insereOrdPalavra(listaPalavra, palavraFormada, indice);
     }
@@ -452,11 +433,12 @@ void recebeArqPalavrasChave(tabela **tabelaHash, no **listaPalavra, char *arqPal
     fclose(arqP);
 }
 
-void recebeArqTexto(tabela **tabelaHash, char *arqTexto, char *palavraFormada, int caractereAtual, int possivelFinal, int indice, int tamanhoTabela, 
-    int caracteres, int tamanhoPalavraFormada, int j) {
+void recebeArqTexto(tabela **tabelaHash, char *arqTexto, char *palavraFormada, int caractereAtual, int indice, int tamanhoTabela, 
+    int caracteres, int tamanhoPalavraFormada) {
     
     int posicaoInicio = 0;
-    
+    char *temp;
+
     printf("Digite o nome do arquivo a ser lido: ");
     scanf("%s", arqTexto);
 
@@ -467,10 +449,13 @@ void recebeArqTexto(tabela **tabelaHash, char *arqTexto, char *palavraFormada, i
     }
 
     while ((caractereAtual = fgetc(arqT)) != EOF) {
-        if (caractereAtual != ' ') {
+        if (caractereAtual != ' ' && caractereAtual != '!' && caractereAtual != '.' && caractereAtual != ',' && caractereAtual != ';' 
+            && caractereAtual != ':' && caractereAtual != '(' && caractereAtual != ')'){
             if (indice >= tamanhoPalavraFormada - 1) {
+                
                 tamanhoPalavraFormada *= 2;
                 char *temp = (char *)realloc(palavraFormada, tamanhoPalavraFormada * sizeof(char));
+                
                 if (temp == NULL) {
                     printf("Erro ao realocar memória.\n");
                     fclose(arqT);
@@ -479,31 +464,16 @@ void recebeArqTexto(tabela **tabelaHash, char *arqTexto, char *palavraFormada, i
                 palavraFormada = temp;
             }
 
-            if ((caractereAtual == '!' || caractereAtual == '.' || caractereAtual == ',' || caractereAtual == ';' 
-                || caractereAtual == ':' || caractereAtual == '@' || caractereAtual == '#' || caractereAtual == '$'
-                || caractereAtual == '%' || caractereAtual == '&' || caractereAtual == '*' || caractereAtual == '(' 
-                || caractereAtual == ')') && j <= 1) {
-                possivelFinal = indice;
-                j++;
-            }
-
             palavraFormada[indice] = caractereAtual;
             indice++;
         } else if (indice > 0) {
-            if (palavraFormada[indice - 1] == '!' || palavraFormada[indice - 1] == '.' || palavraFormada[indice - 1] == ',' || palavraFormada[indice - 1] == ';' 
-                || palavraFormada[indice - 1] == ':' || palavraFormada[indice - 1] == '@' || palavraFormada[indice - 1] == '#' || palavraFormada[indice - 1] == '$'
-                || palavraFormada[indice - 1] == '%' || palavraFormada[indice - 1] == '&' || palavraFormada[indice - 1] == '*' || palavraFormada[indice - 1] == '(' 
-                || palavraFormada[indice - 1] == ')') {
-                palavraFormada[possivelFinal] = '\0';
-                posicaoInicio = caracteres - indice;
-                buscarPalavra((*tabelaHash), palavraFormada, tamanhoTabela, posicaoInicio, possivelFinal);
-            } else {
-                palavraFormada[indice] = '\0';
-                posicaoInicio = caracteres - indice;
-                buscarPalavra((*tabelaHash), palavraFormada, tamanhoTabela, posicaoInicio, indice);
-            }
+            
+            palavraFormada[indice] = '\0';
+            posicaoInicio = caracteres - indice;
+           
+            buscarPalavra((*tabelaHash), palavraFormada, tamanhoTabela, posicaoInicio, indice);
+            
             indice = 0;
-            j = 0;
         }
         caracteres++;
     }
@@ -511,26 +481,18 @@ void recebeArqTexto(tabela **tabelaHash, char *arqTexto, char *palavraFormada, i
     if (indice > 0) {
         palavraFormada[indice] = '\0';
         posicaoInicio = caracteres - indice;
+        
         buscarPalavra((*tabelaHash), palavraFormada, tamanhoTabela, posicaoInicio, indice);
     }
 
     fclose(arqT);
 }
 
-void converterParaISO8859_1(const char *arquivoEntrada, const char *arquivoSaida) {
-    FILE *entrada = fopen(arquivoEntrada, "r");
-    FILE *saida = fopen(arquivoSaida, "w");
+void converterAqr(const char *arquivo) {
+    FILE *arquivoPtr = fopen(arquivo, "r+");
 
-    if (!entrada || !saida) {
+    if (arquivoPtr == NULL) {
         perror("Erro ao abrir arquivo");
-        exit(EXIT_FAILURE);
-    }
-
-    iconv_t conversor = iconv_open("ISO-8859-1", "UTF-8");
-    if (conversor == (iconv_t)-1) {
-        perror("Erro ao abrir conversor de encoding");
-        fclose(entrada);
-        fclose(saida);
         exit(EXIT_FAILURE);
     }
 
@@ -538,32 +500,46 @@ void converterParaISO8859_1(const char *arquivoEntrada, const char *arquivoSaida
     char bufferSaida[1024];
     size_t tamanhoEntrada, tamanhoSaida;
 
-    while (fgets(bufferEntrada, sizeof(bufferEntrada), entrada)) {
-        char *entradaPtr = bufferEntrada;
-        char *saidaPtr = bufferSaida;
+    char *entradaAux;
+    char *saidaAux;
+
+    long posicaoInicial = 0;
+
+    iconv_t conversor = iconv_open("ISO-8859-1", "UTF-8");
+
+    if (conversor == (iconv_t)-1) {
+        perror("Erro ao abrir conversor de encoding");
+        fclose(arquivoPtr);
+        exit(EXIT_FAILURE);
+    }
+
+    while (fgets(bufferEntrada, sizeof(bufferEntrada), arquivoPtr)) {
+        
+        entradaAux = bufferEntrada;
+        saidaAux = bufferSaida;
+        
         tamanhoEntrada = strlen(bufferEntrada);
         tamanhoSaida = sizeof(bufferSaida);
 
-        if (iconv(conversor, &entradaPtr, &tamanhoEntrada, &saidaPtr, &tamanhoSaida) == (size_t)-1) {
+        if (iconv(conversor, &entradaAux, &tamanhoEntrada, &saidaAux, &tamanhoSaida) == (size_t)-1) {
+            
             perror("Erro ao converter encoding");
             iconv_close(conversor);
-            fclose(entrada);
-            fclose(saida);
+            
+            fclose(arquivoPtr);
             exit(EXIT_FAILURE);
         }
 
-        fwrite(bufferSaida, 1, sizeof(bufferSaida) - tamanhoSaida, saida);
+        fseek(arquivoPtr, posicaoInicial, SEEK_SET);
+
+        fwrite(bufferSaida, 1, sizeof(bufferSaida) - tamanhoSaida, arquivoPtr);
+
+        posicaoInicial = ftell(arquivoPtr);
     }
 
     iconv_close(conversor);
-    fclose(entrada);
-    fclose(saida);
+    fclose(arquivoPtr);
 }
-
-void menu(){
-
-}
-
 
 int main(){
     tabela *tabelaHash;
@@ -579,18 +555,18 @@ int main(){
 
     criaTabela(tabelaHash, tamanhoTabela);  
 
-     //setlocale(LC_ALL, "Portuguese_Brazil");
+    setlocale(LC_ALL, "Portuguese_Brazil");
 
     recebeArqPalavrasChave(&tabelaHash, &listaPalavra, arqPalavrasChave, palavraFormada, caractereAtual, indice, 
-    tamanhoPalavraFormada, possivelFinal, caracteres, tamanhoTabela, j);
+    tamanhoPalavraFormada, caracteres, tamanhoTabela);
 
-    recebeArqTexto(&tabelaHash, arqTexto, palavraFormada, caractereAtual, possivelFinal, indice, tamanhoTabela, 
-    caracteres, tamanhoPalavraFormada, j);
+    recebeArqTexto(&tabelaHash, arqTexto, palavraFormada, caractereAtual, indice, tamanhoTabela, 
+    caracteres, tamanhoPalavraFormada);
 
     aumentaTabela(&tabelaHash, listaPalavra, &tamanhoTabela);   
     
     // exibirLista(listaPalavra);
-    //imprimirTabela(tabelaHash, tamanhoTabela, 10);
+    //imprimirTabela(tabelaHash, tamanhoTabela;
 
     imprimeOrdTabela(tabelaHash, listaPalavra, tamanhoTabela);
 

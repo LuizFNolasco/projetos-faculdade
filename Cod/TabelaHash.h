@@ -3,287 +3,265 @@
 #include<string.h>
 #include <ctype.h>
 #include <locale.h>
-//#include "iconv.h"
+#include <iconv.h>
 
-//
+//Estrutura responsavel por formar uma lista encadeada de após quantos caracteres a palavra aparece
 typedef struct aparicoes{
     int tamanho;
     struct aparicoes *prox;
 }aparicoes;
 
-//
+//Estrutura responsavel pela tabela hash, armezana a palavra chave, uma versão dela com e sem acento e uma lista encadeada de após quantos caracteres a palavra apareceu
 typedef struct tabela{
     char *chave;
     char *chaveSemAcento;
     aparicoes *Lista;
 }tabela;
 
-//
+//Estrutura responsavel por formar uma lista encadeada de nó's das palavras chaves sem acento para realizar a ordenação de forma alfabetica
 typedef struct no{
     char *palavraNo;
     struct no *prox;
 }no;
 
 /*
-FunÃ§Ã£o:
-
-DescriÃ§Ã£o:
-
+Função:
+    criaTabela
+Descrição:
+    Responsavel por inicializar os campos da estrutura da tabela hash
 Entrada:
-
+    tabela *tabelaHash: um ponteiro para o vetor de registro da estrutura tabela
+    int tamanhoTabela: o atual tamanho da tabela hash
 Saida:
-
+    void
 */
 void criaTabela(tabela *tabelaHash, int tamanhoTabela);
 
 /*
-FunÃ§Ã£o:
-
-DescriÃ§Ã£o:
-
+Função:
+    excluirTabela
+Descrição:
+    Responsavel por excluir a tabela, realizando uma serie de free's que irão liberar a memoria alocada para a palavra chave com e sem acento e a lista encadeada que cada palavra possui
 Entrada:
-
+    tabela *tabelaHash: um ponteiro para o vetor de registro da estrutura tabela
+    int tamanho: o atual tamanho da tabela
 Saida:
-
+    void
 */
 void excluirTabela(tabela *tabelaHash, int tamanhoTabela);
 
 /*
-FunÃ§Ã£o:
-
-DescriÃ§Ã£o:
-
+Função:
+    *criaLista
+Descrição:
+    Cria um nó da estrutura aparicoes e inicializa o proprio com o numero de após quantos caracteres a palavra aparece
 Entrada:
-
+    int caracteres: o numero de após quantos caracteres a palavra aparece
 Saida:
-
+    Um nó com dados da estrutura aparicoes 
 */
 aparicoes *criaLista(int caracteres);
 
 /*
-FunÃ§Ã£o:
-
-DescriÃ§Ã£o:
-
+Função:
+    *insereFimAparicoes
+Descrição:
+    Insere o novo nó no fim da lista encadeada de aparições da palavra
 Entrada:
-
+    aparicoes *listaAparicoes: ponteiro para a lista de após quantos caracteres a palavra aparece
+    int caracteres: o numero de após quantos caracteres a palavra aparece
 Saida:
-
+    A lista encadeada atualizada em relação da quantidade de vezes que a palavra aparece e após quantos caracteres a palavra aparece
 */
 aparicoes *insereFimAparicoes(aparicoes *listaAparicoes, int caracteres);
 
 /*
-FunÃ§Ã£o:
-
-DescriÃ§Ã£o:
-
+Função:
+    *AjeitaPalavra
+Descrição:
+    Retira todos os caracteres acentuados, maiusculos ou especiais
 Entrada:
-
+    char *novaPalavra: ponteiro para a palavra que será mudada
+    int tamanhoPalavra: o tamanho da palavra que será mudada
 Saida:
-
+    A nova palavra, sem caracteres acentuados, maiusculos ou especiais
 */
 char *ajeitaPalavra(char *novaPalavra, int tamanhoPalavra);
 
 /*
-FunÃ§Ã£o:
-
-DescriÃ§Ã£o:
-
+Função:
+    funcaoHash
+Descrição:
+    Responsavel por calcular o indice em que a palavra se encontrará na tabela hash
 Entrada:
-
+    int tamanhoPalavra: o tamanho da palavra
+    int tamanhoTabela: o atual tamanho da tabela
 Saida:
-
+    Um inteiro com o codigo gerado após o calculo feito com a palavra
 */
 int funcaoHash(int tamanhoPalavra, int tamanhoTabela);
 
 /*
-FunÃ§Ã£o:
-
-DescriÃ§Ã£o:
-
+Função:
+    buscaPalavra
+Descrição:
+    Busca a palavra na tabela hash, caso ache a palavra insere na lista encadeada o numero de caracteres que aparecem após a ocorrencia da palavra
 Entrada:
-
+    tabela *tabelaHash: um ponteiro para o vetor de registro da estrutura tabela
+    char *palavra: a palavra que será buscada na tabela
+    int tamanhoTabela: o atual tamanho da tabela
+    int caracteres: após quantos caracteres a palavra aparece
+    int tamanhoPalavra: o tamanho da palavra que será buscada
 Saida:
-
+    Um inteiro indicado se a palavra está ou não na tabela (1 ou 0 respectivamente)
 */
 int buscarPalavra(tabela *tabelaHash, char *palavra, int tamanhoTabela, int caracteres, int tamanhoPalavra);
 
 /*
-FunÃ§Ã£o:
-
-DescriÃ§Ã£o:
-
+Função:
+    inserirPalavra
+Descrição:
+    Insere a palavra na tabela hash de acordo com o seu codigo hash gerado pela funcaoHash, usa a buscaPalavra para saber se a palavra está ou não na tabela
 Entrada:
-
+    tabela *tabelaHash: um ponteiro para o vetor de registro da estrutura 
+    char *palavra: ponteiro para a palavra que será inserida na tabela hash
+    int tamanhoTabela: atual tamanho da tabela hash
+    int caracteres: após quantos caracteres a palavra aparece
+    int tamanhoPalavra: tamanho da palavra
 Saida:
-
+    void
 */
 void inserirPalavra(tabela *tabelaHash, char *palavra, int tamanhoTabela, int caracteres, int tamanhoPalavra);
 
 /*
-FunÃ§Ã£o:
-
-DescriÃ§Ã£o:
-
+Função:
+    imprimirTabela
+Descrição:
+    Imprime toda a tabela hash, mostrando a palavra e a posição em que se encontra
 Entrada:
-
+    tabela *tabelaHash: ponteiro para o vetor de registros da estrutura tabela
+    int tamanhoTabela: atual tamanho da tabela
 Saida:
-
+    void
 */
-void imprimirTabela(tabela *tabelaHash, int tamanhoTabela, int tamanhoPalavra);
+void imprimirTabela(tabela *tabelaHash, int tamanhoTabela);
 
 /*
-FunÃ§Ã£o:
-
-DescriÃ§Ã£o:
-
+Função:
+    *criaNo
+Descrição:
+    Cria um nó da versão da palavra sem acentos, letras maiusculas e caracteres especiais
 Entrada:
-
+    char *palavra: a palavra que será inserida no nó
+    int tamanhoPalavra: tamanho da palavra
 Saida:
-
+    Um nó com a versão da palavra sem acentos, caracteres especiais e letras maiusculas
 */
 no *criaNo(char *palavra, int tamanhoPalavra);
 
 /*
-FunÃ§Ã£o:
-
-DescriÃ§Ã£o:
-
+Função:
+    insereOrdPalavra
+Descrição:
+    Transforma a palavra em uma versão sem acentos, caracteres especiais e letras maiusculas (com ajuda da função "ajeitaPalavra")e insere na lista de palavras de forma ordenada (com ajuda da função "strcmp")
 Entrada:
-
+    no **listaPalavra: ponteiro para a lista de palavras sem acentos, caracteres especiais e letras maiusculas
+    char *palavra: ponteiro para a palavra que será inserida na lista
+    int tamanhoPalavra: tamanho da palavra
 Saida:
-
+    void
 */
 void insereOrdPalavra(no **listaPalavra, char *palavra, int tamanhoPalavra);
 
 /*
-FunÃ§Ã£o:
-
-DescriÃ§Ã£o:
-
+Função:
+    liberaListaPalavras
+Descrição:
+    Liberar o espaço da memoria guardado para a lista de palavras ordenadas e sem acento
 Entrada:
-
+    no **listaPalavras: ponteiro para a lista de palavras sem acento, caracteres especiais e letras maiusculas
 Saida:
-
-*/
-void exibirLista(no *listaPalavras);
-
-/*
-FunÃ§Ã£o:
-
-DescriÃ§Ã£o:
-
-Entrada:
-
-Saida:
-
+    void
 */
 void liberaListaPalavra(no **listaPalavras);
 
 /*
-FunÃ§Ã£o:
-
-DescriÃ§Ã£o:
-
+Função:
+    imprimeOrdTabela
+Descrição:
+    Imprime as palavras chaves e a após quantos caracteres é a sua ocorrencia
 Entrada:
-
+    tabela *tabelaHash: ponteiro para o vetor de registros da estrutura tabela
+    no *listaPalavras: lista encadeada ordenada com todas as palavras chave sem acento, caracteres especiais e letras maiusculas
 Saida:
-
+    void
 */
 void imprimeOrdTabela(tabela *tabelaHash, no *listaPalavras, int tamanhoTabela);
 
 /*
-FunÃ§Ã£o:
-
-DescriÃ§Ã£o:
-
+Função:
+    aumentaTabela
+Descrição:
+    Aumenta o numero da tabela para o dobro do atual
 Entrada:
-
+    tabela **tabelaHash: ponteiro de ponteiro para o vetor de registros da estrutura tabela
+    no *listaPalavras: ponteiro para a lista encadeada de palavras sem acento, caracteres especiais e letras maiusculas
+    int *tamanhoTabela: ponteiro para o tamanho da tabela
 Saida:
-
+    void
 */
 void aumentaTabela(tabela **tabelaHash, no *listaPalavras, int *tamanhoTabela);
 
 /*
-FunÃ§Ã£o:
-
-DescriÃ§Ã£o:
-
+Função:
+    recebeArqPalavrasChave
+Descrição:
+    Abre o arquivo de palavras chave, inserindo as versões com e sem acentos, caracteres especiais e letras maiusculas na tabela hash e a versão sem acentos, caracteres especiais e letras maiusculas na lista encadeada
 Entrada:
-
+    tabela **tabelaHash: ponteiro para o ponteiro para o vetor de registros da estrutura tabela
+    no **listaPalavras: ponteiro de ponteiro para a lista encadeada com as palavras sem acento, caracteres especiais e letras maiusculas
+    char *arqPalavrasChave: nome do arquivo que o usuario deseja abrir
+    char *palavraFormada: ponteiro para a junção de caracteres que formam uma possivel palavra chave
+    int caractereAtual: atual caractere lido do arquivo
+    int indice: posição que o caractere lido irá ocupar na palavraFormada
+    int tamanhoPalavraFormada: quantidade de caracteres lidos do inicio ao fim da palavra
+    int caracteres: numero de caracteres lidos no arquivo de palavra chave
+    int tamanhoTabela: atual tamanho da tabela hash
 Saida:
-
+    void
 */
 void recebeArqPalavrasChave(tabela **tabelaHash, no **listaPalavra, char *arqPalavrasChave, char *palavraFormada, int caractereAtual, int indice, 
-    int tamanhoPalavraFormada, int possivelFinal, int caracteres, int tamanhoTabela, int j);
+    int tamanhoPalavraFormada, int caracteres, int tamanhoTabela);
 
 /*
-FunÃ§Ã£o:
-
-DescriÃ§Ã£o:
-
+Função:
+    recebeArqTexto
+Descrição:
+    Lê o arquivo de texto para contabilizar a ocorrencia das palavras chaves e após quantos caracteres cada uma delas aparece e insere na tabela hash os dois dados citados
 Entrada:
-
+    tabela **tabelaHash: ponteiro para o ponteiro do vetor de registros da estrutura tabela
+    char *arqTexto: ponteiro para o nome do arquivo de texto que será aberto
+    char *palavraFormada: ponteiro para a palavra formada pela junção de caracteres lidos do arquivo de texto
+    int caractereAtual: atual caractere lido do arquivo de texto
+    int indice: posição que o caractere lido irá ocupar na palavraFormada
+    int tamanhoTabela: atual tamanho da tabela hash
+    int caracteres: quantidade de caracteres lidos do arquivo texto
+    int tamanhoPalavraFormada: tamanho da palavra encontrada no arquivo texto
 Saida:
-
+    void
 */
-void recebeArqTexto(tabela **tabelaHash, char *arqTexto, char *palavraFormada, int caractereAtual, int possivelFinal, int indice, int tamanhoTabela, 
-    int caracteres, int tamanhoPalavraFormada, int j);
+void recebeArqTexto(tabela **tabelaHash, char *arqTexto, char *palavraFormada, int caractereAtual, int indice, int tamanhoTabela, 
+    int caracteres, int tamanhoPalavraFormada);
 
 /*
-FunÃ§Ã£o:
-
-DescriÃ§Ã£o:
-
+Função:
+    converterArq
+Descrição:
+    Converte um arquivo para iso 8859-1
 Entrada:
-
+    const char *arquivoEntrada: arquivo que terá o encoding alterado
+    const char *arquivoSaida: arquivo com o encoding alterado
 Saida:
-
+    void
 */
-void converterParaISO8859_1(const char *arquivoEntrada, const char *arquivoSaida);
-
-/*
-FunÃ§Ã£o:
-
-DescriÃ§Ã£o:
-
-Entrada:
-
-Saida:
-
-*/
-void menu();
-
-
-/*
-// Converte o encoding do arquivo lido para ISO-8859-1
-char *convertEncoding(const char *input, const char *fromEncoding, const char *toEncoding) {
-    iconv_t cd = iconv_open(toEncoding, fromEncoding);
-    if (cd == (iconv_t)-1) {
-        perror("iconv_open");
-        return NULL;
-    }
-
-    size_t inBytesLeft = strlen(input);
-    size_t outBytesLeft = inBytesLeft * 2; // Buffer de saÃ­da maior para garantir espaÃ§o suficiente
-    char *output = (char *)malloc(outBytesLeft);
-    if (output == NULL) {
-        perror("malloc");
-        iconv_close(cd);
-        return NULL;
-    }
-
-    char *inBuf = (char *)input;
-    char *outBuf = output;
-    if (iconv(cd, &inBuf, &inBytesLeft, &outBuf, &outBytesLeft) == (size_t)-1) {
-        perror("iconv");
-        free(output);
-        iconv_close(cd);
-        return NULL;
-    }
-
-    *outBuf = '\0'; // Adicionar o caractere nulo ao final da string convertida
-    iconv_close(cd);
-    return output;
-}
-*/
+void converterArq(const char *arquivoEntrada, const char *arquivoSaida);
