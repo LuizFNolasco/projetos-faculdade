@@ -492,8 +492,9 @@ void recebeArqPalavrasChave(tabela **tabelaHash, no **listaPalavra, char *arqPal
     //Loop para percorrer o arquivo de palavras chave
     while ((caractereAtual = fgetc(arqP)) != EOF) {
         //Caso não tenha um espaço, virgula ou algum tipo de pontuação insere o caracter na palavra
-        if (caractereAtual != ' ' && caractereAtual != '!' && caractereAtual != '.' && caractereAtual != ',' && caractereAtual != ';' 
-            && caractereAtual != ':' && caractereAtual != '(' && caractereAtual != ')') {
+        if (caractereAtual != ' ' && caractereAtual != '!' && caractereAtual != '?' && caractereAtual != '.' && caractereAtual != ',' 
+            && caractereAtual != ';' && caractereAtual != ':' && caractereAtual != '(' && caractereAtual != ')' && caractereAtual != '['
+            && caractereAtual != ']' && caractereAtual != '{' && caractereAtual != '}') {
             
             //Caso o indice esteja muito proximo do tamanho maximo da palavraFormada é feito uma realocação  
             if (indice >= tamanhoPalavraFormada - 1) {
@@ -556,8 +557,9 @@ void recebeArqTexto(tabela **tabelaHash, char *arqTexto, char *palavraFormada, i
     }
 
     while ((caractereAtual = fgetc(arqT)) != EOF) {
-        if (caractereAtual != ' ' && caractereAtual != '!' && caractereAtual != '.' && caractereAtual != ',' && caractereAtual != ';' 
-            && caractereAtual != ':' && caractereAtual != '(' && caractereAtual != ')') {
+        if (caractereAtual != ' ' && caractereAtual != '!' && caractereAtual != '?' && caractereAtual != '.' && caractereAtual != ',' 
+            && caractereAtual != ';' && caractereAtual != ':' && caractereAtual != '(' && caractereAtual != ')' && caractereAtual != '['
+            && caractereAtual != ']' && caractereAtual != '{' && caractereAtual != '}') {
 
             if (indice >= tamanhoPalavraFormada - 1) {
                 

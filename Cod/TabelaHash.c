@@ -395,8 +395,9 @@ void recebeArqPalavrasChave(tabela **tabelaHash, no **listaPalavra, char *arqPal
     }
 
     while ((caractereAtual = fgetc(arqP)) != EOF) {
-        if (caractereAtual != ' ' && caractereAtual != '!' && caractereAtual != '.' && caractereAtual != ',' && caractereAtual != ';' 
-            && caractereAtual != ':' && caractereAtual != '(' && caractereAtual != ')') {
+        if (caractereAtual != ' ' && caractereAtual != '!' && caractereAtual != '?' && caractereAtual != '.' && caractereAtual != ',' 
+            && caractereAtual != ';' && caractereAtual != ':' && caractereAtual != '(' && caractereAtual != ')' && caractereAtual != '['
+            && caractereAtual != ']' && caractereAtual != '{' && caractereAtual != '}') {
 
             if (indice >= tamanhoPalavraFormada - 1) {
 
@@ -454,8 +455,9 @@ void recebeArqTexto(tabela **tabelaHash, char *arqTexto, char *palavraFormada, i
     }
 
     while ((caractereAtual = fgetc(arqT)) != EOF) {
-        if (caractereAtual != ' ' && caractereAtual != '!' && caractereAtual != '.' && caractereAtual != ',' && caractereAtual != ';' 
-            && caractereAtual != ':' && caractereAtual != '(' && caractereAtual != ')'){
+        if (caractereAtual != ' ' && caractereAtual != '!' && caractereAtual != '?' && caractereAtual != '.' && caractereAtual != ',' 
+            && caractereAtual != ';' && caractereAtual != ':' && caractereAtual != '(' && caractereAtual != ')' && caractereAtual != '['
+            && caractereAtual != ']' && caractereAtual != '{' && caractereAtual != '}'){
             if (indice >= tamanhoPalavraFormada - 1) {
                 
                 tamanhoPalavraFormada *= 2;
