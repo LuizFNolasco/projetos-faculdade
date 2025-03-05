@@ -471,128 +471,134 @@ void aumentaTabela(tabela **tabelaHash, no *listaPalavras, int *tamanhoTabela) {
     *tamanhoTabela = novoTamanho;
 }
 
-//Abre o arquivo de palavras chave e insere tanto na lista encadeada quando na tabela
-void recebeArqPalavrasChave(tabela **tabelaHash, no **listaPalavra, char *arqPalavrasChave, char *palavraFormada, int caractereAtual, int indice, 
+void recebeArqPalavrasChave(tabela **tabelaHash, no **listaPalavra, char *arqPalavrasChave, char *palavraFormada, int caractereAtual, int indice,
     int tamanhoPalavraFormada, int caracteres, int tamanhoTabela) {
     
     int posicaoInicio = 0;
     char *temp;
+    int temLetra = 0;
 
     printf("Digite o nome do arquivo de palavras chaves: ");
     scanf("%s", arqPalavrasChave);
 
-    //Abertura do arquvio para leitura
     FILE *arqP = fopen(arqPalavrasChave, "r");
-
     if (arqP == NULL) {
         printf("Erro ao tentar abrir o arquivo.\n");
         return;
     }
 
-    //Loop para percorrer o arquivo de palavras chave
     while ((caractereAtual = fgetc(arqP)) != EOF) {
-        //Caso não tenha um espaço, virgula ou algum tipo de pontuação insere o caracter na palavra
-        if (caractereAtual != ' ' && caractereAtual != '!' && caractereAtual != '?' && caractereAtual != '.' && caractereAtual != ',' 
-            && caractereAtual != ';' && caractereAtual != ':' && caractereAtual != '(' && caractereAtual != ')' && caractereAtual != '['
-            && caractereAtual != ']' && caractereAtual != '{' && caractereAtual != '}') {
-            
-            //Caso o indice esteja muito proximo do tamanho maximo da palavraFormada é feito uma realocação  
-            if (indice >= tamanhoPalavraFormada - 1) {
-                
-                tamanhoPalavraFormada *= 2;
-                temp = (char *)realloc(palavraFormada, tamanhoPalavraFormada * sizeof(char));
-                
-                if (temp == NULL) {
-                    printf("Erro ao realocar memória.\n");
-                    fclose(arqP);
-                    return;
+        unsigned char c = (unsigned char)caractereAtual;
+
+        switch(c) {
+            case 32: case 33: case 40: case 41: case 44: case 46: case 58: case 59: case 63: case 91: case 93: case 123: case 125:
+
+                if (indice > 0 && temLetra > 0) {
+                    palavraFormada[indice] = '\0';
+                    posicaoInicio = caracteres - indice;
+                    
+                    inserirPalavra((*tabelaHash), palavraFormada, tamanhoTabela, posicaoInicio, indice);
+                    insereOrdPalavra(listaPalavra, palavraFormada, indice);
                 }
-                palavraFormada = temp;
-            }
-            palavraFormada[indice] = caractereAtual; //Insere o caractere lido na palavra que está se formando
-            indice++; //Quantidade de caracteres que a palavra possui
+                
+                indice = 0;
+                temLetra = 0;
+                caracteres++;
+                break;
 
-        } else if (indice > 0) {
+            default:
+                if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= 192 && c <= 255)) {
+                    temLetra = 1;
+                }
 
-            palavraFormada[indice] = '\0'; //Anular o ultimo caracter já que a palavra pode possuir resquicios de outras palavras formadas anteriormente
-            posicaoInicio = caracteres - indice; // Posição de início da palavra
-            //Insere a palavra formada na tabela hash
-            inserirPalavra((*tabelaHash), palavraFormada, tamanhoTabela, posicaoInicio, indice); 
-            //Insere a palavra formada na lista encadeada de palavras sem acentos, caracteres especiais e letras maiusculas
-            insereOrdPalavra(listaPalavra, palavraFormada, indice);
+                if (indice >= tamanhoPalavraFormada - 1) {
+                    temp = (char *)realloc(palavraFormada, (tamanhoPalavraFormada * 2) * sizeof(char));
+                    if (temp == NULL) {
+                        printf("Erro ao realocar memória.\n");
+                        fclose(arqP);
+                        return;
+                    }
+                    palavraFormada = temp;
+                    tamanhoPalavraFormada *= 2;
+                }
 
-            indice = 0; //Reinicia o contador de caracteres da palavra
-            j = 0;
+                palavraFormada[indice] = caractereAtual;
+                indice++;
+                caracteres++;
+                break;
         }
-        caracteres++; //Incrementa o contador de quantos caracteres foram lidos
     }
 
-    if (indice > 0) {
+    if (indice > 0 && temLetra > 0) {
         palavraFormada[indice] = '\0';
         posicaoInicio = caracteres - indice;
         
         inserirPalavra((*tabelaHash), palavraFormada, tamanhoTabela, posicaoInicio, indice);
         insereOrdPalavra(listaPalavra, palavraFormada, indice);
     }
-    //Fecha o arquivo de palavras chave
+
     fclose(arqP);
 }
 
-//Abre o arquivo de texto e insere após quantos caracteres cada palavra aparece
 void recebeArqTexto(tabela **tabelaHash, char *arqTexto, char *palavraFormada, int caractereAtual, int indice, int tamanhoTabela, 
     int caracteres, int tamanhoPalavraFormada) {
     
     int posicaoInicio = 0;
     char *temp;
-    
+    int temLetra = 0;
+
     printf("Digite o nome do arquivo a ser lido: ");
     scanf("%s", arqTexto);
 
-    //Abre o arquivo de texto para leitura
     FILE *arqT = fopen(arqTexto, "r");
-
     if (arqT == NULL) {
         printf("Erro ao tentar abrir o arquivo.\n");
         return;
     }
 
     while ((caractereAtual = fgetc(arqT)) != EOF) {
-        if (caractereAtual != ' ' && caractereAtual != '!' && caractereAtual != '?' && caractereAtual != '.' && caractereAtual != ',' 
-            && caractereAtual != ';' && caractereAtual != ':' && caractereAtual != '(' && caractereAtual != ')' && caractereAtual != '['
-            && caractereAtual != ']' && caractereAtual != '{' && caractereAtual != '}') {
+        unsigned char c = (unsigned char)caractereAtual;
 
-            if (indice >= tamanhoPalavraFormada - 1) {
-                
-                tamanhoPalavraFormada *= 2;
-                temp = (char *)realloc(palavraFormada, tamanhoPalavraFormada * sizeof(char));
-                
-                if (temp == NULL) {
-                    printf("Erro ao realocar memória.\n");
-                    fclose(arqT);
-                    return;
+        switch(c) {
+            case 32: case 33: case 40: case 41: case 44: case 46: case 58: case 59: case 63: case 91: case 93: case 123: case 125:
+
+                if (indice > 0 && temLetra > 0) {
+                    palavraFormada[indice] = '\0';
+                    posicaoInicio = caracteres - indice;
+                    buscarPalavra((*tabelaHash), palavraFormada, tamanhoTabela, posicaoInicio, indice);
                 }
-                palavraFormada = temp;
-            }
+                
+                indice = 0;
+                temLetra = 0;
+                caracteres++;
+                break;
 
-            palavraFormada[indice] = caractereAtual;
-            indice++;
-        } else if (indice > 0) {
-            
-            palavraFormada[indice] = '\0';
-            posicaoInicio = caracteres - indice;
-            
-            //Como a tabela já está formada é feito uma busca, que inclui a inserção de após quantos caracteres a palavra ocorre
-            buscarPalavra((*tabelaHash), palavraFormada, tamanhoTabela, posicaoInicio, indice);
+            default:
+                if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c >= 192 && c <= 255)) {
+                    temLetra = 1;
+                }
 
-            indice = 0;
+                if (indice >= tamanhoPalavraFormada - 1) {
+                    temp = (char *)realloc(palavraFormada, (tamanhoPalavraFormada * 2) * sizeof(char));
+                    if (temp == NULL) {
+                        printf("Erro ao realocar memória.\n");
+                        fclose(arqT);
+                        return;
+                    }
+                    palavraFormada = temp;
+                    tamanhoPalavraFormada *= 2;
+                }
+
+                palavraFormada[indice] = caractereAtual;
+                indice++;
+                caracteres++;
+                break;
         }
-        caracteres++;
     }
 
-    if (indice > 0) {
+    if (indice > 0 && temLetra > 0) {
         palavraFormada[indice] = '\0';
         posicaoInicio = caracteres - indice;
-        
         buscarPalavra((*tabelaHash), palavraFormada, tamanhoTabela, posicaoInicio, indice);
     }
 

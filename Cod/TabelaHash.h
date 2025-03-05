@@ -88,7 +88,7 @@ aparicoes *insereFimAparicoes(aparicoes *listaAparicoes, int caracteres);
 Função:
     *AjeitaPalavra
 Descrição:
-    Retira todos os caracteres acentuados, maiúsculos ou especiais
+    Retira todos os caracteres acentuados, maiúsculos, especiais e números da palavra
 Entrada:
     char *novaPalavra: ponteiro para a palavra que será mudada
     int tamanhoPalavra: o tamanho da palavra que será mudada
@@ -225,7 +225,8 @@ void aumentaTabela(tabela **tabelaHash, no *listaPalavras, int *tamanhoTabela);
 Função:
     recebeArqPalavrasChave
 Descrição:
-    Abre o arquivo de palavras-chave, inserindo as versões com e sem acentos, caracteres especiais e letras maiúsculas na tabela hash e a versão sem acentos, caracteres especiais e letras maiúsculas na lista encadeada
+    Abre o arquivo de palavras-chave, inserindo a versão da palavra normal e a versão sem acentos, caracteres especiais, letras maiúsculas e números 
+    na tabela hash e a versão sem acentos, caracteres especiais e letras maiúsculas na lista encadeada
 Entrada:
     tabela **tabelaHash: ponteiro para o ponteiro do vetor de registros da estrutura tabela
     no **listaPalavras: ponteiro de ponteiro para a lista encadeada com as palavras sem acento, caracteres especiais e letras maiúsculas
@@ -246,7 +247,8 @@ void recebeArqPalavrasChave(tabela **tabelaHash, no **listaPalavra, char *arqPal
 Função:
     recebeArqTexto
 Descrição:
-    Lê o arquivo de texto para contabilizar a ocorrência das palavras-chave e após quantos caracteres cada uma delas aparece e insere na tabela hash os dois dados citados
+    Lê o arquivo de texto para verificar se as palavras-chave estão lá e após quantos caracteres cada uma delas aparece, logo após insere 
+    na tabela hash os dois dados citados
 Entrada:
     tabela **tabelaHash: ponteiro para o ponteiro do vetor de registros da estrutura tabela
     char *arqTexto: ponteiro para o nome do arquivo de texto que será aberto
