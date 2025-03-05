@@ -7,7 +7,7 @@ Integrantes: Emerson Boone, Thaelen de Morais, Luiz Felipe Pereira
 #include<stdlib.h>
 #include<string.h>
 #include<locale.h>
-//#include<iconv.h>
+#include<iconv.h>
 
 typedef struct aparicoes{
     int tamanho;
