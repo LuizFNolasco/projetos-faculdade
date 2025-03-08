@@ -1,8 +1,8 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-#include<locale.h>
-#include<iconv.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <locale.h>
+#include <wchar.h>
 
 //Estrutura da lista encadeada para armazenar apos quantos caracteres cada palavra aparece
 typedef struct aparicoes{
@@ -603,67 +603,6 @@ void recebeArqTexto(tabela **tabelaHash, char *arqTexto, char *palavraFormada, i
     }
 
     fclose(arqT);
-}
-
-void converterAqr(const char *arquivo) {
-    //Abre o arquivo para leitura e escrita
-    FILE *arquivoPtr = fopen(arquivo, "r+");
-
-    //Buffers para leitura e escrita do arquivo
-    char bufferEntrada[1024];
-    char bufferSaida[1024];
-    size_t tamanhoEntrada, tamanhoSaida;
-
-    //Ponteiros auxiliares para função iconv
-    char *entradaAux;
-    char *saidaAux;
-
-    long posicaoInicial = 0; //Guarda a posição inicial para sobrescrever
-
-    if (arquivoPtr == NULL) {
-        perror("Erro ao abrir arquivo");
-        exit(EXIT_FAILURE);
-    }
-
-    //Inicializa o conversor de encoding
-    iconv_t conversor = iconv_open("ISO-8859-1", "UTF-8");
-    //Verifica se ouve um erro ao tentar abrir o arquivo
-    if (conversor == (iconv_t)-1) {
-        //Perror = só pra exibir uma mensagem de erro personalizada
-        perror("Erro ao abrir conversor de encoding");
-        fclose(arquivoPtr);
-        exit(EXIT_FAILURE);
-    }
-
-    //Lê o arquivo linha por linha, convertendo e sobrescrevendo
-    while (fgets(bufferEntrada, sizeof(bufferEntrada), arquivoPtr)) {
-        //Prepara os buffers para a conversão
-        entradaAux = bufferEntrada;
-        saidaAux = bufferSaida;
-        tamanhoEntrada = strlen(bufferEntrada);
-        tamanhoSaida = sizeof(bufferSaida);
-
-        //Converte o encoding
-        if (iconv(conversor, &entradaAux, &tamanhoEntrada, &saidaAux, &tamanhoSaida) == (size_t)-1) {
-            perror("Erro ao converter encoding");
-            iconv_close(conversor);
-            fclose(arquivoPtr);
-            exit(EXIT_FAILURE);
-        }
-
-        //Move o ponteiro do arquivo para a posição inicial da linha atual
-        fseek(arquivoPtr, posicaoInicial, SEEK_SET);
-
-        //Escreve o conteúdo convertido no arquivo
-        fwrite(bufferSaida, 1, sizeof(bufferSaida) - tamanhoSaida, arquivoPtr);
-
-        //Atualiza a posição inicial para a próxima linha
-        posicaoInicial = ftell(arquivoPtr);
-    }
-
-    //Fecha o conversor e o arquivo
-    iconv_close(conversor);
-    fclose(arquivoPtr);
 }
 
 int main(){

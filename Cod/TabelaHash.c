@@ -1,3 +1,8 @@
+/*
+Grupo 4
+Integrantes: Emerson Boone, Thaelen de Morais, Luiz Felipe Pereira
+*/
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -68,20 +73,22 @@ aparicoes *insereFimAparicoes(aparicoes *listaAparicoes, int caracteres) {
         aux = aux->prox;
     }
     aux->prox = novo;
-    return listaAparicoes;
+return listaAparicoes;
 }
 
-char *ajeitaPalavra(char *novaPalavra, int tamanhoPalavra) {
+char *ajeitaPalavra(char *palavra, int tamanhoPalavra) {
     int j = 0;
+    char *novaPalavra = (char*)calloc(tamanhoPalavra, sizeof(char));
+
     for (int i = 0; i < tamanhoPalavra; i++) {
-        unsigned char c = (unsigned char)novaPalavra[i];
+        unsigned char c = (unsigned char)palavra[i];
 
         if (c >= 'a' && c <= 'z') {
             novaPalavra[j] = c;
+            i++;
             j++;
         } else {
             switch (c) {
-                // Tratamento de caracteres acentuados
                 case 192: case 193: case 194: case 195: case 196: case 197:
                 case 224: case 225: case 226: case 227: case 228: case 229:
                     novaPalavra[j] = 'a'; j++; break;
@@ -119,14 +126,14 @@ int funcaoHash(int tamanhoPalavra, int tamanhoTabela) {
         return 0;
     }
 
-    while(posicao / 100 != 0) {
-        posicao = posicao / 10;
-    }
-
     if (tamanhoTabela > posicao){
         posicao = tamanhoTabela / posicao;
     }else{
         posicao = posicao / tamanhoTabela;
+    }
+
+    while(posicao > tamanhoTabela) {
+        posicao = posicao / 10;
     }
 
 return posicao;
@@ -158,16 +165,19 @@ void inserirPalavra(tabela *tabelaHash, char *palavra, int tamanhoTabela, int ca
             tentativas++;
         }
         
+        char *ajeita = (char*)calloc(tamanhoPalavra + 1, sizeof(char));
+
         tabelaHash[posicao].chave = (char *)calloc(tamanhoPalavra + 1, sizeof(char));
         strcpy(tabelaHash[posicao].chave, palavra);
 
         tabelaHash[posicao].chaveSemAcento = (char *)calloc(tamanhoPalavra + 1, sizeof(char));
-        char *ajeita = ajeitaPalavra(palavra, tamanhoPalavra);
+        ajeita = ajeitaPalavra(palavra, tamanhoPalavra);
         strcpy(tabelaHash[posicao].chaveSemAcento, ajeita);
 
         tabelaHash[posicao].Lista = NULL;
-    }
 
+        free(ajeita);
+    }
 }
 
 void imprimirTabela(tabela *tabelaHash, int tamanhoTabela) {
@@ -185,15 +195,22 @@ void imprimirTabela(tabela *tabelaHash, int tamanhoTabela) {
 
 no *criaNo(char *palavra, int tamanhoPalavra) {
     no *novo = (no *)calloc(1, sizeof(no));
+    
     if (novo == NULL) {
         printf("Erro ao tentar alocar");
         return NULL;
     }
     novo->palavraNo = (char *)calloc(tamanhoPalavra + 1, sizeof(char));
-    char *ajeita = ajeitaPalavra(palavra, tamanhoPalavra);
+    char *ajeita = (char *)calloc(tamanhoPalavra + 1, sizeof(char));
+    
+    ajeita = ajeitaPalavra(palavra, tamanhoPalavra);
+    
     strcpy(novo->palavraNo, ajeita);
     novo->prox = NULL;
-    return novo;
+
+    free(ajeita);
+
+return novo;
 }
 
 void insereOrdPalavra(no **listaPalavra, char *palavra, int tamanhoPalavra) {
@@ -262,6 +279,67 @@ void imprimeOrdTabela(tabela *tabelaHash, no *listaPalavras, int tamanhoTabela) 
         aux2 = aux2->prox;
     }
     printf("\n");
+}
+
+void aumentaTabela(tabela **tabelaHash, no *listaPalavras, int *tamanhoTabela) {
+    int novoTamanho = *tamanhoTabela * 2, posicao;
+    tabela *novaTabela = (tabela*)calloc(novoTamanho, sizeof(tabela));
+ 
+    if (*tabelaHash == NULL || tamanhoTabela == NULL) {
+        printf("Erro: ponteiro nulo passado para aumentaTabela.\n");
+        return;
+    }
+
+    if (novaTabela == NULL) {
+        printf("Erro ao tentar alocar memória para a nova tabela.\n");
+        return;
+    }
+
+    criaTabela(novaTabela, novoTamanho);
+
+    for (int i = 0; i < *tamanhoTabela; i++) {
+        if ((*tabelaHash)[i].chave != NULL) {
+            posicao = funcaoHash(strlen((*tabelaHash)[i].chave), novoTamanho);
+            
+            novaTabela[posicao].chave = strdup((*tabelaHash)[i].chave);
+            novaTabela[posicao].chaveSemAcento = strdup((*tabelaHash)[i].chaveSemAcento);
+
+            aparicoes *listaVelha = (*tabelaHash)[i].Lista;
+            aparicoes *aux = listaVelha;
+            aparicoes *novaLista = NULL;
+
+            while(aux != NULL){
+                aparicoes *novo = (aparicoes*)calloc(1, sizeof(aparicoes));
+
+                novo->tamanho = aux->tamanho;
+                novo->prox = NULL;
+
+                if(novaLista == NULL){
+                    novaLista = novo;
+                }
+                aux = aux->prox;
+            }
+            novaTabela[posicao].Lista = novaLista;
+        }
+    }
+    for (int i = 0; i < *tamanhoTabela; i++) {
+        if ((*tabelaHash)[i].chave != NULL) {
+            free((*tabelaHash)[i].chave);
+            free((*tabelaHash)[i].chaveSemAcento);
+
+            aparicoes *aux = (*tabelaHash)[i].Lista;
+
+            while (aux != NULL) {
+                aparicoes *prox = aux->prox;
+                free(aux);
+                aux = prox;
+            }
+        }
+    }
+    free(*tabelaHash);
+
+    *tabelaHash = novaTabela;
+    *tamanhoTabela = novoTamanho;
 }
 
 void recebeArqPalavrasChave(tabela **tabelaHash, no **listaPalavra, char *arqPalavrasChave, char *palavraFormada, int caractereAtual, int indice,
@@ -411,6 +489,8 @@ int main() {
     caracteres, tamanhoPalavraFormada);
 
     imprimeOrdTabela(tabelaHash, listaPalavra, tamanhoTabela);
+
+    imprimirTabela(tabelaHash, tamanhoTabela);
 
     liberaListaPalavra(&listaPalavra);
     excluirTabela(tabelaHash, tamanhoTabela);
