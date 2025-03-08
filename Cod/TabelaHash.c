@@ -83,7 +83,7 @@ char *ajeitaPalavra(char *palavra, int tamanhoPalavra) {
     for (int i = 0; i < tamanhoPalavra; i++) {
         unsigned char c = (unsigned char)palavra[i];
 
-        if (c >= 'a' && c <= 'z') {
+        if (c >= 'a' && c <= 'z' || c >= 'A' && c <= 'Z') {
             novaPalavra[j] = c;
             i++;
             j++;
@@ -120,7 +120,7 @@ return novaPalavra;
 }
 
 int funcaoHash(int tamanhoPalavra, int tamanhoTabela) {
-    int posicao = (tamanhoPalavra * 2);
+    int posicao = (tamanhoPalavra * 31 + tamanhoPalavra * 7);
 
     if (tamanhoPalavra == 0){
         return 0;
