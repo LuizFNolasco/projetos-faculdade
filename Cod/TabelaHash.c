@@ -126,12 +126,6 @@ int funcaoHash(int tamanhoPalavra, int tamanhoTabela) {
         return 0;
     }
 
-    if (tamanhoTabela > posicao){
-        posicao = tamanhoTabela / posicao;
-    }else{
-        posicao = posicao / tamanhoTabela;
-    }
-
     while(posicao > tamanhoTabela) {
         posicao = posicao / 10;
     }
