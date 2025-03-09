@@ -27,9 +27,11 @@ typedef struct tabela{
     aparicoes *Lista;
 }tabela;
 
-//Estrutura responsável por formar uma lista encadeada de nós das palavras-chave sem acento para realizar a ordenação de forma alfabética
+//Estrutura responsável por formar uma lista encadeada de nós das palavras-chave com e sem acento, caracteres especiais e numeros para realizar a 
+//ordenação de forma alfabética
 typedef struct no{
-    char *palavraNo;
+    char *palavraNor;
+    char *palavraSem;
     struct no *prox;
 }no;
 
@@ -76,7 +78,7 @@ aparicoes *criaLista(int caracteres);
 Função:
     *insereFimAparicoes
 Descrição:
-    Insere o novo nó no fim da lista encadeada de aparições da palavra
+    Insere o novo nó no fim da lista encadeada de após quantos caracteres a palavra
 Entrada:
     aparicoes *listaAparicoes: ponteiro para a lista encadeada de após quantos caracteres a palavra aparece
     int caracteres: o número de após quantos caracteres a palavra aparece
@@ -104,12 +106,13 @@ Função:
 Descrição:
     Responsável por calcular o índice onde a palavra se encontrará na tabela hash
 Entrada:
+    char *palavra: palavra que está na tabela hash
     int tamanhoPalavra: o tamanho da palavra
     int tamanhoTabela: o atual tamanho da tabela
 Saida:
     O indice em que a palavra ocupará na tabela
 */
-int funcaoHash(int tamanhoPalavra, int tamanhoTabela);
+int funcaoHash(char *palavra, int tamanhoPalavra, int tamanhoTabela);
 
 /*
 Função:
@@ -147,7 +150,7 @@ void inserirPalavra(tabela *tabelaHash, char *palavra, int tamanhoTabela, int ca
 Função:
     imprimirTabela
 Descrição:
-    Imprime toda a tabela hash, mostrando a palavra e a posição em que se encontra
+    Imprime toda a tabela hash, mostrando a palavra e a posição em que cada uma se encontra
 Entrada:
     tabela *tabelaHash: ponteiro para o vetor de registros da estrutura tabela
     int tamanhoTabela: atual tamanho da tabela
@@ -226,8 +229,8 @@ void aumentaTabela(tabela **tabelaHash, no *listaPalavras, int *tamanhoTabela);
 Função:
     recebeArqPalavrasChave
 Descrição:
-    Abre o arquivo de palavras-chave, inserindo uma versão da palavra normal e uma da palavra sem acentos, caracteres especiais e números 
-    na tabela hash, uma versão da palavra sem acentos, caracteres especiais e números é inserido em uma lista encadeada à parte
+    Abre o arquivo de palavras-chave, retira todos os caracteres maiúsculos das palavras, insere uma versão da palavra normal e uma da palavra sem acentos, 
+    caracteres especiais e números na tabela hash, uma versão da palavra sem acentos, caracteres especiais e números é inserido em uma lista encadeada à parte
 Entrada:
     tabela **tabelaHash: ponteiro para o ponteiro do vetor de registros da estrutura tabela
     no **listaPalavras: ponteiro para o ponteiro da lista encadeada com as palavras sem acento, caracteres especiais e letras maiúsculas
@@ -242,7 +245,7 @@ Saida:
     void
 */
 void recebeArqPalavrasChave(tabela **tabelaHash, no **listaPalavra, char *arqPalavrasChave, char *palavraFormada, int caractereAtual, int indice, 
-    int tamanhoPalavraFormada, int caracteres, int tamanhoTabela);
+    int tamanhoPalavraFormada, int caracteres, int *tamanhoTabela);
 
 /*
 Função:
