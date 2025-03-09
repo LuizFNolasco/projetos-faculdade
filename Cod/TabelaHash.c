@@ -559,5 +559,6 @@ int main() {
     free(palavraFormada);
     free(tabelaHash);
 
+    
     return 0;
 }
