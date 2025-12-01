@@ -49,4 +49,12 @@ public abstract class Pessoa {
         setTelefone(telefone);
         setDataNascimento(dataNascimento);
     }
+
+    void imprimeInformacoesPessoa(){
+        System.out.println("Nome: "+getNome());
+        System.out.println("CPF: "+getCpf());
+        System.out.println("Email: "+getEmail());
+        System.out.println("Telefone: "+getTelefone());
+        System.out.println("Data de Nascimento: "+getDataNascimento());
+    }
 }
