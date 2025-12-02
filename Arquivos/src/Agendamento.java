@@ -4,6 +4,7 @@ public final class Agendamento {
     private LocalDate data;
     private String status;
     //TODOs: Aqui tem que ser uma lista de produtos
+    private Notificacao notificacao;
 
     public void confirmarPedido(){
 
@@ -38,9 +39,23 @@ public final class Agendamento {
     }
 
     //TODOs: Para criar um agendamento deve se ter no minimo um pedido e uma data
-    public Agendamento(LocalDate data){
+    public Agendamento(LocalDate data, Notificacao notificacao){
         // Inserir a lista de pedidos do cliente na variavel "produtos"
         statusEmAnalise();
         setData(data);
+        this.notificacao = notificacao;
+    }
+
+    public void solicitacaoDeProfissional(Profissional[] profissionais){
+        for(Profissional profissional : profissionais){
+            //confere se o proficional trabalha com o tipo de servico solicitado
+            Dia prazo = profissional.conferirAgendaProfissional(4);
+            if(prazo != null){
+                String mensagem = ("Profissional disponivel: "+profissional.getNome()+"\nEspecialidade: "+profissional.getEspecialidade()+"\nDia: "+prazo.getData());
+                int confirmacao = notificacao.notificacaoEspecifica(mensagem);
+            }
+            // else, notifica indisponibilidade
+            // trata os casos de confirmacao ou recusa do profissional
+        }
     }
 }

@@ -9,8 +9,11 @@ public class App {
 
         LocalDate dataNascimento = LocalDate.parse("20/05/1985", dataFormatada);
 
-        String[] dias = new String[]{"Segunda", "Terca", "Quarta", "Quinta", "Sexta"};
-        Profissional padeiro = new Profissional("123.456.789-00", "Joao Silva", "joaosilva@gmail.com", "99999-9999", dataNascimento, "Padeiro", 1, 50.0, 5, 8, 5, dias);
+        Profissional padeiro = new Profissional("123.456.789-00", "Joao Silva", "joaosilva@gmail.com", "99999-9999", dataNascimento, "Padeiro", 1, 50.0, 5, 8);
         padeiro.imprimeInformacoesProfissional();
+
+        Notificacao notificacao = new Notificacao("Maria Souza", "mariasouza@gmail.com");
+        Agendamento agendamento = new Agendamento(LocalDate.parse("15/12/2025", dataFormatada), notificacao);
+        agendamento.solicitacaoDeProfissional(new Profissional[]{padeiro});
     }
 }

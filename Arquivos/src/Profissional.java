@@ -39,17 +39,17 @@ public class Profissional extends Pessoa {
         return tempoExperiencia;
     }
 
-    public void setAgenda(int qtdHorasDiarias, int qtdDiasDisponiveis, String [] dias){
-        this.agenda = new AgendaSemanal(qtdHorasDiarias, qtdDiasDisponiveis, dias);
+    public void setAgenda(int qtdHorasDiarias){
+        this.agenda = new AgendaSemanal(qtdHorasDiarias);
     }
-
-    public Profissional(String cpf, String nome, String email, String telefone, LocalDate dataNascimento, String especialidade, int id, double valorMinimoPedido, int tempoExperiencia, int qtdHorasDiarias, int qtdDiasDisponiveis, String [] dias){
+    
+    public Profissional(String cpf, String nome, String email, String telefone, LocalDate dataNascimento, String especialidade, int id, double valorMinimoPedido, int tempoExperiencia, int qtdHorasDiarias){
         super(cpf, nome, email, telefone, dataNascimento);
         setEspecialidade(especialidade);
         setId(id);
         setValorMinimoPedido(valorMinimoPedido);
         setTempoExperiencia(tempoExperiencia);
-        setAgenda(qtdHorasDiarias, qtdDiasDisponiveis, dias);
+        setAgenda(qtdHorasDiarias);
     }
 
     public void imprimeInformacoesProfissional(){
@@ -59,5 +59,14 @@ public class Profissional extends Pessoa {
         System.out.println("Valor Minimo do Pedido: "+getValorMinimoPedido());  
         agenda.imprimeInformacoesAgenda();
     }
+
+    public Dia conferirAgendaProfissional(int horasServico){
+        return agenda.conferirHorarioProfissional(horasServico);
+    }
+
+    public void confirmarDiaProfissional(Dia dia, int horasServico){
+        agenda.marcarHorarioProfissional(dia, horasServico);
+    }
+
 
 }

@@ -1,3 +1,6 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+
 public class AgendaSemanal{
     private int qtdHorasDiarias;
     private int qtdDiasDisponiveis;
@@ -23,21 +26,24 @@ public class AgendaSemanal{
         this.dias = new Dia[qtdDiasDisponiveis];
     }
 
-    public void inicializarDias(String[] nomes) {
-        if (nomes.length != qtdDiasDisponiveis) {
-            throw new IllegalArgumentException("Quantidade de nomes diferente da quantidade de dias.");
-        }
+    public void inicializarDias() {
+        DateTimeFormatter dataFormatada = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        String[] nomes = {"Segunda", "Terca", "Quarta", "Quinta", "Sexta"};
+
+        LocalDate dataInicial = LocalDate.of(2025, 12, 1);
 
         for (int i = 0; i < qtdDiasDisponiveis; i++) {
-            dias[i] = new Dia(nomes[i], qtdHorasDiarias);
+            LocalDate data = dataInicial.plusDays(i); // cada dia soma 1
+            System.out.println(data.format(dataFormatada));
+            dias[i] = new Dia(nomes[i], qtdHorasDiarias, data);
         }
     }
 
-    public AgendaSemanal(int qtdHorasDiarias, int qtdDiasDisponiveis, String[] nomes){
+    public AgendaSemanal(int qtdHorasDiarias){
         setQtdHorasDiarias(qtdHorasDiarias);
-        setQtdDiasDisponiveis(qtdDiasDisponiveis);
+        setQtdDiasDisponiveis(5);
         setDias(qtdDiasDisponiveis);
-        inicializarDias(nomes);
+        inicializarDias();
     }
 
     public void imprimeInformacoesAgenda() {
@@ -46,6 +52,20 @@ public class AgendaSemanal{
         for (Dia dia : dias) {
             dia.imprimeInformacoesDia();
         }
+    }
+
+    public Dia conferirHorarioProfissional(int horasServico){
+        for (Dia dia : dias){
+            Dia diaSemana = dia.conferirHorarioDisponivel(horasServico);
+            if(diaSemana != null) {
+                return diaSemana;
+            }
+        }
+        return null;
+    }
+
+    public void marcarHorarioProfissional(Dia dia, int horasServico){
+        dia.conferirHorarioDisponivel(horasServico);
     }
 
 }
