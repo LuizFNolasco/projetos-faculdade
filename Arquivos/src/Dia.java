@@ -45,6 +45,17 @@ public class Dia {
         System.out.println("Quantidade de horas disponiveis: "+getQuantidadeDeHoras());
     }
 
+
+    /*
+    TODOs: Tenho duas sugestões
+    
+    1 - Implementa so um dos dois métodos e faz a logica do conferirHorario 
+        no metodo confirmarHorario, e se tiver horario retorna true indicando que confirmou
+        se não retorna false, que ja vai indicar que nao tem horario disponivel
+    
+    2 - Deixa um metodo so pra confirmar se existe um horarioDisponivel (ConferirHorario) e usa
+    ele dentro de confirmarHorario que, esse sim, vai diminuir a quantidade de horas disponiveis
+    */
     public Dia conferirHorarioDisponivel(int horasServico){
         if(getQuantidadeDeHoras() >= horasServico){
             diminuiHorasDisponiveis(horasServico);

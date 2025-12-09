@@ -1,9 +1,10 @@
 import java.time.LocalDate;
+import java.util.List;
 
 public final class Agendamento {
     private LocalDate data;
     private String status;
-    private Notificacao notificacao;
+    private Notificacao ntificacao;
 
     public void confirmarPedido(){
 
