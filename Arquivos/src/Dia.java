@@ -47,7 +47,7 @@ public class Dia {
     }
 
     /*
-    TODOs: Alteração feita: conferirHorarioDisponivel não diminui mais as horas apenas verifica se existe horario livre
+    Alteração: conferirHorarioDisponivel não diminui mais as horas apenas verifica se existe horario livre
             quem diminui as horas é o metodo confirmarHorarioDisponivel
     */
     public Dia conferirHorarioDisponivel(int horasServico) {

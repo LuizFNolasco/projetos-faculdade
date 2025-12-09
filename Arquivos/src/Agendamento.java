@@ -2,14 +2,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 public final class Agendamento {
-
-    /*
-        data de entrega
-        status do agendamento: confirmado, pendente, recusado
-        produtos: lista de produtos agendados
-        notificacao: enviada ao cliente para avisar se foi aceito ou recusado
-    */
-
     private LocalDate data;
     private String status;
     private List<Produto> produtos;
@@ -55,11 +47,11 @@ public final class Agendamento {
         this.produtos = produtos;
     }
 
-    //TODOs: Para criar um agendamento deve se ter no minimo um pedido e uma data
-    public Agendamento(LocalDate data, Notificacao notificacao){
-        // Inserir a lista de pedidos do cliente na variavel "produtos"
+    //Alteração: Adicionei uma lista de produtos como parametros
+    public Agendamento(LocalDate data, Notificacao notificacao, List<Produto> produtos){
         statusEmAnalise();
         setData(data);
+        setProdutos(produtos);
         this.notificacao = notificacao;
     }
 

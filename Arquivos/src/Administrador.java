@@ -1,10 +1,12 @@
+import java.time.LocalDate;
+
 public class Administrador extends Pessoa {
 
-	public Administrador() {
+	/* public Administrador() {
 		super();
-	}
+	}*/
 
-	public Administrador(String cpf, String nome, String email, String telefone, java.util.Date dataNascimento) {
+	public Administrador(String cpf, String nome, String email, String telefone, LocalDate dataNascimento) {
 		super(cpf, nome, email, telefone, dataNascimento);
 	}
 
@@ -19,16 +21,19 @@ public class Administrador extends Pessoa {
 	}
 
 	public Profissional aprovaCandidato(Candidato c) {
-		if (c == null)
-			return null;
+		if (c == null) return null;
 
+		//Alterei pro profissional precisar de 8 horas diarias ao invés de 6
 		boolean criterios = c.getTempoExperiencia() > 5 && c.getValorDesejado() < 3000f
-				&& c.getHorasDisponiveisPorDia() > 6;
+				&& c.getHorasDisponiveisPorDia() >= 8;
 
 		if (!criterios)
 			return null;
 
-		return new Profissional();
+		//Alteração: Criei a instâcia do profissional que vai ser retornado
+		//TODOs:Como vai ser definido o id?
+		Profissional aprovado = new Profissional(c.getCpf(), c.getNome(), c.getEmail(), c.getTelefone(), c.getDataNascimento(), c.getEspecialidade(), 0, c.getValorDesejado(), c.getTempoExperiencia());
+		return aprovado;
 	}
 
 }

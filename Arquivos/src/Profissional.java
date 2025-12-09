@@ -64,6 +64,7 @@ public class Profissional extends Pessoa {
         return agenda.conferirHorarioProfissional(horasServico);
     }
 
+    // Isso vai retornar boolean
     public void confirmarDiaProfissional(int horasServico){
         agenda.marcarHorarioProfissional(horasServico);
     }

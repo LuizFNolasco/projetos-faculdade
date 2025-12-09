@@ -1,13 +1,25 @@
 
 abstract public class Produto {
+    //Adicionei valor ao produto
+
+    private float valor;
     private String nome;
     private int id;
     private int tempoDePreparo;
 
-    Produto(String nome, int id, int tempoDePreparo) {
+    Produto(String nome, int id, int tempoDePreparo, float valor) {
+        setValor(valor);
         setNome(nome);
         setId(id);
         setTempoDePreparo(tempoDePreparo);
+    }
+
+    public float getValor() {
+        return valor;
+    }
+
+    public void setValor(float valor) {
+        this.valor = valor;
     }
 
     public int getId() {

@@ -6,8 +6,16 @@ public final class Pedido {
     private int duracao;
     private double valor;
     private Produto produto; 
-    private String status; // TODOs: Precisa de outra variavel status? A do agendamento não bastaria?
+    private String status; //Status: em preparo, concluido, cancelado
     private int quantidade;
+
+
+    public Produto getProduto() {
+        return produto;
+    }
+    public void setProduto(Produto produto) {
+        this.produto = produto;
+    }
 
     public LocalDate getData() {
         return data;
@@ -43,8 +51,6 @@ public final class Pedido {
     public void setQuantidade(int quantidade) {
         this.quantidade = quantidade;
     }
-
-    //TODOs: Retirei o metodo aceitar pedido
 
     public Pedido(LocalDate data, int duracao, double valor, String status, int quantidade){
         setData(data);
