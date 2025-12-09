@@ -3,7 +3,6 @@ import java.time.LocalDate;
 public final class Agendamento {
     private LocalDate data;
     private String status;
-    //TODOs: Aqui tem que ser uma lista de produtos
     private Notificacao notificacao;
 
     public void confirmarPedido(){
