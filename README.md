@@ -1,3 +1,3 @@
 # Trabalho-de-POO
 
-componentes: /thais, jão, lucas, luiz
+componentes: Thais Brandão, João Vítor Carvalho, Lucas Daniel, Luiz

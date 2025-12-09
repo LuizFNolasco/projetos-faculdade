@@ -1,7 +1,7 @@
 import java.time.LocalDate;
 
 public final class Cliente extends Pessoa {
-    //TODOS: Aqui tem que ter uma lista de agendamentos
+    //TODOs: Aqui tem que ter uma lista de agendamentos
 
     //TODOs: Preencher esses metodos
     public void agendarPedido(){
