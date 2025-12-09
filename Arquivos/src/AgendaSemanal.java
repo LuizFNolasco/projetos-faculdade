@@ -2,17 +2,9 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 
 public class AgendaSemanal{
-    private int qtdHorasDiarias;
+    // Alteração: Retirei a qtdHorasDiarias -> É atributo do dia
     private int qtdDiasDisponiveis;
     private Dia[] dias;
-
-    public void setQtdHorasDiarias(int qtdHorasDiarias){
-        this.qtdHorasDiarias = qtdHorasDiarias;
-    }
-
-    public int getQtdHorasDiarias(){
-        return qtdHorasDiarias;
-    }   
 
     public void setQtdDiasDisponiveis(int qtdDiasDisponiveis){
         this.qtdDiasDisponiveis = qtdDiasDisponiveis;
@@ -35,19 +27,17 @@ public class AgendaSemanal{
         for (int i = 0; i < qtdDiasDisponiveis; i++) {
             LocalDate data = dataInicial.plusDays(i); // cada dia soma 1
             System.out.println(data.format(dataFormatada));
-            dias[i] = new Dia(nomes[i], qtdHorasDiarias, data);
+            dias[i] = new Dia(nomes[i], data);
         }
     }
 
-    public AgendaSemanal(int qtdHorasDiarias){
-        setQtdHorasDiarias(qtdHorasDiarias);
+    public AgendaSemanal(){
         setQtdDiasDisponiveis(5);
         setDias(qtdDiasDisponiveis);
         inicializarDias();
     }
 
     public void imprimeInformacoesAgenda() {
-        System.out.println("Quantidade de horas diarias: " + getQtdHorasDiarias());
         System.out.println("Quantidade de dias disponiveis: " + getQtdDiasDisponiveis());
         for (Dia dia : dias) {
             dia.imprimeInformacoesDia();
@@ -56,16 +46,18 @@ public class AgendaSemanal{
 
     public Dia conferirHorarioProfissional(int horasServico){
         for (Dia dia : dias){
-            Dia diaSemana = dia.conferirHorarioDisponivel(horasServico);
-            if(diaSemana != null) {
-                return diaSemana;
+            if(dia.conferirHorarioDisponivel(horasServico) != null) {
+                return dia;
             }
         }
         return null;
     }
 
-    public void marcarHorarioProfissional(Dia dia, int horasServico){
-        dia.conferirHorarioDisponivel(horasServico);
+    public void marcarHorarioProfissional(int horasServico){
+        Dia diaDisponivel = conferirHorarioProfissional(horasServico);
+        if(diaDisponivel != null) {
+            diaDisponivel.confirmarHorarioDisponivel(horasServico);
+        }
     }
 
 }

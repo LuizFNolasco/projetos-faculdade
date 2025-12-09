@@ -2,7 +2,7 @@ import java.time.LocalDate;
 
 public class Dia {
     private String nome;
-    private int quantidadeDeHoras;
+    private int quantidadeDeHoras = 8;
     private LocalDate data;
 
 
@@ -30,9 +30,10 @@ public class Dia {
         return data;
     }
 
-    public Dia(String nome, int quantidadeDeHoras, LocalDate data){ 
+    //Alteração: Construtor não recebe mais quantidadeDeHoras -> é fixo em 8
+    public Dia(String nome, LocalDate data){ 
+        setQuantidadeDeHoras(8);
         setNome(nome);
-        setQuantidadeDeHoras(quantidadeDeHoras);
         setData(data);
     }
 
@@ -45,27 +46,22 @@ public class Dia {
         System.out.println("Quantidade de horas disponiveis: "+getQuantidadeDeHoras());
     }
 
-
     /*
-    TODOs: Tenho duas sugestões
-    
-    1 - Implementa so um dos dois métodos e faz a logica do conferirHorario 
-        no metodo confirmarHorario, e se tiver horario retorna true indicando que confirmou
-        se não retorna false, que ja vai indicar que nao tem horario disponivel
-    
-    2 - Deixa um metodo so pra confirmar se existe um horarioDisponivel (ConferirHorario) e usa
-    ele dentro de confirmarHorario que, esse sim, vai diminuir a quantidade de horas disponiveis
+    TODOs: Alteração feita: conferirHorarioDisponivel não diminui mais as horas apenas verifica se existe horario livre
+            quem diminui as horas é o metodo confirmarHorarioDisponivel
     */
-    public Dia conferirHorarioDisponivel(int horasServico){
+    public Dia conferirHorarioDisponivel(int horasServico) {
         if(getQuantidadeDeHoras() >= horasServico){
-            diminuiHorasDisponiveis(horasServico);
             return Dia.this;
         }
+
         return null;
     }
 
     public void confirmarHorarioDisponivel(int horasServico){
-        diminuiHorasDisponiveis(horasServico);
+        if(conferirHorarioDisponivel(horasServico) != null) {
+            diminuiHorasDisponiveis(horasServico);
+        }
     }
             
 }

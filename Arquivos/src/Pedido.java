@@ -1,9 +1,11 @@
 import java.time.LocalDate;
 
 public final class Pedido {
+
     private LocalDate data;
     private int duracao;
     private double valor;
+    private Produto produto; 
     private String status; // TODOs: Precisa de outra variavel status? A do agendamento não bastaria?
     private int quantidade;
 
@@ -42,10 +44,7 @@ public final class Pedido {
         this.quantidade = quantidade;
     }
 
-    //TODOs: Realmente tem que ter esse metodo aqui? Acho que o do Agendamento já bastaria
-    public void aceitarPedido(){
-
-    }
+    //TODOs: Retirei o metodo aceitar pedido
 
     public Pedido(LocalDate data, int duracao, double valor, String status, int quantidade){
         setData(data);
