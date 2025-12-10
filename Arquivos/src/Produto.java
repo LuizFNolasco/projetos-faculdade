@@ -1,5 +1,6 @@
 
-abstract public class Produto {
+//TODOs: Tirei o abstract pra teste
+public class Produto {
     //Alteração: Adicionei valor ao produto
     private String especialidadeNecessaria;
     private float valor;

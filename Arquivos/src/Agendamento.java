@@ -48,11 +48,10 @@ public final class Agendamento {
     }
 
     //Alteração: Adicionei uma lista de produtos como parametros
-    public Agendamento(LocalDate data, Notificacao notificacao, List<Produto> produtos){
+    public Agendamento(LocalDate data, List<Produto> produtos){
         statusEmAnalise();
         setData(data);
         setProdutos(produtos);
-        this.notificacao = notificacao;
     }
 
     /*
@@ -62,7 +61,7 @@ public final class Agendamento {
         Primeiro -> verifica se o profissional trabalha com esse produto
     */
 
-    //TODOs: Verificar se isso ta certo (ESTOU COM MUITO SONO PRA TESTAR AGORA SORRY)
+    //TODOs: Verificar se isso ta certo (ESTOU COM MUITO SONO PRA TESTAR AGORA SORR)
     public void solicitacaoDeProfissional(Profissional[] profissionais){
         List<Produto> produtosAux = this.produtos;
 
@@ -77,6 +76,7 @@ public final class Agendamento {
 
                     if (tempoNecessario <= cargaRestante) {
                         cargaRestante -= tempoNecessario;
+                        System.out.println("Achei " + profissional.getEspecialidade());
                         produtosAux.remove(i);
                         i--; // ajusta o índice após remoção
                     }
