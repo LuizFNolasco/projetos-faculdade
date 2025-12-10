@@ -13,8 +13,10 @@ public class App {
         
         padeiro.confirmarDiaProfissional(8);
         padeiro.confirmarDiaProfissional(8);
-        padeiro.confirmarDiaProfissional(4);
-        padeiro.conferirAgendaProfissional(4).imprimeInformacoesDia();
+        padeiro.confirmarDiaProfissional(16);
+        padeiro.conferirAgendaProfissional(4);
+
+        System.out.println(padeiro.HorasDisponiveis());
         
         
     }

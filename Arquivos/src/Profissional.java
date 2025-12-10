@@ -1,11 +1,23 @@
 import java.time.LocalDate;
+import java.util.List;
 
 public class Profissional extends Pessoa {
+    // Alteração: Adicionei uma lista de pedidos pendentes é inicializada como null
+
+    private List<Pedido> pedidos;
     private String especialidade;
     private int id;
     private double valorMinimoPedido;
     private int tempoExperiencia; // em anos
     private AgendaSemanal agenda;
+
+    public List<Pedido> getPedidos() {
+        return pedidos;
+    }
+
+    public void setPedidos(List<Pedido> pedidos) {
+        this.pedidos = pedidos;
+    }
 
     public void setEspecialidade(String especialidade){
         this.especialidade = especialidade;
@@ -49,6 +61,7 @@ public class Profissional extends Pessoa {
         setId(id);
         setValorMinimoPedido(valorMinimoPedido);
         setTempoExperiencia(tempoExperiencia);
+        setPedidos(null);
         setAgenda();
     }
 
@@ -60,13 +73,27 @@ public class Profissional extends Pessoa {
         agenda.imprimeInformacoesAgenda();
     }
 
-    public Dia conferirAgendaProfissional(int horasServico){
-        return agenda.conferirHorarioProfissional(horasServico);
+    public int HorasDisponiveis() {
+       return this.agenda.HorasDisponiveisAgenda();
     }
 
-    // Isso vai retornar boolean
-    public void confirmarDiaProfissional(int horasServico){
-        agenda.marcarHorarioProfissional(horasServico);
+
+    /*TODOs: Os metodos vão receber um Pedido que, esse sim, vai conter horasServico
+    */
+    public boolean conferirAgendaProfissional(int horasServico){
+        if(agenda.conferirHorarioProfissional(horasServico)) {
+            return true;
+        }
+        return false;
+    }
+
+    //Alteração: Agora confirmaDiaProfissional retorna um booleano indicando se teve sucesso na marcação
+    public boolean confirmarDiaProfissional(int horasServico){
+        if(agenda.marcarHorarioProfissional(horasServico)) {
+            return true;
+        }
+        return false;
+
     }
 
 

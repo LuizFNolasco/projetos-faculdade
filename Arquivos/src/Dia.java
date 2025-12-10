@@ -2,7 +2,7 @@ import java.time.LocalDate;
 
 public class Dia {
     private String nome;
-    private int quantidadeDeHoras = 8;
+    private int quantidadeDeHoras;
     private LocalDate data;
 
 

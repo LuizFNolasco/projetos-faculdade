@@ -1,7 +1,26 @@
 import java.time.LocalDate;
+import java.util.List;
 
 public final class Cliente extends Pessoa {
-    //TODOs: Aqui tem que ter uma lista de agendamentos
+    //Alteração: Adicionei lista de agendamentos e notificações.
+    private List<Agendamento> agendamentos;
+    private List<Notificacao> notificacoes;
+
+    public List<Agendamento> getAgendamentos() {
+        return agendamentos;
+    }
+
+    public void setAgendamentos(List<Agendamento> agendamentos) {
+        this.agendamentos = agendamentos;
+    }
+
+    public List<Notificacao> getNotificacoes() {
+        return notificacoes;
+    }
+
+    public void setNotificacoes(List<Notificacao> notificacoes) {
+        this.notificacoes = notificacoes;
+    }
 
     //TODOs: Preencher esses metodos
     public void agendarPedido(){
@@ -13,7 +32,7 @@ public final class Cliente extends Pessoa {
     }
 
     public void cancelarPedido(){
-
+        
     }
 
     public Cliente(String cpf, String nome, String email, String telefone, LocalDate dataNascimento ){
