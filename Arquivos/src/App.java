@@ -29,8 +29,8 @@ public class App {
         
 
         // Simulação de reservas dos profissionais
-        doceiro.confirmarDiaProfissional(8);
-        confeiteiro.confirmarDiaProfissional(4);
+        //doceiro.confirmarDiaProfissional(8);
+        //confeiteiro.confirmarDiaProfissional(4);
 
         // Lista de produtos para um agendamento
         java.util.List<Produto> listaProdutos1 = new java.util.ArrayList<>();
@@ -47,6 +47,5 @@ public class App {
 
         // Resultado final
         System.out.println("Status do agendamento: " + agendamento1.getStatus());
-        System.out.println("Produtos restantes (se recusado): " + agendamento1.getProdutos());
     }
 }

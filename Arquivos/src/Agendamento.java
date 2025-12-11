@@ -1,19 +1,13 @@
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public final class Agendamento {
     private LocalDate data;
     private String status;
     private List<Produto> produtos;
     private Notificacao notificacao;
-
-    public void confirmarPedido(){
-
-    }
-
-    public void remarcarPedido(){
-
-    }
 
     public String getStatus(){
         return this.status;
@@ -54,50 +48,70 @@ public final class Agendamento {
         setProdutos(produtos);
     }
 
+
+    //TODOs: Testar mais esse metodo (Muito importante)
     /*
-        Essa função vai criar o pedido e atribuir ao profissional
-
-        Para cada Produto deve-se avaliar se há algum profissional com essa especialidade disponivel 
-        Primeiro -> verifica se o profissional trabalha com esse produto
+        
+        Alteração: Metodo de solicitaçãoDeProfissional pronto.
+        Um detalhe, a quantidade pode ser um pouco dificil de implementar dependendo de como vai ser os nossos produtos
+        Porque a classe produto em si não tem um atributo quantidade, então teria que sair varrendo o array de produtos
+        e vendo quais sao iguais e ai multiplica pelo tempo de produção individual,
+        mas pode ser que nao tenha um unico profissional com tempo
+        pra fazer a quantidade e sim varios que somando o tempo conseguiriam realizar aquela quantidade de produtos,
+        dai que vem a dificuldade, por que teria que fazer mais de um pedido do mesmo produto para profissionais diferentes.
+        OBS: Nao sei se ficou claro a explicação, mas qualquer coisa eu explico na aula.
     */
-
-    //TODOs: Verificar se isso ta certo (ESTOU COM MUITO SONO PRA TESTAR AGORA SORR)
     public void solicitacaoDeProfissional(Profissional[] profissionais){
-        List<Produto> produtosAux = this.produtos;
+        Map<Produto, Profissional> alocacaoSimulada = new HashMap<>();
+        Map<Profissional, Integer> horasRestantes = new HashMap<>();
 
-        for(Profissional profissional : profissionais){
-            int cargaRestante = profissional.HorasDisponiveis();
-            //TODOs: Aqui a gente vai usar conferirHorarioProfissional e so depois confirma o pedido atribuindo ao profissional
-            for (int i = 0; i < produtosAux.size(); i++) {
-                Produto produto = produtosAux.get(i);
+        for (Profissional p : profissionais) {
+            horasRestantes.put(p, p.HorasDisponiveis());
+        }
 
-                if (profissional.getEspecialidade() == produto.getEspecialidadeNecessaria()) {
-                    int tempoNecessario = produto.getTempoDePreparo();
+        for (Produto prod : produtos) {
+            boolean encontrado = false;
 
-                    if (tempoNecessario <= cargaRestante) {
-                        cargaRestante -= tempoNecessario;
-                        System.out.println("Achei " + profissional.getEspecialidade());
-                        produtosAux.remove(i);
-                        i--; // ajusta o índice após remoção
+            for (Profissional p : profissionais) {
+                if (p.getEspecialidade() == prod.getEspecialidadeNecessaria()) {
+                    int tempo = prod.getTempoDePreparo();
+
+                    if (horasRestantes.get(p) >= tempo) {
+                        horasRestantes.put(p, horasRestantes.get(p) - tempo);
+                        alocacaoSimulada.put(prod, p);
+                        encontrado = true;
+                        break;
                     }
                 }
             }
-        }
-        // Após tentar alocar profissionais para todos os produtos:
-        if (produtosAux.isEmpty()) {
-            // todos os produtos receberam profissional → pedido aceito
-            statusAceito();
-            //TODOs: Criação de um pedido pra cada produto.
-        } else {
-            this.status = "Pedido recusado";
-        }
+
+                if (!encontrado) {
+                    this.status = "Rejeitado";
+                    return;
+                }
+            }
+            for (Produto prod : produtos) {
+                Profissional p = alocacaoSimulada.get(prod);
+                System.out.println("Profissional Solicitado:");
+                p.imprimeInformacoesProfissional();
+
+                Pedido pedido = new Pedido(
+                    this.data,
+                    prod.getTempoDePreparo(),
+                    prod.getValor(),
+                    "Em preparo",
+                    1
+                );
+
+                boolean ok = p.confirmarPedidoProfissional(pedido);
+
+                if (!ok) {
+                    this.status = "Rejeitado";
+                    return;
+                }
+            }
+
+        this.statusAceito();
+        
     }
 }
-
-/*
-//confere se o profissional trabalha com o tipo de servico solicitado
-            String mensagem = ("Profissional disponivel: "+profissional.getNome()+"\nEspecialidade: "+profissional.getEspecialidade()+"\n");
-            int confirmacao = notificacao.notificacaoEspecifica(mensagem);
-            // else, notifica indisponibilidade
-            // trata os casos de confirmacao ou recusa do profissional
-*/

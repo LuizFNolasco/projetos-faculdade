@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Profissional extends Pessoa {
@@ -61,7 +62,7 @@ public class Profissional extends Pessoa {
         setId(id);
         setValorMinimoPedido(valorMinimoPedido);
         setTempoExperiencia(tempoExperiencia);
-        setPedidos(null);
+        setPedidos(new ArrayList<>());
         setAgenda();
     }
 
@@ -73,13 +74,20 @@ public class Profissional extends Pessoa {
         agenda.imprimeInformacoesAgenda();
     }
 
+    //Alteração: Metodo novo que insere um pedido novo na lista de pedidos ao profissional e utiliza
+    // o metodo confirmarDiaProfissional para descontar as horas semanais.
+    public boolean confirmarPedidoProfissional(Pedido pedido) {
+        if(confirmarDiaProfissional(pedido.getDuracao())) {
+            this.pedidos.add(pedido);
+            return true;
+        }
+        return false;
+    }
+
     public int HorasDisponiveis() {
        return this.agenda.HorasDisponiveisAgenda();
     }
 
-
-    /*TODOs: Os metodos vão receber um Pedido que, esse sim, vai conter horasServico
-    */
     public boolean conferirAgendaProfissional(int horasServico){
         if(agenda.conferirHorarioProfissional(horasServico)) {
             return true;
@@ -87,8 +95,11 @@ public class Profissional extends Pessoa {
         return false;
     }
 
-    //Alteração: Agora confirmaDiaProfissional retorna um booleano indicando se teve sucesso na marcação
-    public boolean confirmarDiaProfissional(int horasServico){
+    //Alteração: Deixei esse metodo privado por que acho que ele so deveria ser utilizado no metodo confirmarPedido
+    /* Inclusive, acho que vale a pena deixar private todos os metodos que so vamos utilizar na mesma classe
+       Até pra deixar menos poluido e a gente nao acabar confundindo na hora de usar outras classes.
+    */
+    private boolean confirmarDiaProfissional(int horasServico){
         if(agenda.marcarHorarioProfissional(horasServico)) {
             return true;
         }
