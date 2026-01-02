@@ -9,27 +9,27 @@ public final class Agendamento {
     private List<Produto> produtos;
     private Notificacao notificacao;
 
-    public String getStatus(){
+    public String getStatus() {
         return this.status;
     }
 
-    public void statusEmAnalise(){
+    public void statusEmAnalise() {
         this.status = "Pedido em análise";
     }
 
-    public void statusAceito(){
+    public void statusAceito() {
         this.status = "Pedido aceito";
     }
 
-    public void statusFinalizado(){
+    public void statusFinalizado() {
         this.status = "Pedido finalizado";
     }
 
-    public LocalDate getData(){
+    public LocalDate getData() {
         return this.data;
     }
 
-    public void setData(LocalDate data){
+    public void setData(LocalDate data) {
         this.data = data;
     }
 
@@ -41,39 +41,31 @@ public final class Agendamento {
         this.produtos = produtos;
     }
 
-    //Alteração: Adicionei uma lista de produtos como parametros
-    public Agendamento(LocalDate data, List<Produto> produtos){
+    // Alteração: Adicionei uma lista de produtos como parametros
+    public Agendamento(LocalDate data, List<Produto> produtos) {
         statusEmAnalise();
         setData(data);
         setProdutos(produtos);
     }
 
-
-    //TODOs: Testar mais esse metodo (Muito importante)
-    /*
-        
-        Alteração: Metodo de solicitaçãoDeProfissional pronto.
-        Um detalhe, a quantidade pode ser um pouco dificil de implementar dependendo de como vai ser os nossos produtos
-        Porque a classe produto em si não tem um atributo quantidade, então teria que sair varrendo o array de produtos
-        e vendo quais sao iguais e ai multiplica pelo tempo de produção individual,
-        mas pode ser que nao tenha um unico profissional com tempo
-        pra fazer a quantidade e sim varios que somando o tempo conseguiriam realizar aquela quantidade de produtos,
-        dai que vem a dificuldade, por que teria que fazer mais de um pedido do mesmo produto para profissionais diferentes.
-        OBS: Nao sei se ficou claro a explicação, mas qualquer coisa eu explico na aula.
-    */
-    public void solicitacaoDeProfissional(Profissional[] profissionais){
+    // agora recebe o cliente solicitante para vincular o pedido
+    public void solicitacaoDeProfissional(Profissional[] profissionais, Cliente cliente) {
         Map<Produto, Profissional> alocacaoSimulada = new HashMap<>();
         Map<Profissional, Integer> horasRestantes = new HashMap<>();
 
-        for (Profissional p : profissionais) {
+        for (int i = 0; i < profissionais.length; i++) {
+            Profissional p = profissionais[i];
             horasRestantes.put(p, p.HorasDisponiveis());
         }
 
-        for (Produto prod : produtos) {
+        for (int i = 0; i < produtos.size(); i++) {
+            Produto prod = produtos.get(i);
             boolean encontrado = false;
 
-            for (Profissional p : profissionais) {
-                if (p.getEspecialidade() == prod.getEspecialidadeNecessaria()) {
+            for (int j = 0; j < profissionais.length; j++) {
+                Profissional p = profissionais[j];
+                // comparar conteúdo das Strings (null-safe)
+                if (p.getEspecialidade() != null && p.getEspecialidade().equals(prod.getEspecialidadeNecessaria())) {
                     int tempo = prod.getTempoDePreparo();
 
                     if (horasRestantes.get(p) >= tempo) {
@@ -85,33 +77,44 @@ public final class Agendamento {
                 }
             }
 
-                if (!encontrado) {
-                    this.status = "Rejeitado";
-                    return;
-                }
+            if (!encontrado) {
+                this.status = "Rejeitado";
+                return;
             }
-            for (Produto prod : produtos) {
-                Profissional p = alocacaoSimulada.get(prod);
-                System.out.println("Profissional Solicitado:");
-                p.imprimeInformacoesProfissional();
+        }
 
-                Pedido pedido = new Pedido(
+        for (int i = 0; i < produtos.size(); i++) {
+            Produto prod = produtos.get(i);
+            Profissional p = alocacaoSimulada.get(prod);
+            System.out.println("Profissional Solicitado:");
+            p.imprimeInformacoesProfissional();
+
+            String clienteCpfParaPedido;
+            if (cliente != null) {
+                clienteCpfParaPedido = cliente.getCpf();
+            } else {
+                clienteCpfParaPedido = null;
+            }
+
+            Pedido pedido = new Pedido(
                     this.data,
                     prod.getTempoDePreparo(),
                     prod.getValor(),
                     "Em preparo",
-                    1
-                );
+                    1,
+                    clienteCpfParaPedido);
 
-                boolean ok = p.confirmarPedidoProfissional(pedido);
+            pedido.setProduto(prod);
 
-                if (!ok) {
-                    this.status = "Rejeitado";
-                    return;
-                }
+            boolean ok = p.confirmarPedidoProfissional(pedido);
+
+            if (!ok) {
+                this.status = "Rejeitado";
+                return;
             }
+        }
 
         this.statusAceito();
-        
+
     }
 }
