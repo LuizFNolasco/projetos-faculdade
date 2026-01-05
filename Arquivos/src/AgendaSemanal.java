@@ -1,5 +1,4 @@
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 public class AgendaSemanal {
     // Alteração: Retirei a qtdHorasDiarias -> É atributo do dia
@@ -19,7 +18,6 @@ public class AgendaSemanal {
     }
 
     public void inicializarDias() {
-        DateTimeFormatter dataFormatada = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String[] nomes = { "Segunda", "Terca", "Quarta", "Quinta", "Sexta" };
 
         LocalDate dataInicial = LocalDate.of(2025, 12, 1);
@@ -38,10 +36,7 @@ public class AgendaSemanal {
     }
 
     public void imprimeInformacoesAgenda() {
-        System.out.println("Quantidade de dias disponiveis: " + getQtdDiasDisponiveis());
-        for (Dia dia : dias) {
-            dia.imprimeInformacoesDia();
-        }
+        System.out.println("Quantidade de horas disponiveis na semana: " + HorasDisponiveisAgenda());
     }
 
     public int HorasDisponiveisAgenda() {

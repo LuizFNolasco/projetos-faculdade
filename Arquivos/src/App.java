@@ -10,17 +10,15 @@ public class App {
 
                 // Produtos disponíveis
                 List<Produto> catalogo = new ArrayList<>();
-                catalogo.add(new Produto("Pão", 1, 4, 20, "Padeiro"));
+                catalogo.add(new Produto("Pao", 1, 4, 20, "Padeiro"));
                 catalogo.add(new Produto("Doce", 2, 3, 50, "Doceiro"));
                 catalogo.add(new Produto("Bolo", 3, 5, 100, "Confeiteiro"));
 
                 // Listas do sistema
                 List<Cliente> clientes = new ArrayList<>();
                 // clientes pré-cadastrados para testes
-                Cliente clienteTeste1 = new Cliente("111.222.333-44", "Maria Silva", "maria@gmail.com", "98888-1111",
-                                LocalDate.parse("10/02/1990", dataFormatada));
-                Cliente clienteTeste2 = new Cliente("555.666.777-88", "Carlos Souza", "carlos@gmail.com", "97777-2222",
-                                LocalDate.parse("03/11/1982", dataFormatada));
+                Cliente clienteTeste1 = new Cliente("111.222.333-44", "Maria Silva", "maria@gmail.com", "98888-1111", LocalDate.parse("10/02/1990", dataFormatada));
+                Cliente clienteTeste2 = new Cliente("555.666.777-88", "Carlos Souza", "carlos@gmail.com", "97777-2222", LocalDate.parse("03/11/1982", dataFormatada));
                 clientes.add(clienteTeste1);
                 clientes.add(clienteTeste2);
 
@@ -28,16 +26,12 @@ public class App {
                 List<Candidato> candidatos = new ArrayList<>();
 
                 // Administrador fixo
-                Administrador admin = new Administrador("000.000.000-00", "Admin", "admin@loja.com", "0000-0000",
-                                LocalDate.parse("01/01/1980", dataFormatada));
+                Administrador admin = new Administrador("000.000.000-00", "Admin", "admin@loja.com", "0000-0000", LocalDate.parse("01/01/1980", dataFormatada));
 
                 // Profissionais pre-cadastrados para testes
-                Profissional doceiro = new Profissional("222.333.444-55", "Ana Silva", "ana@gmail.com", "90000-0000",
-                                LocalDate.parse("15/03/1992", dataFormatada), "Doceiro", 1, 40.0, 8);
-                Profissional confeiteiro = new Profissional("888.999.000-11", "Pedro Silva", "pedro@gmail.com",
-                                "95555-4444", LocalDate.parse("01/09/1988", dataFormatada), "Confeiteiro", 2, 60.0, 8);
-                Profissional padeiro = new Profissional("123.456.789-00", "Joao Silva", "joaosilva@gmail.com",
-                                "99999-9999", LocalDate.parse("01/09/1988", dataFormatada), "Padeiro", 3, 10, 8);
+                Profissional doceiro = new Profissional("222.333.444-55", "Ana Silva", "ana@gmail.com", "90000-0000", LocalDate.parse("15/03/1992", dataFormatada), "Doceiro", 1, 40.0, 8);
+                Profissional confeiteiro = new Profissional("888.999.000-11", "Pedro Silva", "pedro@gmail.com", "95555-4444", LocalDate.parse("01/09/1988", dataFormatada), "Confeiteiro", 2, 60.0, 8);
+                Profissional padeiro = new Profissional("123.456.789-00", "Joao Silva", "joaosilva@gmail.com", "99999-9999", LocalDate.parse("01/09/1988", dataFormatada), "Padeiro", 3, 10, 8);
 
                 profissionais.add(doceiro);
                 profissionais.add(confeiteiro);
@@ -53,7 +47,8 @@ public class App {
                         System.out.println("3 - Adicionar candidato");
                         System.out.println("4 - Avaliar candidatos");
                         System.out.println("5 - Listar clientes");
-                        System.out.println("6 - Cancelar pedido");
+                        System.out.println("6 - Listar funcionarios");
+                        System.out.println("7 - Cancelar pedido");
                         System.out.println("0 - Sair");
                         System.out.print("Escolha uma opcao: \n");
                         String esc = sc.nextLine().trim();
@@ -79,15 +74,13 @@ public class App {
                                 }
                                 case "2": {
                                         if (clientes.isEmpty()) {
-                                                System.out.println(
-                                                                "Nenhum cliente cadastrado. Cadastre um cliente antes.");
+                                                System.out.println("Nenhum cliente cadastrado. Cadastre um cliente antes.");
                                                 System.out.println();
                                                 break;
                                         }
                                         System.out.println("Clientes:");
                                         for (int i = 0; i < clientes.size(); i++) {
-                                                System.out.println(i + " - " + clientes.get(i).getNome() + " ("
-                                                                + clientes.get(i).getCpf() + ")");
+                                                System.out.println(i + " - " + clientes.get(i).getNome() + " ("+ clientes.get(i).getCpf() + ")");
                                         }
                                         System.out.println();
                                         System.out.print("Escolha o indice do cliente: ");
@@ -105,24 +98,22 @@ public class App {
                                                 System.out.println("Catalogo de produtos:");
                                                 for (int i = 0; i < catalogo.size(); i++) {
                                                         Produto p = catalogo.get(i);
-                                                        System.out.println(i + " - " + p.getNome() + " ("
-                                                                        + p.getEspecialidadeNecessaria() + ") - tempo: "
-                                                                        + p.getTempoDePreparo() + "h - R$"
-                                                                        + p.getValor());
+                                                        p.imprimeProduto(i);
                                                 }
                                                 System.out.println();
-                                                System.out.print(
-                                                                "Escolha indice do produto para adicionar (ou 'f' para finalizar): ");
+                                                System.out.print("Escolha indice do produto para adicionar (ou 'f' para finalizar): ");
                                                 String line = sc.nextLine();
                                                 if (line.equalsIgnoreCase("f")) {
                                                         adicionando = false;
-                                                } else {
+                                                } 
+                                                else {
                                                         int pi = Integer.parseInt(line);
                                                         if (pi >= 0 && pi < catalogo.size()) {
                                                                 sel.add(catalogo.get(pi));
                                                                 System.out.println("Produto adicionado.");
                                                                 System.out.println();
-                                                        } else {
+                                                        } 
+                                                        else {
                                                                 System.out.println("Indice invalido.");
                                                                 System.out.println();
                                                         }
@@ -139,8 +130,7 @@ public class App {
                                         String dataAg = sc.nextLine();
                                         LocalDate dataAgendamento = LocalDate.parse(dataAg, dataFormatada);
                                         Agendamento ag = new Agendamento(dataAgendamento, sel);
-                                        ag.solicitacaoDeProfissional(profissionais.toArray(new Profissional[0]),
-                                                        clienteSelecionado);
+                                        ag.solicitacaoDeProfissional(profissionais.toArray(new Profissional[0]), clienteSelecionado);
                                         System.out.println("Status do agendamento: " + ag.getStatus());
                                         System.out.println();
                                         break;
@@ -184,7 +174,8 @@ public class App {
                                                         profissionais.add(aprov);
                                                         aprovados.add(cand);
                                                         System.out.println("Candidato aprovado: " + cand.getNome());
-                                                } else {
+                                                } 
+                                                else {
                                                         System.out.println("Candidato rejeitado: " + cand.getNome());
                                                 }
                                         }
@@ -199,7 +190,7 @@ public class App {
                                                 System.out.println();
                                                 break;
                                         }
-                                        System.out.println("Lista de clientes:");
+                                        System.out.println("Lista de clientes:\n");
                                         for (Cliente c : clientes) {
                                                 c.imprimeInformacoesPessoa();
                                                 System.out.println();
@@ -207,6 +198,19 @@ public class App {
                                         break;
                                 }
                                 case "6": {
+                                        if (profissionais.isEmpty()) {
+                                                System.out.println("Estamos sem profissionais no momento.");
+                                                System.out.println();
+                                                break;
+                                        }
+                                        System.out.println("Lista de profissionais:\n");
+                                        for (Profissional p : profissionais) {
+                                                p.imprimeInformacoesProfissional();
+                                                System.out.println();
+                                        }
+                                        break;
+                                }
+                                case "7": {
                                         if (clientes.isEmpty()) {
                                                 System.out.println("Nenhum cliente cadastrado.");
                                                 System.out.println();
@@ -244,8 +248,7 @@ public class App {
                                                         continue;
                                                 for (int j = 0; j < lista.size(); j++) {
                                                         Pedido ped = lista.get(j);
-                                                        if (ped != null && clienteSelecionadoParaCancelamento.getCpf()
-                                                                        .equals(ped.getClienteCpf())) {
+                                                        if (ped != null && clienteSelecionadoParaCancelamento.getCpf().equals(ped.getClienteCpf())) {
                                                                 pedidosDoCliente.add(ped);
                                                                 profsParaPedidos.add(prof);
                                                         }
@@ -262,12 +265,8 @@ public class App {
                                         for (int i = 0; i < pedidosDoCliente.size(); i++) {
                                                 Pedido ped = pedidosDoCliente.get(i);
                                                 Profissional prof = profsParaPedidos.get(i);
-                                                String nomeProduto = (ped.getProduto() != null
-                                                                ? ped.getProduto().getNome()
-                                                                : "N/A");
-                                                System.out.println(i + " - ID: " + ped.getId() + " | Produto: "
-                                                                + nomeProduto + " | Status: " + ped.getStatus()
-                                                                + " | Profissional: " + prof.getNome());
+                                                String nomeProduto = (ped.getProduto() != null ? ped.getProduto().getNome() : "N/A");
+                                                System.out.println(i + " - ID: " + ped.getId() + " | Produto: " + nomeProduto + " | Status: " + ped.getStatus() + " | Profissional: " + prof.getNome());
                                         }
                                         System.out.println();
                                         System.out.print("Escolha o indice do pedido para cancelar: ");
@@ -285,7 +284,8 @@ public class App {
                                         if (cancelOk) {
                                                 System.out.println("Pedido cancelado com sucesso no profissional: "
                                                                 + profResponsavel.getNome());
-                                        } else {
+                                        } 
+                                        else {
                                                 System.out.println("Falha ao cancelar o pedido.");
                                         }
                                         System.out.println();

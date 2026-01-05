@@ -56,6 +56,8 @@ public class Produto {
         this.nome = nome;
     }
 
-    
+    public void imprimeProduto(int indice){
+        System.out.println(indice + " - " +getNome() + " ("+getEspecialidadeNecessaria() + ") - tempo: "+getTempoDePreparo() + "h - R$" +getValor());
+    }
 
 }

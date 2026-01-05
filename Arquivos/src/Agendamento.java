@@ -7,7 +7,6 @@ public final class Agendamento {
     private LocalDate data;
     private String status;
     private List<Produto> produtos;
-    private Notificacao notificacao;
 
     public String getStatus() {
         return this.status;

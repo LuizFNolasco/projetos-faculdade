@@ -69,8 +69,7 @@ public class Profissional extends Pessoa {
         this.agenda = new AgendaSemanal();
     }
 
-    public Profissional(String cpf, String nome, String email, String telefone, LocalDate dataNascimento,
-            String especialidade, int id, double valorMinimoPedido, int tempoExperiencia) {
+    public Profissional(String cpf, String nome, String email, String telefone, LocalDate dataNascimento, String especialidade, int id, double valorMinimoPedido, int tempoExperiencia) {
         super(cpf, nome, email, telefone, dataNascimento);
         setEspecialidade(especialidade);
         setId(id);
@@ -117,8 +116,7 @@ public class Profissional extends Pessoa {
                         prox.setStatus("Cancelado");
                         // limpa o flag de interrupção
                         Thread.interrupted();
-                        System.out.println(
-                                "Pedido ID " + prox.getId() + " foi interrompido (cancelado) durante preparo.");
+                        System.out.println("Pedido ID " + prox.getId() + " foi cancelado.");
                         System.out.println();
                     } finally {
                         pedidoAtual = null;
@@ -133,7 +131,7 @@ public class Profissional extends Pessoa {
     }
 
     public void imprimeInformacoesProfissional() {
-        super.imprimeInformacoesPessoa();
+        System.out.println("Nome: "+getNome());
         System.out.println("Especialidade: " + getEspecialidade());
         System.out.println("ID: " + getId());
         System.out.println("Valor Minimo do Pedido: " + getValorMinimoPedido());
@@ -179,11 +177,13 @@ public class Profissional extends Pessoa {
     // cancela pedido por id e cpf do cliente; devolve horas de forma proporcional
     // ao tempo restante
     public boolean cancelarPedidoPorId(int pedidoId, String clienteCpf) {
-        // primeiro, checa se o pedido em preparo é o pedido alvo
+        // primeiro, confere se o pedido em preparo é o pedido alvo
         if (pedidoAtual != null) {
             if (pedidoAtual.getId() == pedidoId) {
                 if (clienteCpf != null) {
                     if (clienteCpf.equals(pedidoAtual.getClienteCpf())) {
+                        System.out.println("Seu pedido ja esta em preparo, logo, sera cobrada uma taxa de 50% do valor total.");
+                        System.out.println("Valor a ser cobrado "+pedidoAtual.getValor()/2);
                         // calcula tempo restante antes de interromper
                         long totalMs = totalPreparoMs;
                         long elapsed = System.currentTimeMillis() - inicioPreparoMs;
@@ -196,7 +196,8 @@ public class Profissional extends Pessoa {
                         if (totalMs > 0) {
                             double frac = (double) remainingMs / (double) totalMs;
                             horasADevolver = (int) Math.floor(duracaoHoras * frac);
-                        } else {
+                        } 
+                        else {
                             horasADevolver = 0;
                         }
                         // devolve horas proporcionais
