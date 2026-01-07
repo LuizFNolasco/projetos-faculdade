@@ -1,12 +1,13 @@
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.time.format.ResolverStyle;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
 public class App {
         public static void main(String[] args) throws Exception {
-                DateTimeFormatter dataFormatada = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                DateTimeFormatter dataFormatada = DateTimeFormatter.ofPattern("dd/MM/uuuu").withResolverStyle(ResolverStyle.STRICT);;
 
                 // Produtos disponíveis
                 List<Produto> catalogo = new ArrayList<>();
@@ -41,6 +42,7 @@ public class App {
                 boolean running = true;
 
                 while (running) {
+                        Thread.sleep(3000);
                         System.out.println("\n--- Sistema Confeitaria ---");
                         System.out.println("1 - Adicionar cliente");
                         System.out.println("2 - Adicionar pedido de cliente");
@@ -54,20 +56,60 @@ public class App {
                         String esc = sc.nextLine().trim();
 
                         switch (esc) {
+                                /* 
+                                   TODOs: fiz o tratamento de erro dessa forma porque ficou mais facil, o outro jeito seria colocar um try catch para cada
+                                   erro, seria 1 para o nome, outro para o cpf e assim por diante, achei menos custuso e mais bonito dessa forma que fiz,
+                                   qualquer coisa só falar que eu mudo
+                                */
                                 case "1": {
                                         System.out.print("CPF: ");
                                         String cpf = sc.nextLine();
+                                        while(cpf.length() != 11){
+                                                System.out.println("O cpf não possui 11 digitos, favor digite novamente");
+                                                cpf = sc.nextLine();
+                                        }
+
                                         System.out.print("Nome: ");
                                         String nome = sc.nextLine();
+                                        while(nome.length() < 1){
+                                                System.out.println("O nome não pode ser vazio, favor digite novamente");
+                                                nome = sc.nextLine();
+                                        }
+                                        
                                         System.out.print("Email: ");
                                         String email = sc.nextLine();
+                                        while(email.length() < 1){
+                                                System.out.println("O email não pode ser vazio, favor digite novamente");
+                                                email = sc.nextLine();
+                                        }
+
                                         System.out.print("Telefone: ");
                                         String tel = sc.nextLine();
-                                        System.out.print("Data Nascimento (dd/MM/yyyy): ");
-                                        String dn = sc.nextLine();
-                                        LocalDate dataNasc = LocalDate.parse(dn, dataFormatada);
+                                        while(tel.length() != 9){
+                                                System.out.println("O número de telefone não possui 9 digitos, favor digite novamente");
+                                                tel = sc.nextLine();
+                                        }
+                                        
+                                        boolean valido = false;
+                                        LocalDate dataNasc = null;
+                                        while(valido == false){
+                                                try{
+                                                        System.out.print("Data Nascimento (dd/MM/yyyy)");
+                                                        String dn = sc.nextLine();
+                                                        dataNasc = LocalDate.parse(dn, dataFormatada); // .parse ativa o Exception automaticamente
+                                                        
+                                                        if(dataNasc.isAfter(LocalDate.now())){
+                                                                throw new Exception("A data não pode ser superior ao dia de hoje");
+                                                        }
+                                                        valido = true;
+                                                }catch(Exception e){
+                                                        System.out.println("Formato de data invalido, favor digite um formato valido");
+                                                }
+                                        }
+
                                         Cliente c = new Cliente(cpf, nome, email, tel, dataNasc);
                                         clientes.add(c);
+                                        
                                         System.out.println("Cliente adicionado.");
                                         System.out.println();
                                         break;
@@ -126,10 +168,26 @@ public class App {
                                                 break;
                                         }
 
-                                        System.out.print("Data do agendamento (dd/MM/yyyy): ");
-                                        String dataAg = sc.nextLine();
-                                        LocalDate dataAgendamento = LocalDate.parse(dataAg, dataFormatada);
+                                        boolean valido = false;
+                                        LocalDate dataAgendamento = null;
+                                        while(valido == false){
+                                                try{
+                                                        System.out.print("Data agendamento (dd/MM/yyyy): ");
+                                                        String dataAg = sc.nextLine();
+                                                        dataAgendamento = LocalDate.parse(dataAg, dataFormatada);
+                                                        
+                                                        if(dataAgendamento.isBefore(LocalDate.now())){
+                                                                throw new Exception("A data não pode ser anterior ao dia de hoje");
+                                                        }
+                                                        valido = true;
+                                                }catch(Exception e){
+                                                        System.out.println("Formato de data invalido, favor digite um formato valido");
+                                                }
+                                        }
                                         Agendamento ag = new Agendamento(dataAgendamento, sel);
+
+                                        clienteSelecionado.setAgendamentos(ag);
+
                                         ag.solicitacaoDeProfissional(profissionais.toArray(new Profissional[0]), clienteSelecionado);
                                         System.out.println("Status do agendamento: " + ag.getStatus());
                                         System.out.println();
@@ -138,24 +196,77 @@ public class App {
                                 case "3": {
                                         System.out.print("CPF: ");
                                         String cpf = sc.nextLine();
+                                        while(cpf.length() != 11){
+                                                System.out.println("O cpf não possui 11 digitos, favor digite novamente");
+                                                cpf = sc.nextLine();
+                                        }
+
                                         System.out.print("Nome: ");
                                         String nome = sc.nextLine();
+                                        while(nome.length() < 1){
+                                                System.out.println("O nome não pode ser vazio, favor digite novamente");
+                                                nome = sc.nextLine();
+                                        }
+
                                         System.out.print("Email: ");
                                         String email = sc.nextLine();
+                                        while(email.length() < 1){
+                                                System.out.println("O email não pode ser vazio, favor digite novamente");
+                                                email = sc.nextLine();
+                                        }
+
                                         System.out.print("Telefone: ");
                                         String tel = sc.nextLine();
-                                        System.out.print("Data Nascimento (dd/MM/yyyy): ");
-                                        String dn = sc.nextLine();
+                                        while(nome.length() != 9){
+                                                System.out.println("O número de telefone digitado não possui 9 digitos, favor digite novamente");
+                                                nome = sc.nextLine();
+                                        }
+
+                                        boolean valido = false;
+                                        LocalDate dataNasc = null;
+                                        while(valido == false){
+                                                try{
+                                                        System.out.print("Data Nascimento (dd/MM/yyyy): ");
+                                                        String dn = sc.nextLine();
+                                                        dataNasc = LocalDate.parse(dn, dataFormatada);
+                                                        
+                                                        if(dataNasc.isAfter(LocalDate.now())){
+                                                                throw new Exception("A data não pode ser superior ao dia de hoje");
+                                                        }
+                                                        valido = true;
+                                                }catch(Exception e){
+                                                        System.out.println("Formato de data invalido, favor digite um formato valido");
+                                                }
+                                        }
+
                                         System.out.print("Tempo experiencia (anos): ");
                                         int te = Integer.parseInt(sc.nextLine());
+                                        while(te < 0){
+                                                System.out.println("Tempo de experiencia invalido, favor digite novamente");
+                                                te = Integer.parseInt(sc.nextLine());
+                                        }
+
                                         System.out.print("Valor desejado: ");
                                         float valor = Float.parseFloat(sc.nextLine());
+                                        while(valor < 0){
+                                                System.out.println("Valor invalido, favor digite novamente");
+                                                valor = Float.parseFloat(sc.nextLine());
+                                        }
+
                                         System.out.print("Horas disponiveis por dia: ");
                                         int hpd = Integer.parseInt(sc.nextLine());
+                                        while(hpd < 0){
+                                                System.out.println("Número de horas invalido, favor digite novamente");
+                                        }
+
                                         System.out.print("Especialidade: ");
                                         String esp = sc.nextLine();
-                                        Candidato cand = new Candidato(cpf, nome, email, tel,
-                                                        LocalDate.parse(dn, dataFormatada), te, valor, hpd, esp);
+                                        while(esp.length() < 1){
+                                                System.out.println("Favor não deixe o campo vazio, digite novamente");
+                                                esp = sc.nextLine();
+                                        }
+                                        
+                                        Candidato cand = new Candidato(cpf, nome, email, tel, dataNasc, te, valor, hpd, esp);
                                         candidatos.add(cand);
                                         System.out.println("Candidato adicionado.");
                                         System.out.println();
@@ -232,8 +343,8 @@ public class App {
                                         Cliente clienteSelecionadoParaCancelamento = clientes.get(idxCliente);
 
                                         // coletar pedidos do cliente entre todos os profissionais
-                                        java.util.List<Profissional> profsParaPedidos = new java.util.ArrayList<>();
-                                        java.util.List<Pedido> pedidosDoCliente = new java.util.ArrayList<>();
+                                        List<Profissional> profsParaPedidos = new ArrayList<>();
+                                        List<Pedido> pedidosDoCliente = new ArrayList<>();
                                         for (int i = 0; i < profissionais.size(); i++) {
                                                 Profissional prof = profissionais.get(i);
                                                 // primeiro, checar se há um pedido em preparo que pertence ao cliente
@@ -243,7 +354,7 @@ public class App {
                                                         pedidosDoCliente.add(atual);
                                                         profsParaPedidos.add(prof);
                                                 }
-                                                java.util.List<Pedido> lista = prof.getPedidos();
+                                                List<Pedido> lista = prof.getPedidos();
                                                 if (lista == null)
                                                         continue;
                                                 for (int j = 0; j < lista.size(); j++) {

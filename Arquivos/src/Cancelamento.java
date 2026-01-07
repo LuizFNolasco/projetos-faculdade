@@ -20,21 +20,21 @@ public class Cancelamento {
     }
 
 
-    public String getDescricao() {
+    public String getDescricao() {// TODOs: não está
         return descricao;
     }
     public void setDescricao(String descricao) {
         this.descricao = descricao;
     }
 
-    public Dia getTempoMinimoDeCancelamento() {
+    public Dia getTempoMinimoDeCancelamento() { // TODOs: não está
         return tempoMinimoDeCancelamento;
     }
     public void setTempoMinimoDeCancelamento(Dia tempoMinimoDeCancelamento) {
         this.tempoMinimoDeCancelamento = tempoMinimoDeCancelamento;
     }
 
-    public float getPenalidade() {
+    public float getPenalidade() { // TODOs: não está
         return penalidade;
     }
     public void setPenalidade(float penalidade) {

@@ -81,7 +81,7 @@ public class Profissional extends Pessoa {
     }
 
     // inicia a thread do profissional que processa a fila de pedidos
-    private void iniciarThreadWorker() {
+    private void iniciarThreadWorker() { //TODOs: como adicionar notificação aqui?
         workerThread = new Thread(new Runnable() {
             public void run() {
                 while (true) {
@@ -158,7 +158,7 @@ public class Profissional extends Pessoa {
         return this.agenda.HorasDisponiveisAgenda();
     }
 
-    public boolean conferirAgendaProfissional(int horasServico) {
+    public boolean conferirAgendaProfissional(int horasServico) { // TODOs: não está
         if (agenda.conferirHorarioProfissional(horasServico)) {
             return true;
         }

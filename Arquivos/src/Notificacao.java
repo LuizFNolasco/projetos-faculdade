@@ -1,4 +1,5 @@
 import java.util.Scanner;
+// TODOs: classe não está sendo utilizada, possui algumas instancias que não fazem nada
 
 public class Notificacao {
     public String nomeDestinatario;

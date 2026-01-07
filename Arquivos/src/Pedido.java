@@ -11,7 +11,7 @@ public final class Pedido {
     private Produto produto;
     private String status; // Status: em preparo, concluido, cancelado
     private int quantidade;
-    private String clienteCpf;
+    private String clienteCpf; // TODOs: não poderia ser o objeto cliente?
 
     public int getId() {
         return id;

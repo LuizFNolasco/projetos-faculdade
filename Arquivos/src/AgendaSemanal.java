@@ -9,7 +9,7 @@ public class AgendaSemanal {
         this.qtdDiasDisponiveis = qtdDiasDisponiveis;
     }
 
-    public int getQtdDiasDisponiveis() {
+    public int getQtdDiasDisponiveis() { // TODOs: não está
         return qtdDiasDisponiveis;
     }
 

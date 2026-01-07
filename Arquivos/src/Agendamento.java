@@ -20,7 +20,7 @@ public final class Agendamento {
         this.status = "Pedido aceito";
     }
 
-    public void statusFinalizado() {
+    public void statusFinalizado() { // TODOs: não está
         this.status = "Pedido finalizado";
     }
 
@@ -32,7 +32,7 @@ public final class Agendamento {
         this.data = data;
     }
 
-    public List<Produto> getProdutos() {
+    public List<Produto> getProdutos() { // TODOs: não está
         return produtos;
     }
 

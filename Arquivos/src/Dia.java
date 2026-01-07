@@ -54,7 +54,7 @@ public class Dia {
         }
     }
 
-    public void imprimeInformacoesDia() {
+    public void imprimeInformacoesDia() { // TODOs: não está
         System.out.println("Dia: " + getNome() + ", Data: " + getData());
         System.out.println("Quantidade de horas disponiveis: " + getQuantidadeDeHoras());
     }
@@ -72,7 +72,7 @@ public class Dia {
         return null;
     }
 
-    public void confirmarHorarioDisponivel(int horasServico) {
+    public void confirmarHorarioDisponivel(int horasServico) { // TODOs: não está
         if (conferirHorarioDisponivel(horasServico) != null) {
             diminuiHorasDisponiveis(horasServico);
         }
