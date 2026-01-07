@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.Period;
 
 public class Administrador extends Pessoa {
 
@@ -25,7 +26,7 @@ public class Administrador extends Pessoa {
 
 		//Alterei pro profissional precisar de 8 horas diarias ao invés de 6
 		boolean criterios = c.getTempoExperiencia() > 5 && c.getValorDesejado() < 3000f
-				&& c.getHorasDisponiveisPorDia() >= 8;
+				&& c.getHorasDisponiveisPorDia() >= 8 && Period.between(c.getDataNascimento(), LocalDate.now()).getYears() >= 18;
 
 		if (!criterios)
 			return null;

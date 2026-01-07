@@ -13,7 +13,7 @@ public final class Agendamento {
     }
 
     public void statusEmAnalise() {
-        this.status = "Pedido em análise";
+        this.status = "Pedido em analise";
     }
 
     public void statusAceito() {

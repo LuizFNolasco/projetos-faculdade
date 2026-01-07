@@ -18,8 +18,8 @@ public class App {
                 // Listas do sistema
                 List<Cliente> clientes = new ArrayList<>();
                 // clientes pré-cadastrados para testes
-                Cliente clienteTeste1 = new Cliente("111.222.333-44", "Maria Silva", "maria@gmail.com", "98888-1111", LocalDate.parse("10/02/1990", dataFormatada));
-                Cliente clienteTeste2 = new Cliente("555.666.777-88", "Carlos Souza", "carlos@gmail.com", "97777-2222", LocalDate.parse("03/11/1982", dataFormatada));
+                Cliente clienteTeste1 = new Cliente("11122233344", "Maria Silva", "maria@gmail.com", "988881111", LocalDate.parse("10/02/1990", dataFormatada));
+                Cliente clienteTeste2 = new Cliente("55566677788", "Carlos Souza", "carlos@gmail.com", "977772222", LocalDate.parse("03/11/1982", dataFormatada));
                 clientes.add(clienteTeste1);
                 clientes.add(clienteTeste2);
 
@@ -27,12 +27,12 @@ public class App {
                 List<Candidato> candidatos = new ArrayList<>();
 
                 // Administrador fixo
-                Administrador admin = new Administrador("000.000.000-00", "Admin", "admin@loja.com", "0000-0000", LocalDate.parse("01/01/1980", dataFormatada));
+                Administrador admin = new Administrador("00000000000", "Admin", "admin@hotmail.com", "000000000", LocalDate.parse("01/01/1980", dataFormatada));
 
                 // Profissionais pre-cadastrados para testes
-                Profissional doceiro = new Profissional("222.333.444-55", "Ana Silva", "ana@gmail.com", "90000-0000", LocalDate.parse("15/03/1992", dataFormatada), "Doceiro", 1, 40.0, 8);
-                Profissional confeiteiro = new Profissional("888.999.000-11", "Pedro Silva", "pedro@gmail.com", "95555-4444", LocalDate.parse("01/09/1988", dataFormatada), "Confeiteiro", 2, 60.0, 8);
-                Profissional padeiro = new Profissional("123.456.789-00", "Joao Silva", "joaosilva@gmail.com", "99999-9999", LocalDate.parse("01/09/1988", dataFormatada), "Padeiro", 3, 10, 8);
+                Profissional doceiro = new Profissional("22233344455", "Ana Silva", "ana@gmail.com", "900000000", LocalDate.parse("15/03/1992", dataFormatada), "Doceiro", 1, 40.0, 8);
+                Profissional confeiteiro = new Profissional("88899900011", "Pedro Silva", "pedro@gmail.com", "955554444", LocalDate.parse("01/09/1988", dataFormatada), "Confeiteiro", 2, 60.0, 8);
+                Profissional padeiro = new Profissional("12345678900", "Joao Silva", "joaosilva@gmail.com", "999999999", LocalDate.parse("01/09/1988", dataFormatada), "Padeiro", 3, 10, 8);
 
                 profissionais.add(doceiro);
                 profissionais.add(confeiteiro);
@@ -42,7 +42,7 @@ public class App {
                 boolean running = true;
 
                 while (running) {
-                        Thread.sleep(3000);
+                        Thread.sleep(2000);
                         System.out.println("\n--- Sistema Confeitaria ---");
                         System.out.println("1 - Adicionar cliente");
                         System.out.println("2 - Adicionar pedido de cliente");
@@ -78,15 +78,15 @@ public class App {
                                         
                                         System.out.print("Email: ");
                                         String email = sc.nextLine();
-                                        while(email.length() < 1){
-                                                System.out.println("O email não pode ser vazio, favor digite novamente");
+                                        while(!email.contains("@gmail.com") && !email.contains("@hotmail.com") && !email.contains("@outlook.com")){
+                                                System.out.println("Formato de email incorreto");
                                                 email = sc.nextLine();
                                         }
 
                                         System.out.print("Telefone: ");
                                         String tel = sc.nextLine();
                                         while(tel.length() != 9){
-                                                System.out.println("O número de telefone não possui 9 digitos, favor digite novamente");
+                                                System.out.println("O numero de telefone nao possui 9 digitos, favor digite novamente");
                                                 tel = sc.nextLine();
                                         }
                                         
@@ -94,7 +94,7 @@ public class App {
                                         LocalDate dataNasc = null;
                                         while(valido == false){
                                                 try{
-                                                        System.out.print("Data Nascimento (dd/MM/yyyy)");
+                                                        System.out.print("Data Nascimento (dd/MM/yyyy): ");
                                                         String dn = sc.nextLine();
                                                         dataNasc = LocalDate.parse(dn, dataFormatada); // .parse ativa o Exception automaticamente
                                                         
@@ -102,7 +102,8 @@ public class App {
                                                                 throw new Exception("A data não pode ser superior ao dia de hoje");
                                                         }
                                                         valido = true;
-                                                }catch(Exception e){
+                                                }
+                                                catch(Exception e){
                                                         System.out.println("Formato de data invalido, favor digite um formato valido");
                                                 }
                                         }
@@ -210,16 +211,16 @@ public class App {
 
                                         System.out.print("Email: ");
                                         String email = sc.nextLine();
-                                        while(email.length() < 1){
-                                                System.out.println("O email não pode ser vazio, favor digite novamente");
+                                        while(!email.contains("@gmail.com") && !email.contains("@hotmail.com") && !email.contains("@outlook.com")){
+                                                System.out.println("Formato de email incorreto");
                                                 email = sc.nextLine();
                                         }
 
                                         System.out.print("Telefone: ");
                                         String tel = sc.nextLine();
-                                        while(nome.length() != 9){
-                                                System.out.println("O número de telefone digitado não possui 9 digitos, favor digite novamente");
-                                                nome = sc.nextLine();
+                                        while(tel.length() != 9){
+                                                System.out.println("O numero de telefone nao possui 9 digitos, favor digite novamente");
+                                                tel = sc.nextLine();
                                         }
 
                                         boolean valido = false;
@@ -257,6 +258,7 @@ public class App {
                                         int hpd = Integer.parseInt(sc.nextLine());
                                         while(hpd < 0){
                                                 System.out.println("Número de horas invalido, favor digite novamente");
+                                                hpd = Integer.parseInt(sc.nextLine());
                                         }
 
                                         System.out.print("Especialidade: ");
