@@ -20,6 +20,8 @@ public class Profissional extends Pessoa {
     // escala temporal: 1 hora do sistema = 15 segundos reais
     private static final long MS_POR_HORA = 15000L;
 
+    Notificacao notf = new Notificacao(); //TODOs: aqui
+
     // expõe o pedido atualmente em preparo (ou null)
     public Pedido getPedidoAtual() {
         return pedidoAtual;
@@ -81,7 +83,7 @@ public class Profissional extends Pessoa {
     }
 
     // inicia a thread do profissional que processa a fila de pedidos
-    private void iniciarThreadWorker() { //TODOs: como adicionar notificação aqui?
+    private void iniciarThreadWorker() {
         workerThread = new Thread(new Runnable() {
             public void run() {
                 while (true) {
@@ -109,6 +111,7 @@ public class Profissional extends Pessoa {
                         }
                         prox.setStatus("Pedido finalizado");
                         // log simples: fim do preparo
+                        notf.notificacaoPadrao(); //TODOs: aqui
                         System.out.println("Pedido ID " + prox.getId() + " finalizado pelo profissional: " + getNome());
                         System.out.println();
                     } catch (InterruptedException e) {
@@ -116,6 +119,7 @@ public class Profissional extends Pessoa {
                         prox.setStatus("Cancelado");
                         // limpa o flag de interrupção
                         Thread.interrupted();
+                        notf.notificacaoPadrao();
                         System.out.println("Pedido ID " + prox.getId() + " foi cancelado.");
                         System.out.println();
                     } finally {
@@ -147,6 +151,7 @@ public class Profissional extends Pessoa {
                 this.pedidos.add(pedido);
                 pedidos.notify();
             }
+            notf.notificacaoPadrao(); //TODOs: aqui
             System.out.println("Pedido ID " + pedido.getId() + " adicionado à fila do profissional: " + getNome());
             System.out.println();
             return true;
@@ -182,6 +187,7 @@ public class Profissional extends Pessoa {
             if (pedidoAtual.getId() == pedidoId) {
                 if (clienteCpf != null) {
                     if (clienteCpf.equals(pedidoAtual.getClienteCpf())) {
+                        notf.notificacaoPadrao(); //TODOs: aqui
                         System.out.println("Seu pedido ja esta em preparo, logo, sera cobrada uma taxa de 50% do valor total.");
                         System.out.println("Valor a ser cobrado "+pedidoAtual.getValor()/2);
                         // calcula tempo restante antes de interromper

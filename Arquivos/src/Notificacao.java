@@ -1,7 +1,13 @@
-import java.util.Scanner;
-// TODOs: classe não está sendo utilizada, possui algumas instancias que não fazem nada
-
+// TODOs: classe não está sendo utilizada
 public class Notificacao {
+    public Notificacao(){
+    }
+
+    public void notificacaoPadrao(){
+        System.out.println("Prezado cliente a doceria Doce Encanto gostaria de lhe informar que");
+    }
+    
+    /* 
     public String nomeDestinatario;
     public String emailDestinatario;
 
@@ -25,7 +31,7 @@ public class Notificacao {
         setNomeDestinatario(nomeDestinatario);
         setEmailDestinatario(emailDestinatario);
     }
-
+    
     public void notificacaoPadrao(){
         System.out.println("Mensagem enviada para o email: " + getEmailDestinatario());
         System.out.println("Caro(a) senhor(a) "+getNomeDestinatario());
@@ -40,5 +46,5 @@ public class Notificacao {
         entrada.close();
         return opcao;
     }
-
+*/
 }

@@ -1,56 +1,40 @@
 public class Cancelamento {
+    private Cliente cliente;
+    private double penalidade;
+    private Agendamento agend;
 
-    /*
-    TODOs: Precisamos vincular o cancelamento com o cliente pra penalizar ele, e com o pedido pra liberar horasDisponiveis
-    */
-
-    private String descricao;
-    /*
-    TODOs: Já que o tempoMinimoDeCancelamento vai ser especifico pra cada pedido, acho legal ele ser um date Dia
-    */
-    private Dia tempoMinimoDeCancelamento; // Acho que nao vai precisar
-
-    // Acho melhor a penalidade ser float ou double.
-    private float penalidade;
-
-    Cancelamento(String descricao, Dia tempoMinimoDeCancelamento, int penalidade) {
-        setDescricao(descricao);
-        setTempoMinimoDeCancelamento(tempoMinimoDeCancelamento);
-        setPenalidade(penalidade);
-    }
-
-
-    public String getDescricao() {// TODOs: não está
-        return descricao;
-    }
-    public void setDescricao(String descricao) {
-        this.descricao = descricao;
-    }
-
-    public Dia getTempoMinimoDeCancelamento() { // TODOs: não está
-        return tempoMinimoDeCancelamento;
-    }
-    public void setTempoMinimoDeCancelamento(Dia tempoMinimoDeCancelamento) {
-        this.tempoMinimoDeCancelamento = tempoMinimoDeCancelamento;
-    }
-
-    public float getPenalidade() { // TODOs: não está
+    public double getPenalidade() {
         return penalidade;
     }
-    public void setPenalidade(float penalidade) {
+    public void setPenalidade(double penalidade) {
         this.penalidade = penalidade;
     }
 
-    /*
-    TODOs: Preencher calculaPenalidade()
+    public void ativarDivida(Cliente cliente){
+        this.cliente = cliente;
 
-    public float calculaPenalidade(float penalidade) {
-
+        cliente.setDivida(getPenalidade());
     }
-    */
 
-    
+    public Cliente getCliente() {
+        return cliente;
+    }
 
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
 
+    public Agendamento getAgend() {
+        return agend;
+    }
+    public void setAgend(Agendamento agend) {
+        this.agend = agend;
+        agend.statusCancelado();
+    }
 
+    Cancelamento(double penalidade, Cliente cliente) {
+        setPenalidade(penalidade);
+        setCliente(cliente);
+        ativarDivida(cliente);
+    }
 }

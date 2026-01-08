@@ -20,8 +20,8 @@ public final class Agendamento {
         this.status = "Pedido aceito";
     }
 
-    public void statusFinalizado() { // TODOs: não está
-        this.status = "Pedido finalizado";
+    public void statusCancelado() {
+        this.status = "Pedido cancelado";
     }
 
     public LocalDate getData() {
@@ -31,11 +31,7 @@ public final class Agendamento {
     public void setData(LocalDate data) {
         this.data = data;
     }
-
-    public List<Produto> getProdutos() { // TODOs: não está
-        return produtos;
-    }
-
+    
     public void setProdutos(List<Produto> produtos) {
         this.produtos = produtos;
     }

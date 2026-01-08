@@ -43,16 +43,24 @@ public class App {
 
                 while (running) {
                         Thread.sleep(3000);
-                        System.out.println("\n--- Sistema Confeitaria ---");
-                        System.out.println("1 - Adicionar cliente");
-                        System.out.println("2 - Adicionar pedido de cliente");
-                        System.out.println("3 - Adicionar candidato");
-                        System.out.println("4 - Avaliar candidatos");
-                        System.out.println("5 - Listar clientes");
-                        System.out.println("6 - Listar funcionarios");
-                        System.out.println("7 - Cancelar pedido");
-                        System.out.println("0 - Sair");
-                        System.out.print("Escolha uma opcao: \n");
+                        System.out.println("\n");
+                        System.out.println("========================================");
+                        System.out.println("|       CONFEITARIA DOCE ENCANTO       |");
+                        System.out.println("========================================");
+                        System.out.println("|  [1] Adicionar Cliente               |");
+                        System.out.println("|  [2] Adicionar Pedido                |         (  )   (  ) "); // Fumaça
+                        System.out.println("|  [7] Cancelar Pedido                 |          ) (    )  ("); // Fumaça
+                        System.out.println("|--------------------------------------|        .............."); // Borda
+                        System.out.println("|  [3] Adicionar Candidato             |        |            |__"); // Alça topo
+                        System.out.println("|  [4] Avaliar Candidatos              |        |            |  )"); // Alça meio
+                        System.out.println("|  [6] Listar Funcionários             |        \\            /_/"); // Alça baixo
+                        System.out.println("|--------------------------------------|         `----------'  "); // Base copo
+                        System.out.println("|  [5] Listar Clientes                 |       _________________"); // Pires
+                        System.out.println("|  [8] Listar Devedores                |");
+                        System.out.println("|--------------------------------------|");
+                        System.out.println("|  [0] SAIR                            |");
+                        System.out.println("========================================");
+                        System.out.print(">> Escolha uma opção: ");
                         String esc = sc.nextLine().trim();
 
                         switch (esc) {
@@ -154,6 +162,8 @@ public class App {
                                                                 sel.add(catalogo.get(pi));
                                                                 System.out.println("Produto adicionado.");
                                                                 System.out.println();
+
+                                                                clienteSelecionado.setDivida(catalogo.get(pi).getValor());
                                                         } 
                                                         else {
                                                                 System.out.println("Indice invalido.");
@@ -345,6 +355,7 @@ public class App {
                                         // coletar pedidos do cliente entre todos os profissionais
                                         List<Profissional> profsParaPedidos = new ArrayList<>();
                                         List<Pedido> pedidosDoCliente = new ArrayList<>();
+
                                         for (int i = 0; i < profissionais.size(); i++) {
                                                 Profissional prof = profissionais.get(i);
                                                 // primeiro, checar se há um pedido em preparo que pertence ao cliente
@@ -354,6 +365,7 @@ public class App {
                                                         pedidosDoCliente.add(atual);
                                                         profsParaPedidos.add(prof);
                                                 }
+
                                                 List<Pedido> lista = prof.getPedidos();
                                                 if (lista == null)
                                                         continue;
@@ -388,6 +400,11 @@ public class App {
                                                 break;
                                         }
                                         Pedido pedidoParaCancelar = pedidosDoCliente.get(idxPedido);
+
+                                        Cancelamento cancel = new Cancelamento(pedidoParaCancelar.getValor()/2, clienteSelecionadoParaCancelamento);
+
+                                        clienteSelecionadoParaCancelamento.setDivida(-pedidoParaCancelar.getValor());
+
                                         Profissional profResponsavel = profsParaPedidos.get(idxPedido);
                                         boolean cancelOk = profResponsavel.cancelarPedidoPorId(
                                                         pedidoParaCancelar.getId(),
@@ -402,6 +419,18 @@ public class App {
                                         System.out.println();
                                         break;
                                 }
+                                case "8":
+                                        int i = 0;
+                                        for(Cliente c : clientes){
+                                                if(c.getDivida() > 0.1){
+                                                        System.out.println(c.getNome() + "deve um total de: " + c.getDivida());
+                                                        i++;
+                                                }
+                                        }
+                                        if(i == 0){
+                                                System.out.println("\nNão há devedores");
+                                        }
+                                        break;
                                 case "0": {
                                         running = false;
                                         break;

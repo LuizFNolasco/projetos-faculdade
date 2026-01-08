@@ -8,11 +8,7 @@ public class AgendaSemanal {
     public void setQtdDiasDisponiveis(int qtdDiasDisponiveis) {
         this.qtdDiasDisponiveis = qtdDiasDisponiveis;
     }
-
-    public int getQtdDiasDisponiveis() { // TODOs: não está
-        return qtdDiasDisponiveis;
-    }
-
+    
     public void setDias(int qtdDiasDisponiveis) {
         this.dias = new Dia[qtdDiasDisponiveis];
     }
@@ -24,7 +20,6 @@ public class AgendaSemanal {
 
         for (int i = 0; i < qtdDiasDisponiveis; i++) {
             LocalDate data = dataInicial.plusDays(i); // cada dia soma 1
-            // System.out.println(data.format(dataFormatada));
             dias[i] = new Dia(nomes[i], data);
         }
     }
