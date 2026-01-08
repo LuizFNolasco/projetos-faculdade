@@ -49,18 +49,18 @@ public class App {
                         System.out.println("========================================");
                         System.out.println("|  [1] Adicionar Cliente               |");
                         System.out.println("|  [2] Adicionar Pedido                |         (  )   (  ) ");
-                        System.out.println("|  [7] Cancelar Pedido                 |          ) (    )  (");
+                        System.out.println("|  [3] Cancelar Pedido                 |          ) (    )  (");
                         System.out.println("|--------------------------------------|        ..............");
-                        System.out.println("|  [3] Adicionar Candidato             |        |            |__");
-                        System.out.println("|  [4] Avaliar Candidatos              |        |            |  )");
-                        System.out.println("|  [6] Listar Funcionários             |        \\            /_/");
+                        System.out.println("|  [4] Adicionar Candidato             |        |            |__");
+                        System.out.println("|  [5] Avaliar Candidatos              |        |            |  )");
+                        System.out.println("|  [6] Listar Funcionarios             |        \\            /_/");
                         System.out.println("|--------------------------------------|         `----------'  ");
-                        System.out.println("|  [5] Listar Clientes                 |       _________________");
+                        System.out.println("|  [7] Listar Clientes                 |       _________________");
                         System.out.println("|  [8] Listar Devedores                |");
                         System.out.println("|--------------------------------------|");
                         System.out.println("|  [0] SAIR                            |");
                         System.out.println("========================================");
-                        System.out.print(">> Escolha uma opção: ");
+                        System.out.print(">> Escolha uma opcao: ");
                         String esc = sc.nextLine().trim();
 
                         switch (esc) {
@@ -73,14 +73,14 @@ public class App {
                                         System.out.print("CPF: ");
                                         String cpf = sc.nextLine();
                                         while(cpf.length() != 11){
-                                                System.out.println("O cpf não possui 11 digitos, favor digite novamente");
+                                                System.out.println("O cpf nao possui 11 digitos, favor digite novamente");
                                                 cpf = sc.nextLine();
                                         }
 
                                         System.out.print("Nome: ");
                                         String nome = sc.nextLine();
                                         while(nome.length() < 1){
-                                                System.out.println("O nome não pode ser vazio, favor digite novamente");
+                                                System.out.println("O nome nao pode ser vazio, favor digite novamente");
                                                 nome = sc.nextLine();
                                         }
                                         
@@ -107,7 +107,7 @@ public class App {
                                                         dataNasc = LocalDate.parse(dn, dataFormatada); // .parse ativa o Exception automaticamente
                                                         
                                                         if(dataNasc.isAfter(LocalDate.now())){
-                                                                throw new Exception("A data não pode ser superior ao dia de hoje");
+                                                                throw new Exception("A data nao pode ser superior ao dia de hoje");
                                                         }
                                                         valido = true;
                                                 }
@@ -188,7 +188,7 @@ public class App {
                                                         dataAgendamento = LocalDate.parse(dataAg, dataFormatada);
                                                         
                                                         if(dataAgendamento.isBefore(LocalDate.now())){
-                                                                throw new Exception("A data não pode ser anterior ao dia de hoje");
+                                                                throw new Exception("A data nao pode ser anterior ao dia de hoje");
                                                         }
                                                         valido = true;
                                                 }catch(Exception e){
@@ -204,18 +204,18 @@ public class App {
                                         System.out.println();
                                         break;
                                 }
-                                case "3": {
+                                case "4": {
                                         System.out.print("CPF: ");
                                         String cpf = sc.nextLine();
                                         while(cpf.length() != 11){
-                                                System.out.println("O cpf não possui 11 digitos, favor digite novamente");
+                                                System.out.println("O cpf nao possui 11 digitos, favor digite novamente");
                                                 cpf = sc.nextLine();
                                         }
 
                                         System.out.print("Nome: ");
                                         String nome = sc.nextLine();
                                         while(nome.length() < 1){
-                                                System.out.println("O nome não pode ser vazio, favor digite novamente");
+                                                System.out.println("O nome nao pode ser vazio, favor digite novamente");
                                                 nome = sc.nextLine();
                                         }
 
@@ -242,7 +242,7 @@ public class App {
                                                         dataNasc = LocalDate.parse(dn, dataFormatada);
                                                         
                                                         if(dataNasc.isAfter(LocalDate.now())){
-                                                                throw new Exception("A data não pode ser superior ao dia de hoje");
+                                                                throw new Exception("A data nao pode ser superior ao dia de hoje");
                                                         }
                                                         valido = true;
                                                 }catch(Exception e){
@@ -267,7 +267,7 @@ public class App {
                                         System.out.print("Horas disponiveis por dia: ");
                                         int hpd = Integer.parseInt(sc.nextLine());
                                         while(hpd < 0){
-                                                System.out.println("Número de horas invalido, favor digite novamente");
+                                                System.out.println("Numero de horas invalido, favor digite novamente");
                                                 hpd = Integer.parseInt(sc.nextLine());
                                         }
 
@@ -284,7 +284,7 @@ public class App {
                                         System.out.println();
                                         break;
                                 }
-                                case "4": {
+                                case "5": {
                                         if (candidatos.isEmpty()) {
                                                 System.out.println("Nenhum candidato para avaliar.");
                                                 System.out.println();
@@ -307,7 +307,7 @@ public class App {
                                         System.out.println();
                                         break;
                                 }
-                                case "5": {
+                                case "7": {
                                         if (clientes.isEmpty()) {
                                                 System.out.println("Nenhum cliente cadastrado.");
                                                 System.out.println();
@@ -333,7 +333,7 @@ public class App {
                                         }
                                         break;
                                 }
-                                case "7": {
+                                case "3": {
                                         if (clientes.isEmpty()) {
                                                 System.out.println("Nenhum cliente cadastrado.");
                                                 System.out.println();
@@ -430,7 +430,7 @@ public class App {
                                                 }
                                         }
                                         if(i == 0){
-                                                System.out.println("\nNão há devedores");
+                                                System.out.println("\nNao ha devedores");
                                         }
                                         break;
                                 case "0": {
