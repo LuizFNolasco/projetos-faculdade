@@ -48,14 +48,14 @@ public class App {
                         System.out.println("|       CONFEITARIA DOCE ENCANTO       |");
                         System.out.println("========================================");
                         System.out.println("|  [1] Adicionar Cliente               |");
-                        System.out.println("|  [2] Adicionar Pedido                |         (  )   (  ) "); // Fumaça
-                        System.out.println("|  [7] Cancelar Pedido                 |          ) (    )  ("); // Fumaça
-                        System.out.println("|--------------------------------------|        .............."); // Borda
-                        System.out.println("|  [3] Adicionar Candidato             |        |            |__"); // Alça topo
-                        System.out.println("|  [4] Avaliar Candidatos              |        |            |  )"); // Alça meio
-                        System.out.println("|  [6] Listar Funcionários             |        \\            /_/"); // Alça baixo
-                        System.out.println("|--------------------------------------|         `----------'  "); // Base copo
-                        System.out.println("|  [5] Listar Clientes                 |       _________________"); // Pires
+                        System.out.println("|  [2] Adicionar Pedido                |         (  )   (  ) ");
+                        System.out.println("|  [7] Cancelar Pedido                 |          ) (    )  (");
+                        System.out.println("|--------------------------------------|        ..............");
+                        System.out.println("|  [3] Adicionar Candidato             |        |            |__");
+                        System.out.println("|  [4] Avaliar Candidatos              |        |            |  )");
+                        System.out.println("|  [6] Listar Funcionários             |        \\            /_/");
+                        System.out.println("|--------------------------------------|         `----------'  ");
+                        System.out.println("|  [5] Listar Clientes                 |       _________________");
                         System.out.println("|  [8] Listar Devedores                |");
                         System.out.println("|--------------------------------------|");
                         System.out.println("|  [0] SAIR                            |");
