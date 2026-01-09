@@ -83,7 +83,7 @@ public class App {
                                         System.out.print("Email: ");
                                         String email = sc.nextLine();
                                         while(!email.contains("@gmail.com") && !email.contains("@hotmail.com") && !email.contains("@outlook.com")){
-                                                System.out.println("Formato de email incorreto");
+                                                System.out.println("Formato de email incorreto, favor nao esqueca de inserir o '@gmail.com', '@hotmail.com' ou '@outlook.com'");
                                                 email = sc.nextLine();
                                         }
 
@@ -218,7 +218,7 @@ public class App {
                                         System.out.print("Email: ");
                                         String email = sc.nextLine();
                                         while(!email.contains("@gmail.com") && !email.contains("@hotmail.com") && !email.contains("@outlook.com")){
-                                                System.out.println("Formato de email incorreto");
+                                                System.out.println("Formato de email incorreto, favor nao esqueca de inserir o '@gmail.com', '@hotmail.com' ou '@outlook.com'");
                                                 email = sc.nextLine();
                                         }
 
