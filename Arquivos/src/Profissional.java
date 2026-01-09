@@ -67,7 +67,8 @@ public class Profissional extends Pessoa {
         this.agenda = new AgendaSemanal();
     }
 
-    public Profissional(String cpf, String nome, String email, String telefone, LocalDate dataNascimento, String especialidade, int id, double valorMinimoPedido, int tempoExperiencia) {
+    public Profissional(String cpf, String nome, String email, String telefone, LocalDate dataNascimento,
+            String especialidade, int id, double valorMinimoPedido, int tempoExperiencia) {
         super(cpf, nome, email, telefone, dataNascimento);
         setEspecialidade(especialidade);
         setId(id);
@@ -115,8 +116,9 @@ public class Profissional extends Pessoa {
                         prox.setStatus("Cancelado");
                         // limpa o flag de interrupção
                         Thread.interrupted();
+                        // mensagem de cancelamento
                         notf.notificacaoPadrao();
-                        System.out.println("Pedido ID " + prox.getId() + " foi cancelado.");
+                        System.out.println("Pedido ID " + prox.getId() + " cancelado.");
                         System.out.println();
                     } finally {
                         pedidoAtual = null;
@@ -131,7 +133,7 @@ public class Profissional extends Pessoa {
     }
 
     public void imprimeInformacoesProfissional() {
-        System.out.println("Nome: "+getNome());
+        System.out.println("Nome: " + getNome());
         System.out.println("Especialidade: " + getEspecialidade());
         System.out.println("ID: " + getId());
         System.out.println("Valor Minimo do Pedido: " + getValorMinimoPedido());
@@ -145,8 +147,9 @@ public class Profissional extends Pessoa {
                 this.pedidos.add(pedido);
                 pedidos.notify();
             }
+            // notificar o usuário que o pedido foi adicionado à fila
             notf.notificacaoPadrao();
-            System.out.println("Pedido ID " + pedido.getId() + " adicionado a fila do profissional: " + getNome());
+            System.out.println("Pedido ID " + pedido.getId() + " adicionado à fila.");
             System.out.println();
             return true;
         }
@@ -166,15 +169,18 @@ public class Profissional extends Pessoa {
 
     // cancela pedido por id e cpf do cliente; devolve horas de forma proporcional
     // ao tempo restante
-    public boolean cancelarPedidoPorId(int pedidoId, String clienteCpf) {
+    // retorna: 0 = não encontrado / erro, 1 = cancelado durante preparo, 2 =
+    // cancelado na fila
+    public int cancelarPedidoPorId(int pedidoId, String clienteCpf) {
         // primeiro, confere se o pedido em preparo é o pedido alvo
         if (pedidoAtual != null) {
             if (pedidoAtual.getId() == pedidoId) {
                 if (clienteCpf != null) {
                     if (clienteCpf.equals(pedidoAtual.getClienteCpf())) {
                         notf.notificacaoPadrao();
-                        System.out.println("Seu pedido ja esta em preparo, logo, sera cobrada uma taxa de 50% do valor total.");
-                        System.out.println("Valor a ser cobrado "+pedidoAtual.getValor()/2);
+                        System.out.println(
+                                "Seu pedido ja esta em preparo, logo, sera cobrada uma taxa de 50% do valor total.");
+                        System.out.println("Valor a ser cobrado " + pedidoAtual.getValor() / 2);
                         // calcula tempo restante antes de interromper
                         long totalMs = totalPreparoMs;
                         long elapsed = System.currentTimeMillis() - inicioPreparoMs;
@@ -187,22 +193,24 @@ public class Profissional extends Pessoa {
                         if (totalMs > 0) {
                             double frac = (double) remainingMs / (double) totalMs;
                             horasADevolver = (int) Math.floor(duracaoHoras * frac);
-                        } 
-                        else {
+                        } else {
                             horasADevolver = 0;
                         }
                         // devolve horas proporcionais
                         if (horasADevolver > 0) {
                             agenda.liberarHoras(horasADevolver);
                         }
+                        // imprimir mensagem de cancelamento (sem citar o profissional)
+                        System.out.println("Pedido ID " + pedidoAtual.getId() + " cancelado.");
+                        System.out.println();
                         // interrompe a thread worker para cancelar o pedido em preparo
                         workerThread.interrupt();
-                        return true;
+                        return 1;
                     } else {
-                        return false;
+                        return 0;
                     }
                 } else {
-                    return false;
+                    return 0;
                 }
             }
         }
@@ -222,18 +230,22 @@ public class Profissional extends Pessoa {
                             if (horasADevolver > 0) {
                                 agenda.liberarHoras(horasADevolver);
                             }
-                            return true;
+                            // notificar cliente / registrar cancelamento sem penalidade
+                            notf.notificacaoPadrao();
+                            System.out.println("Pedido ID " + p.getId() + " cancelado.");
+                            System.out.println();
+                            return 2;
                         } else {
-                            return false;
+                            return 0;
                         }
                     } else {
-                        return false;
+                        return 0;
                     }
                 }
             }
         }
 
-        return false;
+        return 0;
     }
 
 }
