@@ -9,9 +9,9 @@ public final class Pedido {
     private int duracao;
     private double valor;
     private Produto produto;
-    private String status; // Status: em preparo, concluido, cancelado
+    private String status;
     private int quantidade;
-    private String clienteCpf; // TODOs: não poderia ser o objeto cliente?
+    private String clienteCpf;
 
     public int getId() {
         return id;
@@ -73,7 +73,6 @@ public final class Pedido {
         this.quantidade = quantidade;
     }
 
-    // Altered constructor: adds clienteCpf and assigns unique id
     public Pedido(LocalDate data, int duracao, double valor, String status, int quantidade, String clienteCpf) {
         this.id = nextId++;
         setData(data);

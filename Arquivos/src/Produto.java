@@ -1,20 +1,9 @@
-
-//TODOs: Tirei o abstract pra teste
 public class Produto {
-    //Alteração: Adicionei valor ao produto
     private String especialidadeNecessaria;
     private float valor;
     private String nome;
     private int id;
     private int tempoDePreparo;
-
-    Produto(String nome, int id, int tempoDePreparo, float valor, String especialidadeNecessaria) {
-        setValor(valor);
-        setNome(nome);
-        setId(id);
-        setTempoDePreparo(tempoDePreparo);
-        setEspecialidadeNecessaria(especialidadeNecessaria);
-    }
 
     public String getEspecialidadeNecessaria() {
         return especialidadeNecessaria;
@@ -59,5 +48,14 @@ public class Produto {
     public void imprimeProduto(int indice){
         System.out.println(indice + " - " +getNome() + " ("+getEspecialidadeNecessaria() + ") - tempo: "+getTempoDePreparo() + "h - R$" +getValor());
     }
+
+    Produto(String nome, int id, int tempoDePreparo, float valor, String especialidadeNecessaria) {
+        setValor(valor);
+        setNome(nome);
+        setId(id);
+        setTempoDePreparo(tempoDePreparo);
+        setEspecialidadeNecessaria(especialidadeNecessaria);
+    }
+
 
 }

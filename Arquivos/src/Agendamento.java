@@ -36,14 +36,12 @@ public final class Agendamento {
         this.produtos = produtos;
     }
 
-    // Alteração: Adicionei uma lista de produtos como parametros
     public Agendamento(LocalDate data, List<Produto> produtos) {
         statusEmAnalise();
         setData(data);
         setProdutos(produtos);
     }
 
-    // agora recebe o cliente solicitante para vincular o pedido
     public void solicitacaoDeProfissional(Profissional[] profissionais, Cliente cliente) {
         Map<Produto, Profissional> alocacaoSimulada = new HashMap<>();
         Map<Profissional, Integer> horasRestantes = new HashMap<>();
@@ -81,7 +79,7 @@ public final class Agendamento {
         for (int i = 0; i < produtos.size(); i++) {
             Produto prod = produtos.get(i);
             Profissional p = alocacaoSimulada.get(prod);
-            System.out.println("Profissional Solicitado:");
+            System.out.println("\nProfissional Solicitado:");
             p.imprimeInformacoesProfissional();
 
             String clienteCpfParaPedido;

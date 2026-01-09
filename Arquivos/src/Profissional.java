@@ -3,8 +3,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Profissional extends Pessoa {
-    // Alteração: Adicionei uma lista de pedidos pendentes é inicializada como null
-
     private List<Pedido> pedidos;
     private String especialidade;
     private int id;
@@ -12,7 +10,6 @@ public class Profissional extends Pessoa {
     private int tempoExperiencia; // em anos
     private AgendaSemanal agenda;
 
-    // thread que processa pedidos do profissional
     private Thread workerThread;
     private volatile Pedido pedidoAtual;
     private volatile long inicioPreparoMs; // início do preparo atual (ms)
@@ -20,9 +17,8 @@ public class Profissional extends Pessoa {
     // escala temporal: 1 hora do sistema = 15 segundos reais
     private static final long MS_POR_HORA = 15000L;
 
-    Notificacao notf = new Notificacao(); //TODOs: aqui
+    Notificacao notf = new Notificacao();
 
-    // expõe o pedido atualmente em preparo (ou null)
     public Pedido getPedidoAtual() {
         return pedidoAtual;
     }
@@ -111,7 +107,7 @@ public class Profissional extends Pessoa {
                         }
                         prox.setStatus("Pedido finalizado");
                         // log simples: fim do preparo
-                        notf.notificacaoPadrao(); //TODOs: aqui
+                        notf.notificacaoPadrao();
                         System.out.println("Pedido ID " + prox.getId() + " finalizado pelo profissional: " + getNome());
                         System.out.println();
                     } catch (InterruptedException e) {
@@ -140,18 +136,16 @@ public class Profissional extends Pessoa {
         System.out.println("ID: " + getId());
         System.out.println("Valor Minimo do Pedido: " + getValorMinimoPedido());
         agenda.imprimeInformacoesAgenda();
+        System.out.println();
     }
 
-    // Alteração: Metodo novo que insere um pedido novo na lista de pedidos ao
-    // profissional e utiliza
-    // o metodo confirmarDiaProfissional para descontar as horas semanais.
     public boolean confirmarPedidoProfissional(Pedido pedido) {
         if (confirmarDiaProfissional(pedido.getDuracao())) {
             synchronized (pedidos) {
                 this.pedidos.add(pedido);
                 pedidos.notify();
             }
-            notf.notificacaoPadrao(); //TODOs: aqui
+            notf.notificacaoPadrao();
             System.out.println("Pedido ID " + pedido.getId() + " adicionado a fila do profissional: " + getNome());
             System.out.println();
             return true;
@@ -163,15 +157,6 @@ public class Profissional extends Pessoa {
         return this.agenda.HorasDisponiveisAgenda();
     }
 
-    public boolean conferirAgendaProfissional(int horasServico) { // TODOs: não está
-        if (agenda.conferirHorarioProfissional(horasServico)) {
-            return true;
-        }
-        return false;
-    }
-
-    // Alteração: Deixei esse metodo privado por que acho que ele so deveria ser
-    // utilizado no metodo confirmarPedido
     private boolean confirmarDiaProfissional(int horasServico) {
         if (agenda.marcarHorarioProfissional(horasServico)) {
             return true;
@@ -187,7 +172,7 @@ public class Profissional extends Pessoa {
             if (pedidoAtual.getId() == pedidoId) {
                 if (clienteCpf != null) {
                     if (clienteCpf.equals(pedidoAtual.getClienteCpf())) {
-                        notf.notificacaoPadrao(); //TODOs: aqui
+                        notf.notificacaoPadrao();
                         System.out.println("Seu pedido ja esta em preparo, logo, sera cobrada uma taxa de 50% do valor total.");
                         System.out.println("Valor a ser cobrado "+pedidoAtual.getValor()/2);
                         // calcula tempo restante antes de interromper

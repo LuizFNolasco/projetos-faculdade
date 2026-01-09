@@ -1,7 +1,6 @@
 import java.time.LocalDate;
 
 public class AgendaSemanal {
-    // Alteração: Retirei a qtdHorasDiarias -> É atributo do dia
     private int qtdDiasDisponiveis;
     private Dia[] dias;
 
@@ -43,34 +42,6 @@ public class AgendaSemanal {
         return totalHoras;
     }
 
-    // ALTERAÇÃO GRANDE:
-    /*
-     * Mudei a logica de alocação de horas dos profissionais.
-     * - Agora o conferirHorarioProfissional confere se a semana inteira do
-     * profissional tem horas suficientes
-     * pro serviço e nao se existe um dia capaz de alocar todo o serviço.
-     * 
-     * - E pro marcarHorarioProfissional, usa conferirHorarioProfissional pra ver se
-     * tem tempo na semana e, caso tenha,
-     * vai alocando a maior quantidade de horas pra cada dia.
-     * 
-     * exemplo: Serviço de 16 horas
-     * ANTES DA MARCAÇÃO
-     * Agenda -> Segunda Terça Quarta Quinta Sexta
-     * horas -> 6 2 8 4 6
-     * 
-     * DEPOIS
-     * Agenda -> Segunda Terça Quarta Quinta Sexta
-     * horas -> 0 0 0 4 6
-     * 
-     */
-    /*
-     * Inclusive, talvez vale a pena ate deletar a classe dia
-     * Do jeito antigo se o profissional tem 10 horas semanais sendo 2 horas em cada
-     * dia da semana e ele
-     * receber um pedido de 4 horas, esse pedido nao vai ser aprovado.
-     * 
-     */
     public boolean conferirHorarioProfissional(int horasServico) {
         if (HorasDisponiveisAgenda() >= horasServico)
             return true;
@@ -98,8 +69,6 @@ public class AgendaSemanal {
         return false;
     }
 
-    // nova função: libera horas de volta na semana (ex: quando um pedido é
-    // cancelado)
     public boolean liberarHoras(int horasADevolver) {
         int horasRestantes = horasADevolver;
         for (int i = 0; i < this.dias.length && horasRestantes > 0; i++) {

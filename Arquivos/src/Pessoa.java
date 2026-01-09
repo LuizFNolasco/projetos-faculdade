@@ -39,6 +39,7 @@ public abstract class Pessoa {
     public LocalDate getDataNascimento() {
         return dataNascimento;
     }
+    
     public void setDataNascimento(LocalDate dataNascimento) {
         this.dataNascimento = dataNascimento;
     }

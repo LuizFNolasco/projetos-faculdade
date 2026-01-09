@@ -30,7 +30,6 @@ public class Dia {
         return data;
     }
 
-    // Alteração: Construtor não recebe mais quantidadeDeHoras -> é fixo em 8
     public Dia(String nome, LocalDate data) {
         // maxHoras fixo em 8
         this.maxHoras = 8;
@@ -46,35 +45,10 @@ public class Dia {
         }
     }
 
-    // nova função para aumentar/restaurar horas ao cancelar um pedido
     public void aumentaHorasDisponiveis(int horas) {
         quantidadeDeHoras += horas;
         if (quantidadeDeHoras > maxHoras) {
             quantidadeDeHoras = maxHoras;
-        }
-    }
-
-    public void imprimeInformacoesDia() { // TODOs: não está
-        System.out.println("Dia: " + getNome() + ", Data: " + getData());
-        System.out.println("Quantidade de horas disponiveis: " + getQuantidadeDeHoras());
-    }
-
-    /*
-     * Alteração: conferirHorarioDisponivel não diminui mais as horas apenas
-     * verifica se existe horario livre
-     * quem diminui as horas é o metodo confirmarHorarioDisponivel
-     */
-    public Dia conferirHorarioDisponivel(int horasServico) {
-        if (getQuantidadeDeHoras() >= horasServico) {
-            return Dia.this;
-        }
-
-        return null;
-    }
-
-    public void confirmarHorarioDisponivel(int horasServico) { // TODOs: não está
-        if (conferirHorarioDisponivel(horasServico) != null) {
-            diminuiHorasDisponiveis(horasServico);
         }
     }
 

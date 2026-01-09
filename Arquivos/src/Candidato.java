@@ -1,7 +1,6 @@
 import java.time.LocalDate;
 
 public class Candidato extends Pessoa {
-	//Alteração: Adicionei o atributo especialidade
 	private int tempoExperiencia;
 	private String especialidade;
 	private float valorDesejado;
@@ -40,14 +39,13 @@ public class Candidato extends Pessoa {
 		this.horasDisponiveisPorDia = horasDisponiveisPorDia;
 	}
 
-	//dataNascimento tava tipada errada
 	public Candidato(String cpf, String nome, String email, String telefone, LocalDate dataNascimento,
 		int tempoExperiencia, float valorDesejado, int horasDisponiveisPorDia, String especialidade) {
 		super(cpf, nome, email, telefone, dataNascimento);
-		this.especialidade = especialidade;
-		this.tempoExperiencia = tempoExperiencia;
-		this.valorDesejado = valorDesejado;
-		this.horasDisponiveisPorDia = horasDisponiveisPorDia;
+		setEspecialidade(especialidade);
+		setTempoExperiencia(tempoExperiencia);
+		setValorDesejado(valorDesejado);
+		setHorasDisponiveisPorDia(horasDisponiveisPorDia);
 	}
 
 }
