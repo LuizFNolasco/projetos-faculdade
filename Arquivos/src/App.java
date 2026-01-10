@@ -62,14 +62,14 @@ public class App {
                         System.out.println("|--------------------------------------|        ..............");
                         System.out.println("|  [4] Adicionar Candidato             |        |            |__");
                         System.out.println("|  [5] Avaliar Candidatos              |        |            |  )");
-                        System.out.println("|  [6] Listar Funcionários             |        \\            /_/");
+                        System.out.println("|  [6] Listar Funcionarios             |        \\            /_/");
                         System.out.println("|--------------------------------------|         `----------'  ");
                         System.out.println("|  [7] Listar Clientes                 |       _________________");
                         System.out.println("|  [8] Listar Devedores                |");
                         System.out.println("|--------------------------------------|");
                         System.out.println("|  [0] SAIR                            |");
                         System.out.println("========================================");
-                        System.out.print(">> Escolha uma opção: ");
+                        System.out.print(">> Escolha uma opcao: ");
                         String esc = sc.nextLine().trim();
 
                         switch (esc) {
@@ -130,7 +130,7 @@ public class App {
                                                         dataNasc = LocalDate.parse(dn, dataFormatada);
                                                         if (dataNasc.isAfter(LocalDate.now())) {
                                                                 throw new Exception(
-                                                                                "A data não pode ser superior ao dia de hoje");
+                                                                                "A data nao pode ser superior ao dia de hoje");
                                                         }
                                                         break;
                                                 } catch (Exception e) {
@@ -300,7 +300,7 @@ public class App {
                                                         dataNascC = LocalDate.parse(dn, dataFormatada);
                                                         if (dataNascC.isAfter(LocalDate.now())) {
                                                                 throw new Exception(
-                                                                                "A data não pode ser superior ao dia de hoje");
+                                                                                "A data nao pode ser superior ao dia de hoje");
                                                         }
                                                         break;
                                                 } catch (Exception e) {
@@ -546,7 +546,7 @@ public class App {
                                                 }
                                         }
                                         if (i == 0) {
-                                                System.out.println("\nNão há devedores");
+                                                System.out.println("\nNao ha devedores");
                                         }
                                         break;
                                 case "0": {

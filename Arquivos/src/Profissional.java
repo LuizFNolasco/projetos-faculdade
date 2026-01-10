@@ -149,7 +149,7 @@ public class Profissional extends Pessoa {
             }
             // notificar o usuário que o pedido foi adicionado à fila
             notf.notificacaoPadrao();
-            System.out.println("Pedido ID " + pedido.getId() + " adicionado à fila.");
+            System.out.println("Pedido ID " + pedido.getId() + " adicionado a fila.");
             System.out.println();
             return true;
         }
