@@ -16,7 +16,7 @@ public class Administrador extends Pessoa {
 		if (!criterios)
 			return null;
 		
-		Profissional aprovado = new Profissional(c.getCpf(), c.getNome(), c.getEmail(), c.getTelefone(), c.getDataNascimento(), c.getEspecialidade(), 0, c.getValorDesejado(), c.getTempoExperiencia());
+		Profissional aprovado = new Profissional(c.getCpf(), c.getNome(), c.getEmail(), c.getTelefone(), c.getDataNascimento(), c.getEspecialidade(), c.getValorDesejado(), c.getTempoExperiencia());
 		return aprovado;
 	}
 

@@ -37,11 +37,11 @@ public class App {
 
                 // Profissionais pre-cadastrados para testes
                 Profissional doceiro = new Profissional("22233344455", "Ana Silva", "ana@gmail.com", "900000000",
-                                LocalDate.parse("15/03/1992", dataFormatada), "Doceiro", 1, 40.0, 8);
+                                LocalDate.parse("15/03/1992", dataFormatada), "Doceiro", 40.0, 8);
                 Profissional confeiteiro = new Profissional("88899900011", "Pedro Silva", "pedro@gmail.com",
-                                "955554444", LocalDate.parse("01/09/1988", dataFormatada), "Confeiteiro", 2, 60.0, 8);
+                                "955554444", LocalDate.parse("01/09/1988", dataFormatada), "Confeiteiro", 60.0, 8);
                 Profissional padeiro = new Profissional("12345678900", "Joao Silva", "joaosilva@gmail.com", "999999999",
-                                LocalDate.parse("01/09/1988", dataFormatada), "Padeiro", 3, 10, 8);
+                                LocalDate.parse("01/09/1988", dataFormatada), "Padeiro", 10, 8);
 
                 profissionais.add(doceiro);
                 profissionais.add(confeiteiro);

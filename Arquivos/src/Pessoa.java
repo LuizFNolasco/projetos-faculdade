@@ -51,7 +51,7 @@ public abstract class Pessoa {
     public void setTelefone(String telefone) {
         // valida telefone: exatamente 9 dígitos numéricos
         if (telefone == null || !telefone.matches("\\d{9}")) {
-            throw new IllegalArgumentException("Telefone inválido: deve conter exatamente 9 dígitos numéricos.");
+            throw new IllegalArgumentException("Telefone invalido: deve conter exatamente 9 digitos numericos.");
         }
         this.telefone = telefone;
     }
@@ -82,26 +82,26 @@ public abstract class Pessoa {
 
     public static void validarCpf(String cpf) {
         if (cpf == null || !cpf.matches("\\d{11}")) {
-            throw new IllegalArgumentException("CPF inválido: deve conter exatamente 11 dígitos numéricos.");
+            throw new IllegalArgumentException("CPF invalido: deve conter exatamente 11 digitos numericos.");
         }
     }
 
     public static void validarNome(String nome) {
         if (nome == null || nome.trim().isEmpty()) {
-            throw new IllegalArgumentException("Nome inválido: não pode ser vazio.");
+            throw new IllegalArgumentException("Nome invalido: nao pode ser vazio.");
         }
     }
 
     public static void validarEmail(String email) {
         if (email == null || !(email.contains("@gmail.com") || email.contains("@hotmail.com")
                 || email.contains("@outlook.com"))) {
-            throw new IllegalArgumentException("Email inválido: use @gmail.com, @hotmail.com ou @outlook.com.");
+            throw new IllegalArgumentException("Email invalido: use @gmail.com, @hotmail.com ou @outlook.com.");
         }
     }
 
     public static void validarTelefone(String telefone) {
         if (telefone == null || !telefone.matches("\\d{9}")) {
-            throw new IllegalArgumentException("Telefone inválido: deve conter exatamente 9 dígitos numéricos.");
+            throw new IllegalArgumentException("Telefone invalido: deve conter exatamente 9 digitos numericos.");
         }
     }
 

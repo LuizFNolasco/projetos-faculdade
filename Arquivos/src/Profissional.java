@@ -9,6 +9,7 @@ public class Profissional extends Pessoa {
     private double valorMinimoPedido;
     private int tempoExperiencia; // em anos
     private AgendaSemanal agenda;
+    private static int qtdProfissionais = 0;
 
     private Thread workerThread;
     private volatile Pedido pedidoAtual;
@@ -67,11 +68,17 @@ public class Profissional extends Pessoa {
         this.agenda = new AgendaSemanal();
     }
 
+    public static void incrementaQtdProfissionais(){
+        qtdProfissionais++;
+    }
+
     public Profissional(String cpf, String nome, String email, String telefone, LocalDate dataNascimento,
-            String especialidade, int id, double valorMinimoPedido, int tempoExperiencia) {
+            String especialidade, double valorMinimoPedido, int tempoExperiencia) {
         super(cpf, nome, email, telefone, dataNascimento);
         setEspecialidade(especialidade);
-        setId(id);
+        setId(qtdProfissionais);
+        incrementaQtdProfissionais();
+        
         setValorMinimoPedido(valorMinimoPedido);
         setTempoExperiencia(tempoExperiencia);
         setPedidos(new ArrayList<>());
