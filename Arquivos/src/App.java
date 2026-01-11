@@ -8,7 +8,6 @@ import java.util.Scanner;
 public class App {
         public static void main(String[] args) throws Exception {
                 DateTimeFormatter dataFormatada = DateTimeFormatter.ofPattern("dd/MM/uuuu").withResolverStyle(ResolverStyle.STRICT);
-                ;;;;;;;
 
                 // Produtos disponíveis
                 List<Produto> catalogo = new ArrayList<>();
