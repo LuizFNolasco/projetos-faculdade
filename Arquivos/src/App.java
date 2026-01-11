@@ -7,9 +7,8 @@ import java.util.Scanner;
 
 public class App {
         public static void main(String[] args) throws Exception {
-                DateTimeFormatter dataFormatada = DateTimeFormatter.ofPattern("dd/MM/uuuu")
-                                .withResolverStyle(ResolverStyle.STRICT);
-                ;
+                DateTimeFormatter dataFormatada = DateTimeFormatter.ofPattern("dd/MM/uuuu").withResolverStyle(ResolverStyle.STRICT);
+                ;;;;;;;
 
                 // Produtos disponíveis
                 List<Produto> catalogo = new ArrayList<>();
@@ -21,10 +20,8 @@ public class App {
                 List<Cliente> clientes = new ArrayList<>();
 
                 // clientes pré-cadastrados para testes
-                Cliente clienteTeste1 = new Cliente("11122233344", "Maria Silva", "maria@gmail.com", "988881111",
-                                LocalDate.parse("10/02/1990", dataFormatada));
-                Cliente clienteTeste2 = new Cliente("55566677788", "Carlos Souza", "carlos@gmail.com", "977772222",
-                                LocalDate.parse("03/11/1982", dataFormatada));
+                Cliente clienteTeste1 = new Cliente("11122233344", "Maria Silva", "maria@gmail.com", "988881111", LocalDate.parse("10/02/1990", dataFormatada));
+                Cliente clienteTeste2 = new Cliente("55566677788", "Carlos Souza", "carlos@gmail.com", "977772222", LocalDate.parse("03/11/1982", dataFormatada));
                 clientes.add(clienteTeste1);
                 clientes.add(clienteTeste2);
 
@@ -32,16 +29,12 @@ public class App {
                 List<Candidato> candidatos = new ArrayList<>();
 
                 // Administrador fixo
-                Administrador admin = new Administrador("00000000000", "Admin", "admin@hotmail.com", "000000000",
-                                LocalDate.parse("01/01/1980", dataFormatada));
+                Administrador admin = new Administrador("00000000000", "Admin", "admin@hotmail.com", "000000000", LocalDate.parse("01/01/1980", dataFormatada));
 
                 // Profissionais pre-cadastrados para testes
-                Profissional doceiro = new Profissional("22233344455", "Ana Silva", "ana@gmail.com", "900000000",
-                                LocalDate.parse("15/03/1992", dataFormatada), "Doceiro", 40.0, 8);
-                Profissional confeiteiro = new Profissional("88899900011", "Pedro Silva", "pedro@gmail.com",
-                                "955554444", LocalDate.parse("01/09/1988", dataFormatada), "Confeiteiro", 60.0, 8);
-                Profissional padeiro = new Profissional("12345678900", "Joao Silva", "joaosilva@gmail.com", "999999999",
-                                LocalDate.parse("01/09/1988", dataFormatada), "Padeiro", 10, 8);
+                Profissional doceiro = new Profissional("22233344455", "Ana Silva", "ana@gmail.com", "900000000", LocalDate.parse("15/03/1992", dataFormatada), "Doceiro", 40.0, 8);
+                Profissional confeiteiro = new Profissional("88899900011", "Pedro Silva", "pedro@gmail.com", "955554444", LocalDate.parse("01/09/1988", dataFormatada), "Confeiteiro", 60.0, 8);
+                Profissional padeiro = new Profissional("12345678900", "Joao Silva", "joaosilva@gmail.com", "999999999", LocalDate.parse("01/09/1988", dataFormatada), "Padeiro", 10, 8);
 
                 profissionais.add(doceiro);
                 profissionais.add(confeiteiro);
@@ -81,7 +74,8 @@ public class App {
                                                         cpf = sc.nextLine();
                                                         Pessoa.validarCpf(cpf);
                                                         break;
-                                                } catch (IllegalArgumentException e) {
+                                                } 
+                                                catch (IllegalArgumentException e) {
                                                         System.out.println("Erro no CPF: " + e.getMessage());
                                                 }
                                         }
@@ -93,7 +87,8 @@ public class App {
                                                         nome = sc.nextLine();
                                                         Pessoa.validarNome(nome);
                                                         break;
-                                                } catch (IllegalArgumentException e) {
+                                                } 
+                                                catch (IllegalArgumentException e) {
                                                         System.out.println("Erro: " + e.getMessage());
                                                 }
                                         }
@@ -105,7 +100,8 @@ public class App {
                                                         email = sc.nextLine();
                                                         Pessoa.validarEmail(email);
                                                         break;
-                                                } catch (IllegalArgumentException e) {
+                                                } 
+                                                catch (IllegalArgumentException e) {
                                                         System.out.println("Erro: " + e.getMessage());
                                                 }
                                         }
@@ -117,7 +113,8 @@ public class App {
                                                         tel = sc.nextLine();
                                                         Pessoa.validarTelefone(tel);
                                                         break;
-                                                } catch (IllegalArgumentException e) {
+                                                } 
+                                                catch (IllegalArgumentException e) {
                                                         System.out.println("Erro: " + e.getMessage());
                                                 }
                                         }
@@ -133,7 +130,8 @@ public class App {
                                                                                 "A data nao pode ser superior ao dia de hoje");
                                                         }
                                                         break;
-                                                } catch (Exception e) {
+                                                } 
+                                                catch (Exception e) {
                                                         System.out.println(
                                                                         "Formato de data invalido, favor digite um formato valido");
                                                 }
@@ -152,6 +150,7 @@ public class App {
                                                 System.out.println();
                                                 break;
                                         }
+                                        
                                         System.out.println("Clientes:");
                                         for (int i = 0; i < clientes.size(); i++) {
                                                 System.out.println(i + " - " + clientes.get(i).getNome() + " ("
@@ -167,7 +166,9 @@ public class App {
                                                                         "Indice invalido. Digite um numero inteiro:");
                                                         continue;
                                                 }
+                                                
                                                 idx = Integer.parseInt(s);
+                                                
                                                 if (idx < 0 || idx >= clientes.size()) {
                                                         System.out.println("Indice invalido. Digite um indice valido:");
                                                         continue;
@@ -185,8 +186,7 @@ public class App {
                                                         p.imprimeProduto(i);
                                                 }
                                                 System.out.println();
-                                                System.out.print(
-                                                                "Escolha indice do produto para adicionar (ou 'f' para finalizar): ");
+                                                System.out.print("Escolha indice do produto para adicionar (ou 'f' para finalizar): ");
                                                 String line = sc.nextLine().trim();
                                                 if (line.equalsIgnoreCase("f")) {
                                                         adicionando = false;
@@ -224,21 +224,20 @@ public class App {
                                                         dataAgendamento = LocalDate.parse(dataAg, dataFormatada);
 
                                                         if (dataAgendamento.isBefore(LocalDate.now())) {
-                                                                throw new Exception(
-                                                                                "A data não pode ser anterior ao dia de hoje");
+                                                                throw new Exception("A data não pode ser anterior ao dia de hoje");
                                                         }
                                                         valido = true;
-                                                } catch (Exception e) {
-                                                        System.out.println(
-                                                                        "Formato de data invalido, favor digite um formato valido");
+                                                } 
+                                                catch (Exception e) {
+                                                        System.out.println("Formato de data invalido, favor digite um formato valido");
                                                 }
                                         }
+
                                         Agendamento ag = new Agendamento(dataAgendamento, sel);
 
                                         clienteSelecionado.setAgendamentos(ag);
 
-                                        ag.solicitacaoDeProfissional(profissionais.toArray(new Profissional[0]),
-                                                        clienteSelecionado);
+                                        ag.solicitacaoDeProfissional(profissionais.toArray(new Profissional[0]), clienteSelecionado);
                                         System.out.println("Status do agendamento: " + ag.getStatus());
                                         System.out.println();
                                         break;
@@ -251,7 +250,8 @@ public class App {
                                                         cpfC = sc.nextLine();
                                                         Pessoa.validarCpf(cpfC);
                                                         break;
-                                                } catch (IllegalArgumentException e) {
+                                                } 
+                                                catch (IllegalArgumentException e) {
                                                         System.out.println("Erro no CPF: " + e.getMessage());
                                                 }
                                         }
@@ -263,7 +263,8 @@ public class App {
                                                         nomeC = sc.nextLine();
                                                         Pessoa.validarNome(nomeC);
                                                         break;
-                                                } catch (IllegalArgumentException e) {
+                                                } 
+                                                catch (IllegalArgumentException e) {
                                                         System.out.println("Erro: " + e.getMessage());
                                                 }
                                         }
@@ -275,7 +276,8 @@ public class App {
                                                         emailC = sc.nextLine();
                                                         Pessoa.validarEmail(emailC);
                                                         break;
-                                                } catch (IllegalArgumentException e) {
+                                                } 
+                                                catch (IllegalArgumentException e) {
                                                         System.out.println("Erro: " + e.getMessage());
                                                 }
                                         }
@@ -287,7 +289,8 @@ public class App {
                                                         telC = sc.nextLine();
                                                         Pessoa.validarTelefone(telC);
                                                         break;
-                                                } catch (IllegalArgumentException e) {
+                                                } 
+                                                catch (IllegalArgumentException e) {
                                                         System.out.println("Erro: " + e.getMessage());
                                                 }
                                         }
@@ -299,11 +302,11 @@ public class App {
                                                         String dn = sc.nextLine();
                                                         dataNascC = LocalDate.parse(dn, dataFormatada);
                                                         if (dataNascC.isAfter(LocalDate.now())) {
-                                                                throw new Exception(
-                                                                                "A data nao pode ser superior ao dia de hoje");
+                                                                throw new Exception("A data nao pode ser superior ao dia de hoje");
                                                         }
                                                         break;
-                                                } catch (Exception e) {
+                                                } 
+                                                catch (Exception e) {
                                                         System.out.println("Formato invalido");
                                                 }
                                         }
@@ -318,7 +321,8 @@ public class App {
                                                         }
                                                         te = Integer.parseInt(teStr);
                                                         break;
-                                                } catch (IllegalArgumentException e) {
+                                                } 
+                                                catch (IllegalArgumentException e) {
                                                         System.out.println("formato invalido");
                                                 }
                                         }
@@ -333,7 +337,8 @@ public class App {
                                                                 throw new IllegalArgumentException("formato invalido");
                                                         }
                                                         break;
-                                                } catch (IllegalArgumentException e) {
+                                                } 
+                                                catch (IllegalArgumentException e) {
                                                         System.out.println("formato invalido");
                                                 }
                                         }
@@ -348,7 +353,8 @@ public class App {
                                                         }
                                                         hpd = Integer.parseInt(hpdStr);
                                                         break;
-                                                } catch (IllegalArgumentException e) {
+                                                } 
+                                                catch (IllegalArgumentException e) {
                                                         System.out.println("formato invalido");
                                                 }
                                         }
@@ -358,15 +364,14 @@ public class App {
                                                 System.out.print("Especialidade: ");
                                                 esp = sc.nextLine();
                                                 if (esp.length() < 1) {
-                                                        System.out.println(
-                                                                        "Favor não deixe o campo vazio, digite novamente");
-                                                } else {
+                                                        System.out.println("Favor não deixe o campo vazio, digite novamente");
+                                                } 
+                                                else {
                                                         break;
                                                 }
                                         }
 
-                                        Candidato cand = new Candidato(cpfC, nomeC, emailC, telC, dataNascC, te, valor,
-                                                        hpd, esp);
+                                        Candidato cand = new Candidato(cpfC, nomeC, emailC, telC, dataNascC, te, valor, hpd, esp);
                                         candidatos.add(cand);
                                         System.out.println("Candidato adicionado.");
                                         System.out.println();
@@ -378,6 +383,7 @@ public class App {
                                                 System.out.println();
                                                 break;
                                         }
+
                                         List<Candidato> aprovados = new ArrayList<>();
                                         for (Candidato cand : candidatos) {
                                                 Profissional aprov = admin.aprovaCandidato(cand);
@@ -385,10 +391,12 @@ public class App {
                                                         profissionais.add(aprov);
                                                         aprovados.add(cand);
                                                         System.out.println("Candidato aprovado: " + cand.getNome());
-                                                } else {
+                                                } 
+                                                else {
                                                         System.out.println("Candidato rejeitado: " + cand.getNome());
                                                 }
                                         }
+
                                         // remove aprovados da lista de candidatos
                                         candidatos.removeAll(aprovados);
                                         System.out.println();
@@ -413,6 +421,7 @@ public class App {
                                                 System.out.println();
                                                 break;
                                         }
+
                                         System.out.println("Lista de profissionais:\n");
                                         for (Profissional p : profissionais) {
                                                 p.imprimeInformacoesProfissional();
@@ -428,19 +437,19 @@ public class App {
                                         }
                                         System.out.println("Clientes:");
                                         for (int i = 0; i < clientes.size(); i++) {
-                                                System.out.println(i + " - " + clientes.get(i).getNome() + " ("
-                                                                + clientes.get(i).getCpf() + ")");
+                                                System.out.println(i + " - " + clientes.get(i).getNome() + " ("+ clientes.get(i).getCpf() + ")");
                                         }
+
                                         System.out.println();
                                         System.out.print("Escolha o indice do cliente dono do pedido: ");
                                         int idxCliente = -1;
                                         while (true) {
                                                 String s = sc.nextLine().trim();
                                                 if (!s.matches("\\d+")) {
-                                                        System.out.println(
-                                                                        "Indice invalido. Digite um numero inteiro:");
+                                                        System.out.println("Indice invalido. Digite um numero inteiro:");
                                                         continue;
                                                 }
+
                                                 idxCliente = Integer.parseInt(s);
                                                 if (idxCliente < 0 || idxCliente >= clientes.size()) {
                                                         System.out.println("Indice invalido. Digite um indice valido:");
@@ -458,8 +467,7 @@ public class App {
                                                 Profissional prof = profissionais.get(i);
                                                 // primeiro, checar se há um pedido em preparo que pertence ao cliente
                                                 Pedido atual = prof.getPedidoAtual();
-                                                if (atual != null && clienteSelecionadoParaCancelamento.getCpf()
-                                                                .equals(atual.getClienteCpf())) {
+                                                if (atual != null && clienteSelecionadoParaCancelamento.getCpf().equals(atual.getClienteCpf())) {
                                                         pedidosDoCliente.add(atual);
                                                         profsParaPedidos.add(prof);
                                                 }
@@ -469,8 +477,7 @@ public class App {
                                                         continue;
                                                 for (int j = 0; j < lista.size(); j++) {
                                                         Pedido ped = lista.get(j);
-                                                        if (ped != null && clienteSelecionadoParaCancelamento.getCpf()
-                                                                        .equals(ped.getClienteCpf())) {
+                                                        if (ped != null && clienteSelecionadoParaCancelamento.getCpf().equals(ped.getClienteCpf())) {
                                                                 pedidosDoCliente.add(ped);
                                                                 profsParaPedidos.add(prof);
                                                         }
@@ -487,12 +494,8 @@ public class App {
                                         for (int i = 0; i < pedidosDoCliente.size(); i++) {
                                                 Pedido ped = pedidosDoCliente.get(i);
                                                 Profissional prof = profsParaPedidos.get(i);
-                                                String nomeProduto = (ped.getProduto() != null
-                                                                ? ped.getProduto().getNome()
-                                                                : "N/A");
-                                                System.out.println(i + " - ID: " + ped.getId() + " | Produto: "
-                                                                + nomeProduto + " | Status: " + ped.getStatus()
-                                                                + " | Profissional: " + prof.getNome());
+                                                String nomeProduto = (ped.getProduto() != null ? ped.getProduto().getNome() : "N/A");
+                                                System.out.println(i + " - ID: " + ped.getId() + " | Produto: "+ nomeProduto + " | Status: " + ped.getStatus() + " | Profissional: " + prof.getNome());
                                         }
                                         System.out.println();
                                         System.out.print("Escolha o indice do pedido para cancelar: ");
@@ -500,36 +503,35 @@ public class App {
                                         while (true) {
                                                 String s = sc.nextLine().trim();
                                                 if (!s.matches("\\d+")) {
-                                                        System.out.println(
-                                                                        "Indice de pedido invalido. Digite um numero inteiro:");
+                                                        System.out.println("Indice de pedido invalido. Digite um numero inteiro:");
                                                         continue;
                                                 }
+
                                                 idxPedido = Integer.parseInt(s);
                                                 if (idxPedido < 0 || idxPedido >= pedidosDoCliente.size()) {
-                                                        System.out.println(
-                                                                        "Indice de pedido invalido. Digite um indice valido:");
+                                                        System.out.println("Indice de pedido invalido. Digite um indice valido:");
                                                         continue;
                                                 }
                                                 break;
                                         }
                                         Pedido pedidoParaCancelar = pedidosDoCliente.get(idxPedido);
                                         Profissional profResponsavel = profsParaPedidos.get(idxPedido);
-                                        int codigo = profResponsavel.cancelarPedidoPorId(
-                                                        pedidoParaCancelar.getId(),
-                                                        clienteSelecionadoParaCancelamento.getCpf());
+                                        int codigo = profResponsavel.cancelarPedidoPorId(pedidoParaCancelar.getId(), clienteSelecionadoParaCancelamento.getCpf());
 
                                         if (codigo == 0) {
                                                 System.out.println("Falha ao cancelar o pedido.");
                                                 System.out.println();
                                                 break;
                                         }
+
                                         // ajustar dívida do cliente conforme tipo de cancelamento
                                         double valorPedido = pedidoParaCancelar.getValor();
                                         if (codigo == 1) {
                                                 // cancelado durante preparo -> cobrar 50% (cliente é cobrado metade =>
                                                 // reduzir dívida pela metade do valor)
                                                 clienteSelecionadoParaCancelamento.setDivida(-(valorPedido / 2.0));
-                                        } else if (codigo == 2) {
+                                        } 
+                                        else if (codigo == 2) {
                                                 // cancelado na fila -> devolver integral
                                                 clienteSelecionadoParaCancelamento.setDivida(-valorPedido);
                                         }
@@ -540,8 +542,7 @@ public class App {
                                         int i = 0;
                                         for (Cliente c : clientes) {
                                                 if (c.getDivida() > 0.1) {
-                                                        System.out.println("O cliente " + c.getNome()
-                                                                        + " deve um total de: R$" + c.getDivida());
+                                                        System.out.println("O cliente " + c.getNome() + " deve um total de: R$" + c.getDivida());
                                                         i++;
                                                 }
                                         }

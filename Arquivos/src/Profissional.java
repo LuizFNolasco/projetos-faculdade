@@ -78,7 +78,7 @@ public class Profissional extends Pessoa {
         setEspecialidade(especialidade);
         setId(qtdProfissionais);
         incrementaQtdProfissionais();
-        
+
         setValorMinimoPedido(valorMinimoPedido);
         setTempoExperiencia(tempoExperiencia);
         setPedidos(new ArrayList<>());
@@ -96,7 +96,8 @@ public class Profissional extends Pessoa {
                         while (pedidos.isEmpty()) {
                             try {
                                 pedidos.wait();
-                            } catch (InterruptedException e) {
+                            } 
+                            catch (InterruptedException e) {
                                 // se a thread for interrompida enquanto espera, apenas continua
                             }
                         }
@@ -113,21 +114,26 @@ public class Profissional extends Pessoa {
                         if (totalPreparoMs > 0) {
                             Thread.sleep(totalPreparoMs);
                         }
+                        
                         prox.setStatus("Pedido finalizado");
                         // log simples: fim do preparo
                         notf.notificacaoPadrao();
                         System.out.println("Pedido ID " + prox.getId() + " finalizado pelo profissional: " + getNome());
                         System.out.println();
-                    } catch (InterruptedException e) {
+                    } 
+                    catch (InterruptedException e) {
                         // pedido foi cancelado durante preparo
                         prox.setStatus("Cancelado");
+                        
                         // limpa o flag de interrupção
                         Thread.interrupted();
+                        
                         // mensagem de cancelamento
                         notf.notificacaoPadrao();
                         System.out.println("Pedido ID " + prox.getId() + " cancelado.");
                         System.out.println();
-                    } finally {
+                    } 
+                    finally {
                         pedidoAtual = null;
                         inicioPreparoMs = 0;
                         totalPreparoMs = 0;
@@ -185,38 +191,47 @@ public class Profissional extends Pessoa {
                 if (clienteCpf != null) {
                     if (clienteCpf.equals(pedidoAtual.getClienteCpf())) {
                         notf.notificacaoPadrao();
-                        System.out.println(
-                                "Seu pedido ja esta em preparo, logo, sera cobrada uma taxa de 50% do valor total.");
+                        System.out.println("Seu pedido ja esta em preparo, logo, sera cobrada uma taxa de 50% do valor total.");
                         System.out.println("Valor a ser cobrado " + pedidoAtual.getValor() / 2);
+                        
                         // calcula tempo restante antes de interromper
                         long totalMs = totalPreparoMs;
                         long elapsed = System.currentTimeMillis() - inicioPreparoMs;
                         long remainingMs = totalMs - elapsed;
+                        
                         if (remainingMs < 0) {
                             remainingMs = 0;
                         }
+                        
                         int duracaoHoras = pedidoAtual.getDuracao();
                         int horasADevolver = 0;
+                        
                         if (totalMs > 0) {
                             double frac = (double) remainingMs / (double) totalMs;
                             horasADevolver = (int) Math.floor(duracaoHoras * frac);
-                        } else {
+                        } 
+                        else {
                             horasADevolver = 0;
                         }
+
                         // devolve horas proporcionais
                         if (horasADevolver > 0) {
                             agenda.liberarHoras(horasADevolver);
                         }
+
                         // imprimir mensagem de cancelamento (sem citar o profissional)
                         System.out.println("Pedido ID " + pedidoAtual.getId() + " cancelado.");
                         System.out.println();
+                        
                         // interrompe a thread worker para cancelar o pedido em preparo
                         workerThread.interrupt();
                         return 1;
-                    } else {
+                    } 
+                    else {
                         return 0;
                     }
-                } else {
+                } 
+                else {
                     return 0;
                 }
             }
@@ -231,21 +246,25 @@ public class Profissional extends Pessoa {
                         if (clienteCpf.equals(p.getClienteCpf())) {
                             p.setStatus("Cancelado");
                             pedidos.remove(i);
+                            
                             // pedido não iniciado -> remaining == total -> devolve duracao inteira
                             int dur = p.getDuracao();
                             int horasADevolver = dur; // floor(dur * 1) == dur
                             if (horasADevolver > 0) {
                                 agenda.liberarHoras(horasADevolver);
                             }
+                            
                             // notificar cliente / registrar cancelamento sem penalidade
                             notf.notificacaoPadrao();
                             System.out.println("Pedido ID " + p.getId() + " cancelado.");
                             System.out.println();
                             return 2;
-                        } else {
+                        } 
+                        else {
                             return 0;
                         }
-                    } else {
+                    } 
+                    else {
                         return 0;
                     }
                 }
