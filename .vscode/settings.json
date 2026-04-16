@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "*.ejs": "html",
+        "TCB.C": "cpp",
+        "string.h": "c"
+    }
+}
