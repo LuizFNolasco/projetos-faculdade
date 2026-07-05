@@ -40,3 +40,9 @@ export function createGuestSessao(
     configuracao: config,
   };
 }
+
+export function removeGuestSessao(id: string) {
+  const sessoes = getGuestSessoes();
+  const filtered = sessoes.filter((s) => s.id !== id);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
+}

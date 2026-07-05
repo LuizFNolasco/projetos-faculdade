@@ -1,27 +1,43 @@
 import { NextResponse } from "next/server";
-
 import { getSessionUsuario } from "@/lib/auth/session";
-import { handleRouteError } from "@/lib/api/errors";
-import { updateSessao } from "@/lib/services/sessao.service";
-import { updateSessaoSchema } from "@/lib/validations/timer";
+import { prisma } from "@/lib/db";
 
-type RouteContext = { params: Promise<{ id: string }> };
-
-export async function PATCH(request: Request, context: RouteContext) {
+export async function DELETE(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
   try {
     const session = await getSessionUsuario();
-
+    
     if (!session) {
-      return NextResponse.json({ error: "Não autenticado" }, { status: 401 });
+      return NextResponse.json({ error: "Não autorizado" }, { status: 401 });
     }
 
-    const { id } = await context.params;
-    const body = await request.json();
-    const data = updateSessaoSchema.parse(body);
-    const sessao = await updateSessao(id, session.id, data);
+    const { id } = params;
 
-    return NextResponse.json(sessao);
+    // Verificar se a sessão existe e pertence ao usuário
+    const sessaoEstudo = await prisma.sessaoEstudo.findUnique({
+      where: { id },
+    });
+
+    if (!sessaoEstudo) {
+      return NextResponse.json({ error: "Sessão não encontrada" }, { status: 404 });
+    }
+
+    if (sessaoEstudo.usuarioId !== session.id) {
+      return NextResponse.json({ error: "Acesso negado" }, { status: 403 });
+    }
+
+    // Excluir a sessão
+    await prisma.sessaoEstudo.delete({
+      where: { id },
+    });
+
+    return NextResponse.json({ success: true });
   } catch (error) {
-    return handleRouteError(error);
+    return NextResponse.json(
+      { error: "Erro ao excluir a sessão" },
+      { status: 500 }
+    );
   }
 }

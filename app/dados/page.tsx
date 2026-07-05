@@ -9,11 +9,10 @@ import {
 } from "lucide-react";
 
 import { FocoLayout } from "@/components/layout/foco-nav";
-import { FocoPagesProvider } from "@/components/foco/foco-pages-provider";
 import { calcularOfensiva, calcularTempos } from "@/lib/sessao/calculos";
-import { getGuestSessoes } from "@/lib/sessao/guest-storage";
 import type { ResumoDados } from "@/interfaces/Sessao";
 import type { SessaoEstudo } from "@/interfaces/Sessao";
+import Link from "next/link";
 
 const periods = ["Semana", "Mês", "Ano"] as const;
 const weekDays = ["dom", "seg", "ter", "qua", "qui", "sex", "sab"];
@@ -80,6 +79,7 @@ function DadosContent() {
   const [activePeriod, setActivePeriod] =
     useState<(typeof periods)[number]>("Semana");
   const [resumo, setResumo] = useState<ResumoDados | null>(null);
+  const [isLogado, setIsLogado] = useState(true);
 
   useEffect(() => {
     async function load() {
@@ -87,14 +87,31 @@ function DadosContent() {
       const me = await meRes.json();
 
       if (me.usuario) {
+        setIsLogado(true);
         const res = await fetch(`/api/dados?periodo=${activePeriod}`);
         setResumo(await res.json());
       } else {
-        setResumo(buildGuestResumo(getGuestSessoes(), activePeriod));
+        setIsLogado(false);
       }
     }
     load();
   }, [activePeriod]);
+
+  if (!isLogado) {
+    return (
+      <div className="flex flex-col items-center justify-center rounded-2xl border border-white/5 bg-[#0d1826]/80 p-12 text-center mt-12">
+        <p className="mb-6 text-[#8fa8c4]">
+          Faça login para ter acesso aos seus gráficos e relatórios de produtividade.
+        </p>
+        <Link
+          href="/cadastro"
+          className="rounded-full bg-[#04D939] px-8 py-3 font-semibold text-[#012340] transition-all hover:brightness-110"
+        >
+          CRIAR MINHA CONTA
+        </Link>
+      </div>
+    );
+  }
 
   if (!resumo) {
     return <div className="h-96 animate-pulse rounded-2xl bg-[#112031]" />;
@@ -267,10 +284,8 @@ function DadosContent() {
 
 export default function DadosPage() {
   return (
-    <FocoPagesProvider>
-      <FocoLayout activeTab="dados">
-        <DadosContent />
-      </FocoLayout>
-    </FocoPagesProvider>
+    <FocoLayout activeTab="dados">
+      <DadosContent />
+    </FocoLayout>
   );
 }

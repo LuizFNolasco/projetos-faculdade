@@ -1,140 +1,24 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
-
 import { useTimerConfig } from "@/components/providers/timer-config-provider";
+import { useTimerEngine } from "@/components/providers/timer-engine-provider";
 import { TimerControls } from "@/components/foco/timer-controls";
 import { PauseConfirmModal } from "@/components/foco/pause-confirm-modal";
 import { TimerRing } from "@/components/foco/timer-ring";
-import {
-  avancarFase,
-  criarEstadoInicial,
-  duracaoFaseEmSegundos,
-  formatarTempo,
-  labelFase,
-  type TimerEstado,
-} from "@/lib/timer/engine";
-import {
-  createGuestSessao,
-  saveGuestSessao,
-} from "@/lib/sessao/guest-storage";
-import type { SessaoEstudo } from "@/interfaces/Sessao";
+import { duracaoFaseEmSegundos, formatarTempo, labelFase } from "@/lib/timer/engine";
 
 export function TimerApp() {
-  const { configAtiva, carregando, usuarioLogado } = useTimerConfig();
-  const [estado, setEstado] = useState<TimerEstado | null>(null);
-  const [sessaoId, setSessaoId] = useState<string | null>(null);
-  const [sessaoGuest, setSessaoGuest] = useState<SessaoEstudo | null>(null);
-  const [confirmacaoPausaAberta, setConfirmacaoPausaAberta] = useState(false);
-
-  const persistirSessao = useCallback(
-    async (novoEstado: TimerEstado) => {
-      const payload = {
-        ciclosCompletos: novoEstado.ciclosCompletos,
-        faseAtual: novoEstado.faseAtual,
-        cicloAtual: novoEstado.cicloAtual,
-      };
-
-      if (usuarioLogado && sessaoId) {
-        await fetch(`/api/sessoes/${sessaoId}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
-      } else if (sessaoGuest) {
-        const atualizada: SessaoEstudo = { ...sessaoGuest, ...payload };
-        setSessaoGuest(atualizada);
-        saveGuestSessao(atualizada);
-      }
-    },
-    [usuarioLogado, sessaoId, sessaoGuest],
-  );
-
-  useEffect(() => {
-    if (!configAtiva) return;
-
-    setEstado(criarEstadoInicial(configAtiva));
-    setSessaoId(null);
-    setSessaoGuest(null);
-
-    async function iniciarSessao() {
-      if (usuarioLogado) {
-        const res = await fetch("/api/sessoes", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ configuracaoId: configAtiva!.id }),
-        });
-        if (res.ok) {
-          const sessao = (await res.json()) as SessaoEstudo;
-          setSessaoId(sessao.id);
-        }
-      } else {
-        const guest = createGuestSessao(configAtiva!.id, {
-          id: configAtiva!.id,
-          nome: configAtiva!.nome,
-          duracaoFocoMin: configAtiva!.duracaoFocoMin,
-          duracaoPausaCurtaMin: configAtiva!.duracaoPausaCurtaMin,
-          duracaoPausaLongaMin: configAtiva!.duracaoPausaLongaMin,
-          ciclosAtePausaLonga: configAtiva!.ciclosAtePausaLonga,
-        });
-        setSessaoGuest(guest);
-        saveGuestSessao(guest);
-      }
-    }
-
-    iniciarSessao();
-  }, [configAtiva?.id, usuarioLogado]);
-
-  useEffect(() => {
-    if (!estado || estado.pausado || !configAtiva) return;
-
-    const interval = setInterval(() => {
-      setEstado((prev) => {
-        if (!prev || prev.pausado) return prev;
-
-        if (prev.tempoRestanteSeg <= 1) {
-          const proximo = avancarFase(prev, configAtiva);
-          persistirSessao(proximo);
-          return proximo;
-        }
-
-        return { ...prev, tempoRestanteSeg: prev.tempoRestanteSeg - 1 };
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, [estado?.pausado, configAtiva, persistirSessao]);
-
-  function handleReset() {
-    if (!configAtiva) return;
-    const novo = criarEstadoInicial(configAtiva);
-    setEstado(novo);
-    persistirSessao(novo);
-  }
-
-  function handleRequestPause() {
-    setConfirmacaoPausaAberta(true);
-  }
-
-  function handleConfirmarPausa() {
-    setConfirmacaoPausaAberta(false);
-    setEstado((prev) => (prev ? { ...prev, pausado: true } : prev));
-  }
-
-  function handleCancelarPausa() {
-    setConfirmacaoPausaAberta(false);
-  }
-
-  function handleResume() {
-    setEstado((prev) => (prev ? { ...prev, pausado: false } : prev));
-  }
-
-  function handleSkip() {
-    if (!configAtiva || !estado) return;
-    const proximo = avancarFase(estado, configAtiva);
-    setEstado(proximo);
-    persistirSessao(proximo);
-  }
+  const { configAtiva, carregando } = useTimerConfig();
+  const {
+    estado,
+    confirmacaoPausaAberta,
+    handleReset,
+    handleRequestPause,
+    handleConfirmarPausa,
+    handleCancelarPausa,
+    handleResume,
+    handleSkip,
+  } = useTimerEngine();
 
   if (carregando || !configAtiva || !estado) {
     return (
@@ -170,6 +54,7 @@ export function TimerApp() {
       <TimerControls
         pausado={estado.pausado}
         confirmacaoPausaAberta={confirmacaoPausaAberta}
+        isInitialState={progresso === 0}
         onReset={handleReset}
         onRequestPause={handleRequestPause}
         onResume={handleResume}
