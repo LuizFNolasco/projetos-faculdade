@@ -8,13 +8,14 @@ O sistema auxilia na gestão de tempo em relação a atividades de estudo e/ou t
 
 ## Usuários
 
-O público-alvo é majoritariamente estudantil, embora pessoas de outras áreas também possam utilizar a plataforma. Todos os usuários compartilham o mesmo perfil de funcionalidades.
+O público-alvo é majoritariamente estudantil, embora pessoas de outras áreas também possam utilizar a plataforma. A plataforma suporta contas de usuários (com login/senha) onde todo o histórico de logs é salvo na nuvem, mas também possibilita um uso rápido anônimo ("Começar sem conta").
 
 ## Funcionalidades
 
-### Timer Pomodoro
+### Timer Pomodoro Global e Persistente
 
-- Timer automático baseado nos ciclos da técnica Pomodoro, sem necessidade de reconfiguração manual a cada ciclo.
+- O cronômetro é gerenciado por uma engine global de estados. Você pode iniciar um ciclo de estudo, navegar livremente pelas outras telas (Logs, Dados, Configurações) e o cronômetro continuará operando em segundo plano.
+- Timer automático baseado nos ciclos da técnica Pomodoro, avançando automaticamente entre os estados.
 - Presets prontos, como o **Pomodoro clássico** (4 ciclos — 25 min de foco / 5 min de pausa curta — pausa longa de 15 min).
 
 ### Personalização
@@ -24,8 +25,8 @@ O público-alvo é majoritariamente estudantil, embora pessoas de outras áreas 
 ### Dados e logs de estudo
 
 - Cada sessão de estudo registra horário de início/término e ciclos completados.
-- O resumo diário (tempo total e ciclos por dia) é **calculado** agrupando as sessões pela data de início — não é persistido como entidade separada.
-- Geração de gráficos individuais a partir das sessões salvas.
+- Gráficos diários, semanais e mensais (calculados agregando o histórico de uso no banco de dados).
+- O histórico de sessões é salvo em um banco de dados relacional para usuários cadastrados, de onde podem ser consultados e até mesmo excluídos pela interface.
 
 ## Tecnologias
 
@@ -33,6 +34,7 @@ O público-alvo é majoritariamente estudantil, embora pessoas de outras áreas 
 |---------------|-------------------------------------|
 | Front-end     | React 19 + Next.js 16 (App Router)  |
 | Back-end      | API Routes / Server Actions (Next.js) |
+| Banco de Dados| PostgreSQL + Prisma ORM             |
 | Linguagem     | TypeScript                          |
 | Estilização   | Tailwind CSS 4                      |
 | Componentes   | shadcn/ui + Base UI                 |
@@ -44,9 +46,7 @@ O público-alvo é majoritariamente estudantil, embora pessoas de outras áreas 
 
 ### Diagrama de classes do domínio do problema
 
-O diagrama abaixo representa as entidades centrais do domínio e seus relacionamentos, conforme descrito na proposta do projeto.
-
-As sessões de estudo são a **fonte da verdade** dos dados. O resumo diário e os gráficos são derivados por agregação, sem entidade persistida à parte.
+O diagrama abaixo representa as entidades centrais do domínio persistidas e mapeadas via Prisma. As sessões de estudo são a **fonte da verdade** dos dados. O resumo diário e os gráficos são derivados por agregação no frontend ou via queries agregadas, sem entidade persistida à parte para gráficos.
 
 ```mermaid
 classDiagram
@@ -150,16 +150,13 @@ classDiagram
     GraficoEstudo "1" --> "1" Periodo : cobre
 ```
 
-**Resumo das entidades:**
+**Resumo das entidades persistidas:**
 
 | Entidade             | Tipo        | Responsabilidade                                              |
 |----------------------|-------------|---------------------------------------------------------------|
 | `Usuario`            | Entidade    | Identifica quem usa a plataforma; credenciais (`email`, `senha`) e acesso a sessões e histórico |
 | `ConfiguracaoTimer`  | Entidade    | Define durações e ciclos do Pomodoro (preset ou customizado)  |
 | `SessaoEstudo`       | Entidade    | Fonte da verdade: registra início, fim e ciclos de cada sessão |
-| `EstadoTimer`        | Entidade    | Controla a fase atual e o tempo restante durante a sessão     |
-| `ResumoDiario`       | Calculado   | Agrupa sessões de um dia e totaliza ciclos e tempo            |
-| `GraficoEstudo`      | Calculado   | Transforma sessões agrupadas por data em visualização gráfica |
 
 ---
 
@@ -169,13 +166,12 @@ classDiagram
 |------------------|-------------------------|-------------------------------------------------------------|
 | Versionamento    | **Git** + **GitHub**    | Controle de versão, branches e histórico de alterações      |
 | Build            | **Next.js** + **pnpm**  | Compilação, bundling e scripts de desenvolvimento/produção  |
+| Banco de Dados   | **PostgreSQL** + **Prisma** | Armazenamento de dados relacionais e modelagem de acesso   |
 | Testes           | **Vitest** + **Testing Library** | Testes unitários e de componentes React              |
 | Lint / qualidade | **ESLint**              | Análise estática e padronização de código                   |
 | Issue tracking   | **Trello**       | Registro de bugs, tarefas e acompanhamento do backlog        |
 | CI/CD            | **GitHub Actions**      | Pipeline automatizado de lint, testes e build               |
-| Container        | **Docker**              | Empacotamento da aplicação para execução em ambientes isolados |
-
-> **Nota:** Git, pnpm, Next.js e ESLint já estão configurados no repositório. Vitest, GitHub Actions e Docker serão adicionados conforme o projeto avançar.
+| Container        | **Docker**              | Execução do banco de dados (postgres) via compose              |
 
 ---
 
@@ -185,11 +181,10 @@ classDiagram
 |------------------------|---------------------------------------------------------|
 | [Next.js](https://nextjs.org/) | Framework full-stack React (rotas, SSR, API Routes) |
 | [React](https://react.dev/)    | Construção da interface de usuário                    |
+| [Prisma](https://www.prisma.io/)| ORM moderno e type-safe para comunicação com PostgreSQL|
 | [Tailwind CSS](https://tailwindcss.com/) | Estilização utilitária e responsiva         |
 | [shadcn/ui](https://ui.shadcn.com/) | Componentes acessíveis e customizáveis          |
-| [Base UI](https://base-ui.com/) | Primitivos de UI headless usados pelo shadcn/ui     |
 | [Lucide React](https://lucide.dev/) | Ícones                                              |
-| [class-variance-authority](https://cva.style/) | Variantes tipadas de classes CSS          |
 | [TypeScript](https://www.typescriptlang.org/) | Tipagem estática em todo o código-fonte   |
 
 ---
@@ -198,44 +193,10 @@ classDiagram
 
 Em projetos TypeScript, o equivalente ao JavaDoc é o **[TypeDoc](https://typedoc.org/)**, que gera documentação HTML a partir de comentários **TSDoc** no código.
 
-#### 1. Instalar o TypeDoc (dependência de desenvolvimento)
-
 ```bash
-pnpm add -D typedoc
-```
-
-#### 2. Documentar funções, classes e tipos com TSDoc
-
-```typescript
-/**
- * Calcula o tempo total de estudo em minutos a partir dos ciclos completados.
- *
- * @param ciclos - Quantidade de ciclos Pomodoro finalizados
- * @param duracaoFocoMin - Duração de cada ciclo de foco, em minutos
- * @returns Tempo total estudado em minutos
- */
-export function calcularTempoTotal(ciclos: number, duracaoFocoMin: number): number {
-  return ciclos * duracaoFocoMin;
-}
-```
-
-#### 3. Gerar a documentação
-
-Adicione o script ao `package.json`:
-
-```json
-"docs": "typedoc --entryPoints lib --out docs/api"
-```
-
-Execute:
-
-```bash
+# Executar a documentação (se configurado no package.json)
 pnpm docs
 ```
-
-A documentação gerada estará disponível em `docs/api/index.html`. Abra o arquivo no navegador para visualizar.
-
-> **Alternativa:** a inferência de tipos do TypeScript e a documentação oficial do [Next.js](https://nextjs.org/docs) também servem como referência complementar durante o desenvolvimento.
 
 ---
 
@@ -245,6 +206,7 @@ A documentação gerada estará disponível em `docs/api/index.html`. Abra o arq
 
 - [Node.js](https://nodejs.org/) 20 ou superior
 - [pnpm](https://pnpm.io/) 9 ou superior
+- Instância do PostgreSQL rodando localmente ou via Docker (veja o compose).
 
 #### 1. Clonar o repositório
 
@@ -259,28 +221,40 @@ cd work-and-rest
 pnpm install
 ```
 
-#### 3. Executar em modo de desenvolvimento
+#### 3. Subir o Banco de Dados com Docker
+
+Para iniciar a instância do PostgreSQL localmente, utilize o Docker Compose:
+
+```bash
+docker compose up -d
+```
+
+O banco rodará em segundo plano na porta 5432.
+
+#### 4. Configurar Variáveis de Ambiente
+
+Crie um arquivo `.env` na raiz do projeto contendo a sua string de conexão:
+
+```env
+DATABASE_URL="postgresql://usuario:senha@localhost:5432/workandrest?schema=public"
+```
+
+#### 5. Rodar Migrations e Gerar o Prisma Client
+
+```bash
+npx prisma db push
+npx prisma generate
+```
+
+> **Aviso Importante**: O Prisma Client deste projeto foi configurado com um output customizado no caminho `lib/generated/prisma`. Portanto, sempre importe o Prisma dessa pasta.
+
+#### 6. Executar em modo de desenvolvimento
 
 ```bash
 pnpm dev
 ```
 
 Acesse [http://localhost:3000](http://localhost:3000) no navegador.
-
-#### 4. Outros comandos úteis
-
-| Comando         | Descrição                              |
-|-----------------|----------------------------------------|
-| `pnpm build`    | Gera a build de produção               |
-| `pnpm start`    | Inicia o servidor de produção          |
-| `pnpm lint`     | Executa o ESLint no projeto            |
-
-#### 5. Executar com Docker *(quando configurado)*
-
-```bash
-docker build -t work-and-rest .
-docker run -p 3000:3000 work-and-rest
-```
 
 ---
 
@@ -289,12 +263,17 @@ docker run -p 3000:3000 work-and-rest
 ```
 work-and-rest/
 ├── app/                  # Rotas e páginas (App Router do Next.js)
-│   ├── layout.tsx        # Layout raiz
-│   ├── page.tsx          # Página inicial
+│   ├── layout.tsx        # Layout raiz e contexto
+│   ├── page.tsx          # Página inicial e Landing Page
+│   ├── timer/            # Tela principal de Foco
+│   ├── logs/             # Histórico
 │   └── globals.css       # Estilos globais
 ├── components/           # Componentes React reutilizáveis
-│   └── ui/               # Componentes shadcn/ui
-├── lib/                  # Utilitários e lógica de domínio
+│   ├── foco/             # Lógica visual e controles do cronômetro
+│   ├── providers/        # Provedores de Contexto Globais (Timer e Configs)
+│   └── ui/               # Componentes shadcn/ui base
+├── lib/                  # Utilitários, cálculo de sessão, Prisma DB
+├── prisma/               # Schema do Banco de Dados PostgreSQL
 ├── public/               # Arquivos estáticos
 ├── package.json
 ├── tsconfig.json
