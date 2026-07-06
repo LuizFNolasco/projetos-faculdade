@@ -66,7 +66,7 @@ function LogsContent() {
 
   if (!isLogado) {
     return (
-      <div className="flex flex-col items-center justify-center rounded-2xl border border-white/5 bg-[#0d1826]/80 p-12 text-center">
+      <div className="flex flex-col items-center justify-center rounded-2xl border border-white/5 bg-[#0d1826]/80 p-12 text-center mt-12">
         <p className="mb-6 text-[#8fa8c4]">
           Faça login para salvar o seu histórico de foco.
         </p>
