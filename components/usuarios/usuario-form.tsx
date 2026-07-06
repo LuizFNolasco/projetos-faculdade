@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Lock, Mail, User } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -39,18 +40,7 @@ export function UsuarioForm({
   const isCadastro = variant === "cadastro";
   const isCreate = mode === "create";
 
-  async function autenticarAposCadastro(emailValue: string, senhaValue: string) {
-    const loginResponse = await fetch("/api/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email: emailValue, senha: senhaValue }),
-    });
 
-    if (!loginResponse.ok) {
-      const loginData = await loginResponse.json();
-      throw new Error(loginData.error ?? "Conta criada, mas não foi possível entrar");
-    }
-  }
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -78,9 +68,6 @@ export function UsuarioForm({
         return;
       }
 
-      if (isCreate && isCadastro) {
-        await autenticarAposCadastro(email, senha);
-      }
 
       if (redirectTo) {
         router.push(redirectTo);
@@ -193,6 +180,14 @@ export function UsuarioForm({
           >
             {isSubmitting ? "SALVANDO..." : "CADASTRAR"}
           </button>
+          <div className="mt-4 text-center">
+            <Link
+              href="/login"
+              className="text-sm font-semibold text-[#8fa8c4] transition-colors hover:text-[#04D939]"
+            >
+              Já tenho uma conta
+            </Link>
+          </div>
         </div>
       ) : (
         <Button type="submit" disabled={isSubmitting}>

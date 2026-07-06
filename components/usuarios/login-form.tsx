@@ -83,7 +83,13 @@ export function LoginForm({ redirectTo = "/timer" }: LoginFormProps) {
             required
           />
         </div>
-        <div className="mt-1 flex justify-end">
+        <div className="mt-1 flex justify-between">
+          <Link
+            href="/cadastro"
+            className="text-xs text-gray-400 transition-colors hover:text-[#04D939]"
+          >
+            Cadastro
+          </Link>
           <Link
             href="#"
             className="text-xs text-gray-400 transition-colors hover:text-[#04D939]"

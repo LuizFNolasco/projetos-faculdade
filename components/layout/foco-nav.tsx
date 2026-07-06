@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Sidebar } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { LogOut, Sidebar } from "lucide-react";
 
 import { useTimerConfig } from "@/components/providers/timer-config-provider";
 import { ConfigSidebar } from "@/components/foco/config-sidebar";
@@ -13,6 +13,13 @@ type FocoNavProps = {
 
 export function FocoNav({ activeTab }: FocoNavProps) {
   const { setSidebarAberta } = useTimerConfig();
+  const router = useRouter();
+
+  async function handleLogout() {
+    await fetch("/api/auth/logout", { method: "POST" });
+    router.push("/");
+    router.refresh();
+  }
 
   return (
     <>
@@ -59,7 +66,14 @@ export function FocoNav({ activeTab }: FocoNavProps) {
           </Link>
         </div>
 
-        <div className="w-6" />
+        <button
+          type="button"
+          onClick={handleLogout}
+          className="text-[#8fa8c4] transition-colors hover:text-red-400"
+          title="Sair da conta"
+        >
+          <LogOut size={20} />
+        </button>
       </div>
 
       <ConfigSidebar />
