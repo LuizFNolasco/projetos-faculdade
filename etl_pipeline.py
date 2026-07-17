@@ -1,17 +1,28 @@
 import pandas as pd
 import sqlite3
 import warnings
+import numpy as np
 from pathlib import Path
 from functools import reduce
 
 warnings.filterwarnings('ignore')
 
 def parse_br_float(series):
-    return series.astype(str).str.replace('.', '', regex=False).str.replace(',', '.', regex=False).astype(float)
+    def br_to_float(val):
+        if pd.isna(val):
+            return np.nan
+        if isinstance(val, str):
+            val = val.replace('.', '').replace(',', '.').strip()
+            try:
+                return float(val)
+            except:
+                return np.nan
+        return float(val)
+    return series.apply(br_to_float)
 
 print("Iniciando Pipeline de ETL (Bronze -> Silver -> Gold)...")
 
-base_dir = Path('datasets')
+base_dir = Path('dados_brutos')
 db_path = 'DW_Banestes.db'
 
 with sqlite3.connect(db_path) as conn:
@@ -19,7 +30,12 @@ with sqlite3.connect(db_path) as conn:
     print("Dim_Fundo")
     df_fundos = pd.read_csv(base_dir / 'fundos_anbima_fake.csv', sep=';', encoding='latin1', 
                             usecols=['Código ANBIMA', 'CNPJ do Fundo', 'Nome Comercial', 'Nível 1 Categoria'])
-    df_fundos.columns = ['ID_Fundo', 'CNPJ', 'Nome', 'Categoria']
+    df_fundos = df_fundos.rename(columns={
+        'Código ANBIMA': 'ID_Fundo',
+        'CNPJ do Fundo': 'CNPJ',
+        'Nome Comercial': 'Nome',
+        'Nível 1 Categoria': 'Categoria'
+    })
 
     dim_fundo_bcri = pd.DataFrame({
         'ID_Fundo': ['BCRI11'],
@@ -36,7 +52,7 @@ with sqlite3.connect(db_path) as conn:
 
     print("Fato_Movimentacao")
     fato_movimentacao = pd.read_csv(base_dir / 'movimentacoes_fake.csv', sep=';', usecols=['Data', 'ID_Cliente', 'Codigo_ANBIMA', 'Tipo', 'Valor'])
-    fato_movimentacao.columns = ['Data', 'ID_Cliente', 'ID_Fundo', 'Tipo', 'Valor']
+    fato_movimentacao = fato_movimentacao.rename(columns={'Codigo_ANBIMA': 'ID_Fundo'})
     
     datas_mov = pd.to_datetime(fato_movimentacao['Data'])
     fato_movimentacao['Data'] = datas_mov.dt.strftime('%Y-%m-%d')
