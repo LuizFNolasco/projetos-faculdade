@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 from pathlib import Path
 
-base_dir = Path("datasets")
+base_dir = Path("dados_brutos")
 base_dir.mkdir(exist_ok=True)
 
 print("Lendo catálogo de fundos...")
