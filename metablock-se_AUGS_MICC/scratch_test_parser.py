@@ -24,32 +24,54 @@ def extract_metrics(notebook_path):
                 if isinstance(text, str):
                     text = [text]
                 for line in text:
-                    # Epoch 2/100 -> Val Loss: 1.6418, Val Acc: 0.4000, Bal Acc: 0.1667
-                    # Or Val Bal Acc: 
+                    
+                    # Detecta o início de um novo fold e avança o current_fold se necessário
+                    if "--- Fim do FOLD" in line:
+                        if best_metrics['Loss'] is not None:
+                            folds_best_metrics[current_fold] = best_metrics.copy()
+                            current_fold += 1
+                            best_metrics = {'Loss': None, 'Accuracy': None, 'Balanced accuracy': None}
+                            best_loss = float('inf')
+
+                    # Tenta capturar a métrica por época e salva a melhor (usado no Augsburg)
                     match = re.search(r'Val Loss:\s*([0-9.]+),\s*Val Acc:\s*([0-9.]+),\s*(?:Val\s*)?Bal Acc:\s*([0-9.]+)', line)
                     if match:
                         loss = float(match.group(1))
                         acc = float(match.group(2))
                         bacc = float(match.group(3))
-                        
                         if loss < best_loss:
                             best_loss = loss
                             best_metrics = {'Loss': loss, 'Accuracy': acc, 'Balanced accuracy': bacc}
-                    
-                    # --- Fim do FOLD 1.
-                    if "Fim do FOLD" in line:
-                        folds_best_metrics[current_fold] = best_metrics
-                        current_fold += 1
-                        best_loss = float('inf')
-                        best_metrics = {'Loss': None, 'Accuracy': None, 'Balanced accuracy': None}
+                
+                    # Se tiver métricas "Final" impressas, a gente simplesmente sobrescreve no dicionário oficial!
+                    # Isso funciona perfeitamente para o Miccai que imprime essas métricas soltas no final de tudo.
+                    match_loss = re.search(r'Loss Final.*?FOLD\s*(\d+).*?:\s*([0-9.]+)', line)
+                    if match_loss:
+                        fold_num = int(match_loss.group(1))
+                        if fold_num not in folds_best_metrics: folds_best_metrics[fold_num] = {}
+                        folds_best_metrics[fold_num]['Loss'] = float(match_loss.group(2))
+                        
+                    match_acc = re.search(r'(?:Acur[aá]cia|Accuracy) Final.*?FOLD\s*(\d+).*?:\s*([0-9.]+)', line)
+                    if match_acc:
+                        fold_num = int(match_acc.group(1))
+                        if fold_num not in folds_best_metrics: folds_best_metrics[fold_num] = {}
+                        folds_best_metrics[fold_num]['Accuracy'] = float(match_acc.group(2))
+                        
+                    match_bacc = re.search(r'(?:Acur[aá]cia Balanceada|Balanced accuracy) Final.*?FOLD\s*(\d+).*?:\s*([0-9.]+)', line)
+                    if match_bacc:
+                        fold_num = int(match_bacc.group(1))
+                        if fold_num not in folds_best_metrics: folds_best_metrics[fold_num] = {}
+                        folds_best_metrics[fold_num]['Balanced accuracy'] = float(match_bacc.group(2))
 
+    # Algum notebook pode ter faltado preencher um fold, garantimos que temos 5 folds ou o que der
     if not folds_best_metrics:
         return None
 
     final_dict = {'Loss': [], 'Accuracy': [], 'Balanced accuracy': []}
     for fold in sorted(folds_best_metrics.keys()):
         for metric in final_dict:
-            final_dict[metric].append(folds_best_metrics[fold][metric])
+            # Caso não encontre a métrica (por algum motivo), coloca None
+            final_dict[metric].append(folds_best_metrics[fold].get(metric, None))
             
     return final_dict
 

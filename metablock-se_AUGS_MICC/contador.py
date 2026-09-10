@@ -5,12 +5,12 @@ import glob
 from collections import defaultdict
 
 # --- 1. CONFIGURAÇÃO ---
-base = "/home/luiz_felipe/IC_Final/metablock-se_AUGS_MICC/benchmarks/augsburg/results_MultiClass/opt_adam_early_stop_loss"
+base = "/home/luiz_felipe/IC_Final/metablock-se_AUGS_MICC/benchmarks_miccai/miccai/results/opt_adam_early_stop_loss"
 arquivo = "metrics.txt"
 # MUDANÇA 1: Trocamos a AUC pela Loss na nossa lista de busca
 variaveis = ["Loss", "Accuracy", "Balanced accuracy"]
 pasta_destino = "/home/luiz_felipe/IC_Final/metablock-se_AUGS_MICC/"
-arquivo_saida = "resultado_augsburg_multiclass.txt"
+arquivo_saida = "resultado_miccai_medias.txt"
 
 # --- 2. COLETA DOS DADOS ---
 def nested_dict():
@@ -50,13 +50,19 @@ with open(caminho_final, 'w', encoding='utf-8') as f:
 
             print(f"[{vlm} - {llm}] Valores encontrados nos folds:")
             print(f"Loss: {metricas['Loss']} | Acc: {metricas['Accuracy']} | Bacc: {metricas['Balanced accuracy']}\n")
-            # Calcula a média de todos os folds encontrados para as três métricas
-            media_loss = statistics.mean(metricas["Loss"]) if metricas["Loss"] else 0.0
-            media_acc = statistics.mean(metricas["Accuracy"]) if metricas["Accuracy"] else 0.0
-            media_bacc = statistics.mean(metricas["Balanced accuracy"]) if metricas["Balanced accuracy"] else 0.0
             
-            # MUDANÇA 2: Escreve exatamente na estrutura "Modelo: Loss | Acc | Bacc"
-            f.write(f"{llm}: {media_loss:.4f} | {media_acc:.4f} | {media_bacc:.4f}\n")
+            # Calcula a média e desvio padrão
+            def calc_stats(valores):
+                if not valores: return 0.0, 0.0
+                if len(valores) == 1: return valores[0], 0.0
+                return statistics.mean(valores), statistics.stdev(valores)
+
+            media_loss, std_loss = calc_stats(metricas["Loss"])
+            media_acc, std_acc = calc_stats(metricas["Accuracy"])
+            media_bacc, std_bacc = calc_stats(metricas["Balanced accuracy"])
+            
+            # MUDANÇA 2: Escreve no formato "Modelo: Loss ± Std | Acc ± Std | Bacc ± Std"
+            f.write(f"{llm}: {media_loss:.4f} ± {std_loss:.4f} | {media_acc:.4f} ± {std_acc:.4f} | {media_bacc:.4f} ± {std_bacc:.4f}\n")
         
         # Pula uma linha no final de cada VLM para deixar organizado
         f.write("\n")
